@@ -5,17 +5,22 @@ const AxiosInstance = axios.create({
   baseURL: "https://api.anurag.sh/maccas/v2",
 });
 
-const fetchAccessToken = (): Promise<string> => {
+const fetchAccessToken = async (): Promise<string | undefined> => {
   const accounts = MSALInstance.getAllAccounts();
 
-  return new Promise((resolve) => {
-    MSALInstance.acquireTokenSilent({
+  try {
+    const token = await MSALInstance.acquireTokenSilent({
       ...LoginRequest,
       account: accounts[0] ?? undefined,
-    }).then((response) => {
-      resolve(response.accessToken);
     });
-  });
+    return token.accessToken;
+  } catch {
+    // https://github.com/AzureAD/microsoft-authentication-library-for-js/wiki/Known-issue-on-Safari
+    await MSALInstance.acquireTokenRedirect({
+      ...LoginRequest,
+      account: accounts[0] ?? undefined,
+    });
+  }
 };
 
 AxiosInstance.interceptors.request.use(
