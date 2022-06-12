@@ -2,7 +2,7 @@ import { Box, Button, Card, CardActions, CardContent, CardMedia, Grid, Typograph
 import { Container } from "@mui/system";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { IMAGE_BUCKET_BASE } from "../config/api";
+import { IMAGE_BUCKET_BASE } from "../config/images";
 import useCode from "../hooks/useCode";
 import useSelectedDeal from "../hooks/useSelectedDeal";
 

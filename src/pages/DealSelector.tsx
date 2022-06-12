@@ -16,7 +16,7 @@ import {
 import moment from "moment";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { IMAGE_BUCKET_BASE } from "../config/api";
+import { IMAGE_BUCKET_BASE } from "../config/images";
 import useDeals from "../hooks/useDeals";
 import useLastRefresh from "../hooks/useLastRefresh";
 import useSelectedDeal from "../hooks/useSelectedDeal";

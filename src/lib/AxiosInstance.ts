@@ -1,5 +1,4 @@
 import axios, { AxiosRequestConfig } from "axios";
-import { PUBLIC_API_KEY } from "../config/api";
 import { LoginRequest, MSALInstance } from "../config/msal";
 
 const AxiosInstance = axios.create({
@@ -27,7 +26,6 @@ AxiosInstance.interceptors.request.use(
     if (accessToken) {
       config.headers["Authorization"] = "Bearer " + accessToken;
     }
-    config.headers["X-Api-Key"] = PUBLIC_API_KEY;
     config.headers["Content-Type"] = "application/json";
     return config;
   },
