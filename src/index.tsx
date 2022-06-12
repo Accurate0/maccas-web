@@ -10,22 +10,42 @@ import { theme } from "./styles";
 import { RecoilRoot } from "recoil";
 import Backdrop from "./components/Backdrop";
 import { SnackbarProvider } from "notistack";
+import { ErrorBoundary } from "react-error-boundary";
 
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
 
 root.render(
   <React.StrictMode>
-    <MsalProvider instance={MSALInstance}>
-      <RecoilRoot>
-        <BrowserRouter>
-          <ThemeProvider theme={theme}>
-            <SnackbarProvider>
-              <Backdrop />
-              <App />
-            </SnackbarProvider>
-          </ThemeProvider>
-        </BrowserRouter>
-      </RecoilRoot>
-    </MsalProvider>
+    <ErrorBoundary
+      fallbackRender={({ error, resetErrorBoundary }) => (
+        <>
+          <div role="alert">
+            <div>Oh no</div>
+            <pre>{error.message}</pre>
+            <pre>{JSON.stringify(error)}</pre>
+            <button
+              onClick={() => {
+                resetErrorBoundary();
+              }}
+            >
+              Try again
+            </button>
+          </div>
+        </>
+      )}
+    >
+      <MsalProvider instance={MSALInstance}>
+        <RecoilRoot>
+          <BrowserRouter>
+            <ThemeProvider theme={theme}>
+              <SnackbarProvider>
+                <Backdrop />
+                <App />
+              </SnackbarProvider>
+            </ThemeProvider>
+          </BrowserRouter>
+        </RecoilRoot>
+      </MsalProvider>
+    </ErrorBoundary>
   </React.StrictMode>
 );
