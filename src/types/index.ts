@@ -12,3 +12,4 @@ export * from "./Location";
 export * from "./Restaurant";
 export * from "./RestaurantLocationList";
 export * from "./RestaurantLocationResponse";
+export * from "./OfferResponse";

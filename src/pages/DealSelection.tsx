@@ -47,9 +47,9 @@ const DealSelection: React.FC<DealSelectionProps> = () => {
                   <Typography sx={{ mb: 1.5 }} color="text.secondary">
                     {selectedDeal?.shortName}
                   </Typography>
-                  <Typography gutterBottom>{code?.status.message}</Typography>
+                  <Typography gutterBottom>{code.message}</Typography>
                   <Typography component="div" gutterBottom>
-                    <Box sx={{ fontFamily: "Monospace", fontSize: "h6.fontSize" }}>{code.response?.randomCode}</Box>
+                    <Box sx={{ fontFamily: "Monospace", fontSize: "h6.fontSize" }}>{code.randomCode}</Box>
                   </Typography>
                 </CardContent>
                 <CardActions style={{ margin: "25px 25px 25px 25px" }}>
