@@ -1,0 +1,331 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Maccas API",
+        "version": "2.0.0"
+    },
+    "servers": [
+        {
+            "url": "https://api.anurag.sh/maccas/v2",
+            "description": "The default server"
+        }
+    ],
+    "paths": {
+        "/user/config": {
+            "get": {
+                "summary": "GET config",
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "storeId": {
+                                            "type": "string"
+                                        },
+                                        "storeName": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "summary": "PATCH config",
+                "responses": {},
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "storeId": {
+                                        "type": "string"
+                                    },
+                                    "storeName": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/deals": {
+            "get": {
+                "summary": "GET deals",
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "CreationDateUtc": {
+                                                "type": "string"
+                                            },
+                                            "count": {
+                                                "type": "number"
+                                            },
+                                            "dealUuid": {
+                                                "type": "string"
+                                            },
+                                            "description": {
+                                                "type": "string"
+                                            },
+                                            "imageBaseName": {
+                                                "type": "string"
+                                            },
+                                            "localValidFrom": {
+                                                "type": "string"
+                                            },
+                                            "localValidTo": {
+                                                "type": "string"
+                                            },
+                                            "name": {
+                                                "type": "string"
+                                            },
+                                            "offerId": {
+                                                "type": "number"
+                                            },
+                                            "offerPropositionId": {
+                                                "type": "number"
+                                            },
+                                            "shortName": {
+                                                "type": "string"
+                                            },
+                                            "validFromUTC": {
+                                                "type": "string"
+                                            },
+                                            "validToUTC": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/deals/last-refresh": {
+            "get": {
+                "summary": "GET last refresh",
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "lastRefresh": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/deals/{dealId}": {
+            "post": {
+                "summary": "POST deals by dealId",
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "randomCode": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "dealId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "store",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "number"
+                        }
+                    }
+                ]
+            },
+            "delete": {
+                "summary": "DELETE deals by dealId",
+                "responses": {},
+                "parameters": [
+                    {
+                        "name": "dealId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ]
+            }
+        },
+        "/locations": {
+            "get": {
+                "summary": "GET locations",
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {}
+                                }
+                            }
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "distance",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "latitude",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "longitude",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ]
+            }
+        },
+        "/locations/search": {
+            "get": {
+                "summary": "GET search",
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "address": {
+                                            "type": "object",
+                                            "properties": {
+                                                "addressLine": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        },
+                                        "name": {
+                                            "type": "string"
+                                        },
+                                        "storeNumber": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "text",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ]
+            }
+        },
+        "/code/{dealId}": {
+            "get": {
+                "summary": "GET code by dealId",
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "randomCode": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "dealId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "store",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "number"
+                        }
+                    }
+                ]
+            }
+        }
+    }
+}

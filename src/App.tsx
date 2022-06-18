@@ -6,6 +6,10 @@ import LocationSelection from "./pages/LocationSelection";
 import { LoginRequest } from "./config/msal";
 import DealSelector from "./pages/DealSelector";
 import NavBar from "./components/NavBar";
+import SwaggerUI from "swagger-ui-react";
+import "swagger-ui-react/swagger-ui.css";
+import apiSchema from "./schema/api.json";
+import { fetchAccessToken } from "./lib/AxiosInstance";
 
 const App = () => {
   const { instance } = useMsal();
@@ -34,6 +38,20 @@ const App = () => {
             <Route path="/" element={<DealSelector />} />
             <Route path="/code" element={<DealSelection />} />
             <Route path="/location" element={<LocationSelection />} />
+            <Route
+              path="/spec"
+              element={
+                <div style={{ paddingTop: 50 }}>
+                  <SwaggerUI
+                    spec={apiSchema}
+                    requestInterceptor={async (req) => {
+                      req.headers["Authorization"] = `Bearer ${await fetchAccessToken()}`;
+                      return req;
+                    }}
+                  />
+                </div>
+              }
+            />
           </Routes>
         </Container>
       </AuthenticatedTemplate>
