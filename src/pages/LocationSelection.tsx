@@ -5,7 +5,7 @@ import { useUpdateUserConfig } from "../hooks/useUserConfig";
 import MyLocationIcon from "@mui/icons-material/MyLocation";
 import useNotification from "../hooks/useNotification";
 import useLocations from "../hooks/useLocations";
-import { Restaurant } from "../types";
+import { RestaurantInformation } from "../types";
 
 const options: PositionOptions = {
   enableHighAccuracy: true,
@@ -15,7 +15,7 @@ const options: PositionOptions = {
 
 const LocationSelection = () => {
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
-  const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
+  const [restaurants, setRestaurants] = useState<RestaurantInformation[]>([]);
   const [value, setValue] = useState<string>();
   const [error, setError] = useState<boolean>();
   const { search } = useLocationSearch();
@@ -43,8 +43,8 @@ const LocationSelection = () => {
           navigator.geolocation.getCurrentPosition(
             async (position) => {
               const response = await searchByPosition(position.coords.latitude, position.coords.longitude);
-              if (response.response?.restaurants?.length) {
-                setRestaurants(response.response.restaurants);
+              if (response?.length) {
+                setRestaurants(response);
                 setDialogOpen(true);
               } else {
                 notification({ msg: "No locations found nearby", variant: "error" });
@@ -64,8 +64,8 @@ const LocationSelection = () => {
   };
 
   const handleClose = () => setDialogOpen(false);
-  const handleListItemClick = (value: Restaurant) => {
-    updateConfig({ storeId: value.nationalStoreNumber.toString(), storeName: value.name });
+  const handleListItemClick = (value: RestaurantInformation) => {
+    updateConfig({ storeId: value.storeNumber.toString(), storeName: value.name });
     handleClose();
   };
 
@@ -75,12 +75,8 @@ const LocationSelection = () => {
         <DialogTitle>Nearby Locations</DialogTitle>
         <List sx={{ pt: 0 }}>
           {restaurants.map((restaurant) => (
-            <ListItem
-              button
-              onClick={() => handleListItemClick(restaurant)}
-              key={restaurant.nationalStoreNumber.toString()}
-            >
-              <ListItemText primary={restaurant.name} secondary={restaurant.address.addressLine1} />
+            <ListItem button onClick={() => handleListItemClick(restaurant)} key={restaurant.storeNumber.toString()}>
+              <ListItemText primary={restaurant.name} secondary={restaurant.address.addressLine} />
             </ListItem>
           ))}
         </List>

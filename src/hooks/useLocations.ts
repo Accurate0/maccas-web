@@ -1,5 +1,5 @@
 import AxiosInstance from "../lib/AxiosInstance";
-import { RestaurantLocationResponse } from "../types";
+import { RestaurantInformation } from "../types";
 import useSetBackdrop from "./useSetBackdrop";
 
 const DISTANCE = 100;
@@ -17,7 +17,7 @@ const useLocations = () => {
           longitude,
         },
       });
-      return result.data as RestaurantLocationResponse;
+      return result.data as RestaurantInformation[];
     } finally {
       setBackdrop(false);
     }
