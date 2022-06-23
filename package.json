@@ -41,8 +41,7 @@
     "extends": [
       "react-app",
       "react-app/jest",
-      "plugin:@next/next/recommended",
-      "eslint:recommended"
+      "plugin:@next/next/recommended"
     ]
   },
   "browserslist": {

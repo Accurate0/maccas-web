@@ -1,4 +1,4 @@
-import { UnauthenticatedTemplate, AuthenticatedTemplate, useMsal, MsalProvider } from "@azure/msal-react";
+import { UnauthenticatedTemplate, AuthenticatedTemplate, MsalProvider } from "@azure/msal-react";
 import { Grid, Button, Container, ThemeProvider } from "@mui/material";
 import Head from "next/head";
 import { SnackbarProvider } from "notistack";
