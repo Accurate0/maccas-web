@@ -19,6 +19,9 @@ const App = ({ Component, pageProps }: AppProps) => {
         <ThemeProvider theme={theme}>
           <SnackbarProvider>
             <Backdrop />
+            <Head>
+              <title>Maccas</title>
+            </Head>
             {children}
           </SnackbarProvider>
         </ThemeProvider>
@@ -47,9 +50,6 @@ const App = ({ Component, pageProps }: AppProps) => {
       <AuthenticatedTemplate>
         <NavBar />
         <Container>
-          <Head>
-            <title>Maccas</title>
-          </Head>
           <Component {...pageProps} />
         </Container>
       </AuthenticatedTemplate>
