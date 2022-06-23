@@ -3,9 +3,7 @@ import "swagger-ui-react/swagger-ui.css";
 import apiSchema from "../schema/api.json";
 import dynamic from "next/dynamic";
 
-const SwaggerUI = dynamic<{
-  spec: any;
-}>(import("swagger-ui-react"), { ssr: false });
+const SwaggerUI = dynamic(import("swagger-ui-react"), { ssr: false });
 
 const Swagger = () => {
   return (

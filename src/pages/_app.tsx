@@ -8,8 +8,9 @@ import Backdrop from "../components/Backdrop";
 import NavBar from "../components/NavBar";
 import { LoginRequest, MSALInstance } from "../config/msal";
 import { theme } from "../styles";
+import type { AppProps } from "next/app";
 
-const App = ({ Component, pageProps }: { Component: ReactNode; pageProps: any }) => {
+const App = ({ Component, pageProps }: AppProps) => {
   const { instance } = useMsal();
 
   const AppSetup = ({ children }: { children: ReactNode }) => (

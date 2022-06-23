@@ -22,7 +22,6 @@ import useSelectedDeal from "../hooks/useSelectedDeal";
 import { theme } from "../styles";
 import { Offer } from "../types";
 import { useRouter } from "next/router";
-import Head from "next/head";
 
 export interface DealSelectorProps {}
 

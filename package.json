@@ -40,7 +40,10 @@
   "eslintConfig": {
     "extends": [
       "react-app",
-      "react-app/jest"
+      "react-app/jest",
+      "plugin:@next/next/recommended",
+      "next",
+      "eslint:recommended"
     ]
   },
   "browserslist": {
@@ -54,5 +57,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@next/eslint-plugin-next": "^12.1.6"
   }
 }
