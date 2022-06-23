@@ -1,6 +1,5 @@
 import { useMsal } from "@azure/msal-react";
-import { Box, AppBar, Toolbar, Grid, Typography, Button } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Box, AppBar, Toolbar, Grid, Typography, Button, Link } from "@mui/material";
 import LocationValue from "./LocationValue";
 
 const NavBar = () => {
@@ -13,7 +12,7 @@ const NavBar = () => {
           <Grid justifyContent="space-between" alignItems="baseline" container>
             <Grid item>
               <Typography variant="h6" color="inherit" component="div">
-                <Link to="/" style={{ textDecoration: "none", color: "inherit" }}>
+                <Link href="/" style={{ textDecoration: "none", color: "inherit" }}>
                   Maccas
                 </Link>
               </Typography>

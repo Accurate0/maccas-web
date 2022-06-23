@@ -1,7 +1,7 @@
 import { Box, Button, Card, CardActions, CardContent, CardMedia, Grid, Typography } from "@mui/material";
 import { Container } from "@mui/system";
+import { useRouter } from "next/router";
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { IMAGE_BUCKET_BASE } from "../config/images";
 import useCode from "../hooks/useCode";
 import useSelectedDeal from "../hooks/useSelectedDeal";
@@ -10,7 +10,7 @@ export interface DealSelectionProps {}
 
 const DealSelection: React.FC<DealSelectionProps> = () => {
   const [selectedDeal] = useSelectedDeal();
-  const navigate = useNavigate();
+  const router = useRouter();
   const { code, setDeal, remove, refreshCode } = useCode();
 
   useEffect(() => {
@@ -71,7 +71,7 @@ const DealSelection: React.FC<DealSelectionProps> = () => {
                         variant="outlined"
                         onClick={async () => {
                           await remove();
-                          navigate("/");
+                          router.push("/");
                         }}
                       >
                         Remove

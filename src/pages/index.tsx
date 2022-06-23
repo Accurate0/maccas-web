@@ -15,18 +15,19 @@ import {
 } from "@mui/material";
 import moment from "moment";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { IMAGE_BUCKET_BASE } from "../config/images";
 import useDeals from "../hooks/useDeals";
 import useLastRefresh from "../hooks/useLastRefresh";
 import useSelectedDeal from "../hooks/useSelectedDeal";
 import { theme } from "../styles";
 import { Offer } from "../types";
+import { useRouter } from "next/router";
+import Head from "next/head";
 
 export interface DealSelectorProps {}
 
 const DealSelector: React.FC<DealSelectorProps> = () => {
-  const navigate = useNavigate();
+  const router = useRouter();
   const [, setSelectedDeal] = useSelectedDeal();
   const deals = useDeals();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
@@ -102,7 +103,7 @@ const DealSelector: React.FC<DealSelectorProps> = () => {
                       size={isMobile ? "small" : "large"}
                       onClick={() => {
                         setSelectedDeal(o);
-                        navigate("/code");
+                        router.push("/code");
                       }}
                     >
                       Select
