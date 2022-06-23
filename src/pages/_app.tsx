@@ -10,25 +10,23 @@ import { LoginRequest, MSALInstance } from "../config/msal";
 import { theme } from "../styles";
 import type { AppProps } from "next/app";
 
+const AppSetup = ({ children }: { children: ReactNode }) => (
+  <MsalProvider instance={MSALInstance}>
+    <RecoilRoot>
+      <ThemeProvider theme={theme}>
+        <SnackbarProvider>
+          <Backdrop />
+          <Head>
+            <title>Maccas</title>
+          </Head>
+          {children}
+        </SnackbarProvider>
+      </ThemeProvider>
+    </RecoilRoot>
+  </MsalProvider>
+);
+
 const App = ({ Component, pageProps }: AppProps) => {
-  const { instance } = useMsal();
-
-  const AppSetup = ({ children }: { children: ReactNode }) => (
-    <MsalProvider instance={MSALInstance}>
-      <RecoilRoot>
-        <ThemeProvider theme={theme}>
-          <SnackbarProvider>
-            <Backdrop />
-            <Head>
-              <title>Maccas</title>
-            </Head>
-            {children}
-          </SnackbarProvider>
-        </ThemeProvider>
-      </RecoilRoot>
-    </MsalProvider>
-  );
-
   return (
     <AppSetup>
       <UnauthenticatedTemplate>
@@ -41,7 +39,7 @@ const App = ({ Component, pageProps }: AppProps) => {
           style={{ minHeight: "100vh" }}
         >
           <Grid item xs={3}>
-            <Button variant="contained" onClick={() => instance.loginRedirect(LoginRequest)}>
+            <Button variant="contained" onClick={() => MSALInstance.loginRedirect(LoginRequest)}>
               Login
             </Button>
           </Grid>
