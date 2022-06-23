@@ -42,7 +42,6 @@
       "react-app",
       "react-app/jest",
       "plugin:@next/next/recommended",
-      "next",
       "eslint:recommended"
     ]
   },
