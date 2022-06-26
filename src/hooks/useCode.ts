@@ -49,6 +49,8 @@ const useCode = () => {
       setBackdrop(true);
       await AxiosInstance.delete(`/deals/${deal?.dealUuid}`);
       setDeal(null);
+    } catch (error) {
+      notification({ msg: (error as AxiosError).message, variant: "error" });
     } finally {
       setBackdrop(false);
     }
@@ -69,6 +71,8 @@ const useCode = () => {
       );
       setResponse(response.data);
       return response.data as OfferResponse;
+    } catch (error) {
+      notification({ msg: (error as AxiosError).message, variant: "error" });
     } finally {
       setBackdrop(false);
     }

@@ -1,5 +1,5 @@
 import { atom, useRecoilState } from "recoil";
-import SessionStorageEffect from "../lib/SessionStorageEffect";
+import { SessionStorageEffect } from "../lib/StorageEffect";
 import { Offer } from "../types";
 
 const SelectedOffer = atom<Offer | null>({
