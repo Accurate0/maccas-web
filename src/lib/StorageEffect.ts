@@ -16,7 +16,7 @@ const StorageEffect =
 
     onSet((newValue, _, isReset) => {
       const now = Math.floor(Date.now() / 1000);
-      const value = { ...newValue, __expiry: expiry ? now + expiry : undefined };
+      const value = newValue ? { ...newValue, __expiry: expiry ? now + expiry : undefined } : newValue;
       isReset ? storage?.removeItem(key) : storage?.setItem(key, JSON.stringify(value));
     });
   };
