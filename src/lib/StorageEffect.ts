@@ -7,7 +7,7 @@ const StorageEffect =
   <T>(key: string, expiry?: number): AtomEffect<T> =>
   ({ setSelf, onSet }) => {
     const savedValue = storage?.getItem(key);
-    if (savedValue != null) {
+    if (savedValue) {
       const value = JSON.parse(savedValue) as WithExpiry<T>;
       const expiry = value?.__expiry;
       const now = Math.floor(Date.now() / 1000);
