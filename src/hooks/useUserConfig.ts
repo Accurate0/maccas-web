@@ -10,7 +10,7 @@ import { LocalStorageEffect } from "../lib/StorageEffect";
 const UserConfig = atom<UserOptions | undefined>({
   key: "userConfig",
   default: undefined,
-  effects: [LocalStorageEffect("userConfig", 864000)],
+  effects: [LocalStorageEffect("userConfig", 30)],
 });
 
 export const useGetUserConfig = () => {
