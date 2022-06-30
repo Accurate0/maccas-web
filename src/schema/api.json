@@ -72,8 +72,8 @@
                     }
                 }
             },
-            "patch": {
-                "summary": "PATCH config",
+            "post": {
+                "summary": "POST config",
                 "responses": {},
                 "requestBody": {
                     "content": {
