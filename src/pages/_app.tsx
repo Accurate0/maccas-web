@@ -9,6 +9,7 @@ import NavBar from "../components/NavBar";
 import { LoginRequest, MSALInstance } from "../config/msal";
 import { theme } from "../styles";
 import type { AppProps } from "next/app";
+import LoginGuard from "../components/LoginGuard";
 
 const AppSetup = ({ children }: { children: ReactNode }) => (
   <MsalProvider instance={MSALInstance}>
@@ -29,22 +30,7 @@ const AppSetup = ({ children }: { children: ReactNode }) => (
 const App = ({ Component, pageProps }: AppProps) => {
   return (
     <AppSetup>
-      <UnauthenticatedTemplate>
-        <Grid
-          container
-          spacing={0}
-          direction="column"
-          alignItems="center"
-          justifyContent="center"
-          style={{ minHeight: "100vh" }}
-        >
-          <Grid item xs={3}>
-            <Button variant="contained" onClick={() => MSALInstance.loginRedirect(LoginRequest)}>
-              Login
-            </Button>
-          </Grid>
-        </Grid>
-      </UnauthenticatedTemplate>
+      <LoginGuard />
       <AuthenticatedTemplate>
         <NavBar />
         <Container>
