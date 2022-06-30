@@ -52,7 +52,7 @@ export const useUpdateUserConfig = () => {
 
   const updateConfig = async (c: UserOptions) => {
     setConfig(c);
-    await AxiosInstance.patch("/user/config", c);
+    await AxiosInstance.post("/user/config", c);
   };
 
   return updateConfig;
