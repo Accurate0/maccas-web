@@ -1,12 +1,12 @@
-import { UnauthenticatedTemplate, AuthenticatedTemplate, MsalProvider } from "@azure/msal-react";
-import { Grid, Button, Container, ThemeProvider } from "@mui/material";
+import { AuthenticatedTemplate, MsalProvider } from "@azure/msal-react";
+import { Container, ThemeProvider } from "@mui/material";
 import Head from "next/head";
 import { SnackbarProvider } from "notistack";
 import { ReactNode } from "react";
 import { RecoilRoot } from "recoil";
 import Backdrop from "../components/Backdrop";
 import NavBar from "../components/NavBar";
-import { LoginRequest, MSALInstance } from "../config/msal";
+import { MSALInstance } from "../config/msal";
 import { theme } from "../styles";
 import type { AppProps } from "next/app";
 import LoginGuard from "../components/LoginGuard";
