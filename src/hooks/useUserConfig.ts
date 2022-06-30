@@ -5,12 +5,10 @@ import AxiosInstance from "../lib/AxiosInstance";
 import { UserOptions } from "../types";
 import useNotification from "./useNotification";
 import useSetBackdrop from "./useSetBackdrop";
-import { LocalStorageEffect } from "../lib/StorageEffect";
 
 const UserConfig = atom<UserOptions | undefined>({
   key: "userConfig",
   default: undefined,
-  effects: [LocalStorageEffect("userConfig", 30)],
 });
 
 export const useGetUserConfig = () => {
