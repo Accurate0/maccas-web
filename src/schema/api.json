@@ -11,6 +11,43 @@
         }
     ],
     "paths": {
+        "/statistics/total-accounts": {
+            "get": {
+                "summary": "GET total accounts",
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "number"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/statistics/account": {
+            "get": {
+                "summary": "GET account",
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "additionalProperties": {
+                                        "type": "number"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/user/config": {
             "get": {
                 "summary": "GET config",
