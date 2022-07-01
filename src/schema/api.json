@@ -6,7 +6,7 @@
     },
     "servers": [
         {
-            "url": "https://api.anurag.sh/maccas/v2",
+            "url": "https://api.anurag.sh/maccas/v1",
             "description": "The default server"
         }
     ],

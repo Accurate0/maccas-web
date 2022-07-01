@@ -2,7 +2,7 @@ import axios, { AxiosRequestConfig } from "axios";
 import { LoginRequest, MSALInstance } from "../config/msal";
 
 const AxiosInstance = axios.create({
-  baseURL: "https://api.anurag.sh/maccas/v2",
+  baseURL: "https://api.anurag.sh/maccas/v1",
 });
 
 export const fetchAccessToken = async (): Promise<string | undefined> => {
