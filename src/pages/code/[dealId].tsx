@@ -5,17 +5,19 @@ import { IMAGE_BUCKET_BASE } from "../../config/images";
 import useOfferCode from "../../hooks/useOfferCode";
 import useDeal from "../../hooks/useDeal";
 import Head from "next/head";
+import ErrorPage from "next/error";
 
 export interface DealSelectionProps {}
 
 const DealSelection: React.FC<DealSelectionProps> = () => {
   const router = useRouter();
   const dealId = router.query["dealId"] as string | undefined;
-  const deal = useDeal(dealId);
+  const { deal, error } = useDeal(dealId);
   const { code, remove, refreshCode } = useOfferCode(deal);
 
   return (
     <>
+      {error && <ErrorPage statusCode={404} />}
       {code && deal && (
         <>
           <Head>
