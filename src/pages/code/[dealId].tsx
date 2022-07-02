@@ -20,12 +20,6 @@ const DealSelection: React.FC<DealSelectionProps> = () => {
         <>
           <Head>
             <title>Maccas | {deal.shortName}</title>
-            <meta
-              property="og:image"
-              content={`https://maccas.anurag.sh/api/og-image?name=${
-                deal.shortName
-              }&image=${`${IMAGE_BUCKET_BASE}/${deal?.imageBaseName}`}`}
-            />
           </Head>
           <Container>
             <Grid

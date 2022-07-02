@@ -6,6 +6,7 @@ import MyLocationIcon from "@mui/icons-material/MyLocation";
 import useNotification from "../hooks/useNotification";
 import useLocations from "../hooks/useLocations";
 import { RestaurantInformation } from "../types";
+import Head from "next/head";
 
 const options: PositionOptions = {
   enableHighAccuracy: true,
@@ -71,6 +72,9 @@ const LocationSelection = () => {
 
   return (
     <>
+      <Head>
+        <title>Maccas | Location</title>
+      </Head>
       <Dialog onClose={handleClose} open={dialogOpen}>
         <DialogTitle>Nearby Locations</DialogTitle>
         <List sx={{ pt: 0 }}>
