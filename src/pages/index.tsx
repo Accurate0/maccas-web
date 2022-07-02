@@ -18,7 +18,6 @@ import { useState } from "react";
 import { IMAGE_BUCKET_BASE } from "../config/images";
 import useDeals from "../hooks/useDeals";
 import useLastRefresh from "../hooks/useLastRefresh";
-import useSelectedDeal from "../hooks/useSelectedDeal";
 import { theme } from "../styles";
 import { Offer } from "../types";
 import { useRouter } from "next/router";
@@ -27,7 +26,6 @@ export interface DealSelectorProps {}
 
 const DealSelector: React.FC<DealSelectorProps> = () => {
   const router = useRouter();
-  const [, setSelectedDeal] = useSelectedDeal();
   const deals = useDeals();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const [open, setOpen] = useState(false);
@@ -101,8 +99,7 @@ const DealSelector: React.FC<DealSelectorProps> = () => {
                       color="secondary"
                       size={isMobile ? "small" : "large"}
                       onClick={() => {
-                        setSelectedDeal(o);
-                        router.push("/code");
+                        router.push(`/code/${o.dealUuid}`);
                       }}
                     >
                       Select

@@ -1,25 +1,21 @@
 import { Box, Button, Card, CardActions, CardContent, CardMedia, Grid, Typography } from "@mui/material";
 import { Container } from "@mui/system";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
-import { IMAGE_BUCKET_BASE } from "../config/images";
-import useCode from "../hooks/useCode";
-import useSelectedDeal from "../hooks/useSelectedDeal";
+import { IMAGE_BUCKET_BASE } from "../../config/images";
+import useOfferCode from "../../hooks/useOfferCode";
+import useDeal from "../../hooks/useDeal";
 
 export interface DealSelectionProps {}
 
 const DealSelection: React.FC<DealSelectionProps> = () => {
-  const [selectedDeal] = useSelectedDeal();
   const router = useRouter();
-  const { code, setDeal, remove, refreshCode } = useCode();
-
-  useEffect(() => {
-    setDeal(selectedDeal);
-  }, [selectedDeal, setDeal]);
+  const dealId = router.query["dealId"] as string | undefined;
+  const deal = useDeal(dealId);
+  const { code, remove, refreshCode } = useOfferCode(deal);
 
   return (
     <>
-      {code && selectedDeal && (
+      {code && deal && (
         <Container>
           <Grid
             container
@@ -37,7 +33,7 @@ const DealSelection: React.FC<DealSelectionProps> = () => {
                   height="380"
                   width="380"
                   component="img"
-                  image={`${IMAGE_BUCKET_BASE}/${selectedDeal?.imageBaseName}`}
+                  image={`${IMAGE_BUCKET_BASE}/${deal?.imageBaseName}`}
                 />
                 <CardContent style={{ margin: "25px 25px 25px 25px" }}>
                   <Typography sx={{ fontSize: 24 }} color="text.primary" gutterBottom>
@@ -45,7 +41,7 @@ const DealSelection: React.FC<DealSelectionProps> = () => {
                   </Typography>
                   <Typography variant="h5" component="div"></Typography>
                   <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                    {selectedDeal?.shortName}
+                    {deal?.shortName}
                   </Typography>
                   <Typography gutterBottom>{code.message}</Typography>
                   <Typography component="div" gutterBottom>

@@ -1,14 +1,12 @@
 import { AxiosError } from "axios";
 import { useEffect, useState } from "react";
 import AxiosInstance from "../lib/AxiosInstance";
-import { OfferResponse } from "../types";
+import { Offer, OfferResponse } from "../types";
 import useNotification from "./useNotification";
-import useSelectedDeal from "./useSelectedDeal";
 import useSetBackdrop from "./useSetBackdrop";
 import { useGetUserConfig } from "./useUserConfig";
 
-const useCode = () => {
-  const [deal, setDeal] = useSelectedDeal();
+const useOfferCode = (offer: Offer | undefined) => {
   const [code, setResponse] = useState<OfferResponse>();
   const userConfig = useGetUserConfig();
   const setBackdrop = useSetBackdrop();
@@ -19,7 +17,7 @@ const useCode = () => {
       try {
         setBackdrop(true);
         const response = await AxiosInstance.post(
-          `/deals/${deal?.dealUuid}`,
+          `/deals/${offer?.dealUuid}`,
           null,
           userConfig
             ? {
@@ -38,17 +36,16 @@ const useCode = () => {
       }
     };
 
-    if (deal) {
+    if (offer) {
       get();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [deal]);
+  }, [offer]);
 
   const remove = async () => {
     try {
       setBackdrop(true);
-      await AxiosInstance.delete(`/deals/${deal?.dealUuid}`);
-      setDeal(null);
+      await AxiosInstance.delete(`/deals/${offer?.dealUuid}`);
     } catch (error) {
       notification({ msg: (error as AxiosError).message, variant: "error" });
     } finally {
@@ -60,7 +57,7 @@ const useCode = () => {
     try {
       setBackdrop(true);
       const response = await AxiosInstance.get(
-        `/code/${deal?.dealUuid}`,
+        `/code/${offer?.dealUuid}`,
         userConfig
           ? {
               params: {
@@ -80,10 +77,9 @@ const useCode = () => {
 
   return {
     code,
-    setDeal,
     remove,
     refreshCode,
   };
 };
 
-export default useCode;
+export default useOfferCode;

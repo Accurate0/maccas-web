@@ -94,6 +94,77 @@
                 }
             }
         },
+        "/deal/{dealId}": {
+            "get": {
+                "summary": "GET deal by ID",
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "CreationDateUtc": {
+                                                "type": "string"
+                                            },
+                                            "count": {
+                                                "type": "number"
+                                            },
+                                            "dealUuid": {
+                                                "type": "string"
+                                            },
+                                            "description": {
+                                                "type": "string"
+                                            },
+                                            "imageBaseName": {
+                                                "type": "string"
+                                            },
+                                            "localValidFrom": {
+                                                "type": "string"
+                                            },
+                                            "localValidTo": {
+                                                "type": "string"
+                                            },
+                                            "name": {
+                                                "type": "string"
+                                            },
+                                            "offerId": {
+                                                "type": "number"
+                                            },
+                                            "offerPropositionId": {
+                                                "type": "number"
+                                            },
+                                            "shortName": {
+                                                "type": "string"
+                                            },
+                                            "validFromUTC": {
+                                                "type": "string"
+                                            },
+                                            "validToUTC": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "dealId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ]
+            }
+        },
         "/deals": {
             "get": {
                 "summary": "GET deals",
