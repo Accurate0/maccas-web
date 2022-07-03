@@ -57,7 +57,7 @@ const PointAccount: React.FC<PointAccountProps> = () => {
                           color="error"
                           variant="outlined"
                           onClick={() => {
-                            router.back();
+                            router.push("/points");
                           }}
                         >
                           Back
