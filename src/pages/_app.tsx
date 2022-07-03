@@ -1,4 +1,4 @@
-import { AuthenticatedTemplate, MsalProvider } from "@azure/msal-react";
+import { AuthenticatedTemplate, MsalProvider, UnauthenticatedTemplate } from "@azure/msal-react";
 import { Container, ThemeProvider } from "@mui/material";
 import Head from "next/head";
 import { SnackbarProvider } from "notistack";
@@ -10,6 +10,7 @@ import { MSALInstance } from "../config/msal";
 import { theme } from "../styles";
 import type { AppProps } from "next/app";
 import LoginGuard from "../components/LoginGuard";
+import Login from "./login";
 
 const AppSetup = ({ children }: { children: ReactNode }) => (
   <MsalProvider instance={MSALInstance}>
@@ -37,6 +38,9 @@ const App = ({ Component, pageProps }: AppProps) => {
           <Component {...pageProps} />
         </Container>
       </AuthenticatedTemplate>
+      <UnauthenticatedTemplate>
+        <Login />
+      </UnauthenticatedTemplate>
     </AppSetup>
   );
 };

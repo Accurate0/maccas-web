@@ -1,21 +1,24 @@
 import { InteractionStatus } from "@azure/msal-browser";
 import { useIsAuthenticated, useMsal } from "@azure/msal-react";
+import { useRouter } from "next/router";
 import { useEffect } from "react";
-import { LoginRequest } from "../config/msal";
 
 const LoginGuard = () => {
-  const { instance, inProgress } = useMsal();
+  const { inProgress } = useMsal();
   const isAuthenticated = useIsAuthenticated();
+  const router = useRouter();
 
   useEffect(() => {
     const login = async () => {
-      if (!isAuthenticated && inProgress === InteractionStatus.None) {
-        await instance.loginRedirect(LoginRequest);
-      }
+      router.replace("/login");
     };
 
-    login();
-  }, [isAuthenticated, inProgress, instance]);
+    if (!isAuthenticated && inProgress === InteractionStatus.None) {
+      login();
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return <></>;
 };
