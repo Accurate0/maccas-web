@@ -1,8 +1,10 @@
 import { useMsal } from "@azure/msal-react";
 import { Box, AppBar, Toolbar, Grid, Typography, Button, Link } from "@mui/material";
+import { useRouter } from "next/router";
 import LocationValue from "./LocationValue";
 
 const NavBar = () => {
+  const router = useRouter();
   const { instance } = useMsal();
 
   return (
@@ -12,7 +14,10 @@ const NavBar = () => {
           <Grid justifyContent="space-between" alignItems="baseline" container>
             <Grid item>
               <Typography variant="h6" color="inherit" component="div">
-                <Link href="/" style={{ textDecoration: "none", color: "inherit" }}>
+                <Link
+                  onClick={() => router.push("/")}
+                  style={{ textDecoration: "none", color: "inherit", cursor: "pointer" }}
+                >
                   Maccas
                 </Link>
               </Typography>
