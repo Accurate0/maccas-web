@@ -1,12 +1,10 @@
 import { AxiosError } from "axios";
-import { useState } from "react";
 import AxiosInstance from "../lib/AxiosInstance";
 import { RestaurantInformation } from "../types";
 import useNotification from "./useNotification";
 import useSetBackdrop from "./useSetBackdrop";
 
 const useLocationSearch = () => {
-  const [, setResults] = useState<RestaurantInformation | undefined>();
   const setBackdrop = useSetBackdrop();
   const notification = useNotification();
 
@@ -19,8 +17,7 @@ const useLocationSearch = () => {
         },
       });
 
-      setResults(response.data as RestaurantInformation);
-      return response.data;
+      return response.data as RestaurantInformation;
     } catch (error) {
       notification({ msg: (error as AxiosError).message, variant: "error" });
     } finally {

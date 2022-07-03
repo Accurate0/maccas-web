@@ -165,6 +165,93 @@
                 ]
             }
         },
+        "/points": {
+            "get": {
+                "summary": "GET points",
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "name": {
+                                                "type": "string"
+                                            },
+                                            "totalPoints": {
+                                                "type": "number"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/points/{accountId}": {
+            "get": {
+                "summary": "GET points by accountId",
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "offerResponse": {
+                                            "type": "object",
+                                            "properties": {
+                                                "message": {
+                                                    "type": "string"
+                                                },
+                                                "randomCode": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        },
+                                        "pointsResponse": {
+                                            "type": "object",
+                                            "properties": {
+                                                "lifeTimePoints": {
+                                                    "type": "number"
+                                                },
+                                                "totalPoints": {
+                                                    "type": "number"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "accountId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "store",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "number"
+                        }
+                    }
+                ]
+            }
+        },
         "/deals": {
             "get": {
                 "summary": "GET deals",

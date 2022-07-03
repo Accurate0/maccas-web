@@ -49,10 +49,17 @@ const useUserConfig = () => {
 
 export const useUpdateUserConfig = () => {
   const [, setConfig] = useRecoilState(UserConfig);
+  const notification = useNotification();
 
   const updateConfig = async (c: UserOptions) => {
     setConfig(c);
-    await AxiosInstance.post("/user/config", c);
+    try {
+      await AxiosInstance.post("/user/config", c);
+      notification({ msg: `${c.storeName} selected`, variant: "info" });
+    } catch (error) {
+      const err = error as AxiosError;
+      notification({ msg: err.message, variant: "error" });
+    }
   };
 
   return updateConfig;

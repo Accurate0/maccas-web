@@ -28,7 +28,9 @@ const LocationSelection = () => {
     const trimmedText = text?.trim();
     if (trimmedText) {
       const resp = await search(trimmedText);
-      await updateConfig({ storeId: resp.storeNumber.toString(), storeName: resp.name });
+      if (resp) {
+        await updateConfig({ storeId: resp.storeNumber.toString(), storeName: resp.name });
+      }
       setError(false);
     } else {
       setError(true);
@@ -108,6 +110,13 @@ const LocationSelection = () => {
                     <MyLocationIcon />
                   </IconButton>
                 ),
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  console.log(e);
+                  searchAndUpdate((e.target as any).value ?? undefined);
+                  e.preventDefault();
+                }
               }}
             />
           </Grid>
