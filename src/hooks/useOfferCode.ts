@@ -19,7 +19,7 @@ const useOfferCode = (offer: Offer | undefined) => {
         setBackdrop(true);
         const response = await axios.post(
           `/deals/${offer?.dealUuid}`,
-          null,
+          undefined,
           userConfig
             ? {
                 params: {
