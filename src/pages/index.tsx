@@ -42,6 +42,8 @@ const DealSelector: React.FC<DealSelectorProps> = () => {
     return moment.utc(now).isBetween(from, to);
   };
 
+  const truncate = (s: string, length: number) => (s.length > length ? `${s.substring(0, length - 3)}...` : s);
+
   return (
     <>
       <Dialog open={open} onClose={handleClose}>
@@ -74,7 +76,7 @@ const DealSelector: React.FC<DealSelectorProps> = () => {
                 <Grid container direction="column" justifyContent="space-evenly" alignItems="flex-start" spacing={2}>
                   <Grid item xs={8}>
                     <Typography variant={isMobile ? "h6" : "h5"} component="div">
-                      {o.shortName}
+                      {truncate(o.shortName, 40)}
                     </Typography>
                   </Grid>
                   <Grid item xs={4}>
