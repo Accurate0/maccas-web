@@ -1,7 +1,7 @@
 import { AxiosError } from "axios";
 import { useEffect, useState } from "react";
-import AxiosInstance from "../lib/AxiosInstance";
 import { Offer, OfferResponse } from "../types";
+import useAxios from "./useAxios";
 import useNotification from "./useNotification";
 import useSetBackdrop from "./useSetBackdrop";
 import { useGetUserConfig } from "./useUserConfig";
@@ -11,12 +11,13 @@ const useOfferCode = (offer: Offer | undefined) => {
   const userConfig = useGetUserConfig();
   const setBackdrop = useSetBackdrop();
   const notification = useNotification();
+  const axios = useAxios();
 
   useEffect(() => {
     const get = async () => {
       try {
         setBackdrop(true);
-        const response = await AxiosInstance.post(
+        const response = await axios.post(
           `/deals/${offer?.dealUuid}`,
           null,
           userConfig
@@ -45,7 +46,7 @@ const useOfferCode = (offer: Offer | undefined) => {
   const remove = async () => {
     try {
       setBackdrop(true);
-      await AxiosInstance.delete(`/deals/${offer?.dealUuid}`);
+      await axios.delete(`/deals/${offer?.dealUuid}`);
     } catch (error) {
       notification({ msg: (error as AxiosError).message, variant: "error" });
     } finally {
@@ -56,7 +57,7 @@ const useOfferCode = (offer: Offer | undefined) => {
   const refreshCode = async () => {
     try {
       setBackdrop(true);
-      const response = await AxiosInstance.get(
+      const response = await axios.get(
         `/code/${offer?.dealUuid}`,
         userConfig
           ? {

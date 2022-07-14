@@ -1,7 +1,7 @@
 import { AxiosError } from "axios";
 import { useState, useEffect } from "react";
-import AxiosInstance from "../lib/AxiosInstance";
 import { OfferPointsResponse } from "../types/OfferPointsResponse";
+import useAxios from "./useAxios";
 import useNotification from "./useNotification";
 import useSetBackdrop from "./useSetBackdrop";
 import { useGetUserConfig } from "./useUserConfig";
@@ -12,12 +12,13 @@ const usePointAccount = (accountId: string | undefined) => {
   const setBackdrop = useSetBackdrop();
   const notification = useNotification();
   const userConfig = useGetUserConfig();
+  const axios = useAxios();
 
   useEffect(() => {
     const get = async () => {
       try {
         setBackdrop(true);
-        const response = await AxiosInstance.get(
+        const response = await axios.get(
           `/points/${accountId}`,
           userConfig
             ? {

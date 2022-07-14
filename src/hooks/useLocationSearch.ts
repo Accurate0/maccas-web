@@ -1,17 +1,18 @@
 import { AxiosError } from "axios";
-import AxiosInstance from "../lib/AxiosInstance";
 import { RestaurantInformation } from "../types";
+import useAxios from "./useAxios";
 import useNotification from "./useNotification";
 import useSetBackdrop from "./useSetBackdrop";
 
 const useLocationSearch = () => {
   const setBackdrop = useSetBackdrop();
   const notification = useNotification();
+  const axios = useAxios();
 
   const search = async (text: string) => {
     try {
       setBackdrop(true);
-      const response = await AxiosInstance.get("/locations/search", {
+      const response = await axios.get("/locations/search", {
         params: {
           text: encodeURIComponent(text),
         },

@@ -1,8 +1,8 @@
 import { AxiosError } from "axios";
 import { useEffect } from "react";
 import { atom, useRecoilState, useRecoilValue } from "recoil";
-import AxiosInstance from "../lib/AxiosInstance";
 import { UserOptions } from "../types";
+import useAxios from "./useAxios";
 import useNotification from "./useNotification";
 import useSetBackdrop from "./useSetBackdrop";
 
@@ -19,12 +19,13 @@ const useUserConfig = () => {
   const [config, setConfig] = useRecoilState(UserConfig);
   const setBackdrop = useSetBackdrop();
   const notification = useNotification();
+  const axios = useAxios();
 
   useEffect(() => {
     const get = async () => {
       try {
         setBackdrop(true);
-        const response = await AxiosInstance.get("/user/config");
+        const response = await axios.get("/user/config");
         setConfig(response.data as UserOptions);
       } catch (error) {
         const err = error as AxiosError;
@@ -50,11 +51,12 @@ const useUserConfig = () => {
 export const useUpdateUserConfig = () => {
   const [, setConfig] = useRecoilState(UserConfig);
   const notification = useNotification();
+  const axios = useAxios();
 
   const updateConfig = async (c: UserOptions) => {
     setConfig(c);
     try {
-      await AxiosInstance.post("/user/config", c);
+      await axios.post("/user/config", c);
       notification({ msg: `${c.storeName} selected`, variant: "info" });
     } catch (error) {
       const err = error as AxiosError;

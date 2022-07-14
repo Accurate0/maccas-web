@@ -1,8 +1,8 @@
 import { AxiosError } from "axios";
 import { useEffect, useState } from "react";
-import AxiosInstance from "../lib/AxiosInstance";
 import { AccountResponse } from "../types/AccountResponse";
 import { TotalAccountsResponse } from "../types/TotalAccountsResponse";
+import useAxios from "./useAxios";
 import useNotification from "./useNotification";
 import useSetBackdrop from "./useSetBackdrop";
 
@@ -11,6 +11,7 @@ const useStatistics = () => {
   const [accounts, setAccounts] = useState<AccountResponse>();
   const setBackdrop = useSetBackdrop();
   const notification = useNotification();
+  const axios = useAxios();
 
   useEffect(() => {
     const get = async () => {
@@ -18,8 +19,8 @@ const useStatistics = () => {
         setBackdrop(true);
 
         const [totalAccountResponse, accountResponse] = await Promise.all([
-          AxiosInstance.get("/statistics/total-accounts"),
-          AxiosInstance.get("/statistics/account"),
+          axios.get("/statistics/total-accounts"),
+          axios.get("/statistics/account"),
         ]);
 
         setTotalAccounts(totalAccountResponse.data as TotalAccountsResponse);
