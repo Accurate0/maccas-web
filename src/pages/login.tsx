@@ -11,7 +11,7 @@ const Login: React.FC = () => {
   useLayoutEffect(() => {
     const login = async () => {
       try {
-        await instance.loginRedirect({ ...LoginRequest, redirectUri: "/" });
+        await instance.loginRedirect({ ...LoginRequest, redirectUri: "/login" });
       } catch (err) {}
     };
 
