@@ -31,7 +31,7 @@ const AppSetup = ({ children }: { children: ReactNode }) => (
 const App = ({ Component, pageProps }: AppProps) => {
   return (
     <AppSetup>
-      <LoginGuard />
+      {/* <LoginGuard /> */}
       <AuthenticatedTemplate>
         <NavBar />
         <Container>
