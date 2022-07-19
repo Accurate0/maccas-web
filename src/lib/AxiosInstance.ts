@@ -1,5 +1,4 @@
 import axios, { AxiosRequestConfig } from "axios";
-import Router from "next/router";
 import { LoginRequest, MSALInstance } from "../config/msal";
 
 const AxiosInstance = axios.create({
@@ -16,7 +15,11 @@ export const fetchAccessToken = async (): Promise<string | undefined> => {
     });
     return token.accessToken;
   } catch {
-    Router.push("/login");
+    // https://github.com/AzureAD/microsoft-authentication-library-for-js/wiki/Known-issue-on-Safari
+    await MSALInstance.acquireTokenRedirect({
+      ...LoginRequest,
+      account: accounts[0] ?? undefined,
+    });
   }
 };
 
@@ -28,6 +31,7 @@ AxiosInstance.interceptors.request.use(
     if (accessToken) {
       config.headers["Authorization"] = "Bearer " + accessToken;
     }
+    config.headers["Content-Type"] = "application/json";
     return config;
   },
   (error) => {
