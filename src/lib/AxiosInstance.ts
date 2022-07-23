@@ -3,7 +3,7 @@ import Router from "next/router";
 import { LoginRequest, MSALInstance } from "../config/msal";
 
 const AxiosInstance = axios.create({
-  baseURL: "https://api.anurag.sh/maccas/v1",
+  baseURL: process.env.NEXT_PUBLIC_API_BASE,
 });
 
 export const fetchAccessToken = async (): Promise<string | undefined> => {
