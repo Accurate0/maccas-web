@@ -1,4 +1,5 @@
 import { AxiosError } from "axios";
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { Offer, OfferResponse } from "../types";
 import useAxios from "./useAxios";
@@ -12,6 +13,7 @@ const useOfferCode = (offer: Offer | undefined) => {
   const setBackdrop = useSetBackdrop();
   const notification = useNotification();
   const axios = useAxios();
+  const router = useRouter();
 
   useEffect(() => {
     const get = async () => {
@@ -31,7 +33,13 @@ const useOfferCode = (offer: Offer | undefined) => {
 
         setResponse(response.data as OfferResponse);
       } catch (error) {
-        notification({ msg: (error as AxiosError).message, variant: "error" });
+        const err = error as AxiosError;
+        if (err.response?.status === 409) {
+          notification({ msg: "This deal is currently unavailable. Try again later.", variant: "error" });
+          router.push("/");
+        } else {
+          notification({ msg: (error as AxiosError).message, variant: "error" });
+        }
       } finally {
         setBackdrop(false);
       }
