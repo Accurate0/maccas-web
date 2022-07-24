@@ -35,7 +35,7 @@ const useOfferCode = (offer: Offer | undefined) => {
       } catch (error) {
         const err = error as AxiosError;
         if (err.response?.status === 409) {
-          notification({ msg: "This deal is currently unavailable. Try again later.", variant: "error" });
+          notification({ msg: "This deal is currently unavailable. Try again.", variant: "error" });
           router.push("/");
         } else {
           notification({ msg: (error as AxiosError).message, variant: "error" });
