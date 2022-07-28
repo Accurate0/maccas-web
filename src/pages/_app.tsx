@@ -9,7 +9,6 @@ import NavBar from "../components/NavBar";
 import { MSALInstance } from "../config/msal";
 import { theme } from "../styles";
 import type { AppProps } from "next/app";
-import LoginGuard from "../components/LoginGuard";
 import Login from "./login";
 
 const AppSetup = ({ children }: { children: ReactNode }) => (
@@ -31,7 +30,6 @@ const AppSetup = ({ children }: { children: ReactNode }) => (
 const App = ({ Component, pageProps }: AppProps) => {
   return (
     <AppSetup>
-      <LoginGuard />
       <AuthenticatedTemplate>
         <NavBar />
         <Container>

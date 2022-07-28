@@ -16,7 +16,8 @@ export const fetchAccessToken = async (): Promise<string | undefined> => {
     });
     return token.accessToken;
   } catch {
-    Router.push("/forceLogin");
+    const current = Router.pathname;
+    Router.push(`/forceLogin?to=${current}`);
   }
 };
 
