@@ -56,7 +56,7 @@ const DealSelection: React.FC<DealSelectionProps> = () => {
                     </Typography>
                   </CardContent>
                   <CardActions style={{ margin: "25px 25px 25px 25px" }}>
-                    <Grid container justifyContent="space-between">
+                    <Grid container direction="column" justifyContent="space-between" spacing={2}>
                       <Grid item>
                         <Button
                           color="success"
@@ -65,7 +65,7 @@ const DealSelection: React.FC<DealSelectionProps> = () => {
                             await refreshCode();
                           }}
                         >
-                          Refresh
+                          Refresh Code
                         </Button>
                       </Grid>
                       <Grid item>
@@ -77,7 +77,7 @@ const DealSelection: React.FC<DealSelectionProps> = () => {
                             router.push("/");
                           }}
                         >
-                          Remove
+                          I don't want to use this
                         </Button>
                       </Grid>
                     </Grid>
