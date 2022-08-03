@@ -13,8 +13,7 @@ const Doc = () => {
       </Head>
       {spec && (
         <div style={{ height: "97vh" }}>
-          {" "}
-          <API apiDescriptionDocument={spec} router="hash" />{" "}
+          <API apiDescriptionDocument={spec} router="hash" />
         </div>
       )}
     </div>
