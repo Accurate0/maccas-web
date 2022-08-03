@@ -10,6 +10,7 @@ import { MSALInstance } from "../config/msal";
 import { theme } from "../styles";
 import type { AppProps } from "next/app";
 import Login from "./login";
+import { useRouter } from "next/router";
 
 const AppSetup = ({ children }: { children: ReactNode }) => (
   <MsalProvider instance={MSALInstance}>
@@ -28,13 +29,19 @@ const AppSetup = ({ children }: { children: ReactNode }) => (
 );
 
 const App = ({ Component, pageProps }: AppProps) => {
+  const router = useRouter();
+
   return (
     <AppSetup>
       <AuthenticatedTemplate>
         <NavBar />
-        <Container>
+        {router.pathname === "/doc" ? (
           <Component {...pageProps} />
-        </Container>
+        ) : (
+          <Container>
+            <Component {...pageProps} />
+          </Container>
+        )}
       </AuthenticatedTemplate>
       <UnauthenticatedTemplate>
         <Login />

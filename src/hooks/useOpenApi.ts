@@ -4,8 +4,10 @@ import useAxios from "./useAxios";
 import useNotification from "./useNotification";
 import useSetBackdrop from "./useSetBackdrop";
 
+export type OpenApiObject = any;
+
 const useOpenApi = () => {
-  const [state, setState] = useState<string>();
+  const [state, setState] = useState<OpenApiObject>();
   const setBackdrop = useSetBackdrop();
   const notification = useNotification();
   const axios = useAxios();
@@ -15,7 +17,7 @@ const useOpenApi = () => {
       try {
         setBackdrop(true);
         const response = await axios.get("/docs/openapi");
-        setState(response.data as string);
+        setState(response.data as OpenApiObject);
       } catch (error) {
         notification({ msg: (error as AxiosError).message, variant: "error" });
       } finally {
