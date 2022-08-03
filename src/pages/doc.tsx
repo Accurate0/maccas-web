@@ -3,13 +3,13 @@ import useOpenApi from "../hooks/useOpenApi";
 import { API } from "@stoplight/elements";
 import "@stoplight/elements/styles.min.css";
 
-const Swagger = () => {
+const Doc = () => {
   const spec = useOpenApi();
 
   return (
     <div style={{ paddingTop: "3vh" }}>
       <Head>
-        <title>Maccas | Swagger</title>
+        <title>Maccas | Doc</title>
       </Head>
       {spec && (
         <div style={{ height: "97vh" }}>
@@ -21,4 +21,4 @@ const Swagger = () => {
   );
 };
 
-export default Swagger;
+export default Doc;
