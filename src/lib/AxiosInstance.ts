@@ -1,5 +1,4 @@
 import axios, { AxiosRequestConfig } from "axios";
-import Router from "next/router";
 import { LoginRequest, MSALInstance } from "../config/msal";
 
 const AxiosInstance = axios.create({
@@ -16,8 +15,7 @@ export const fetchAccessToken = async (): Promise<string | undefined> => {
     });
     return token.accessToken;
   } catch {
-    const current = Router.pathname;
-    Router.push(`/forceLogin?to=${current}`);
+    await MSALInstance.acquireTokenRedirect({ ...LoginRequest, account: accounts[0] });
   }
 };
 
@@ -27,7 +25,7 @@ AxiosInstance.interceptors.request.use(
     config.headers = config.headers ?? {};
 
     if (accessToken) {
-      config.headers["Authorization"] = "Bearer " + accessToken;
+      config.headers["Authorization"] = `Bearer ${accessToken}`;
     }
     config.headers["Content-Type"] = "application/json";
     return config;
