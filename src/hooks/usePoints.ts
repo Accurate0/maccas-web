@@ -17,7 +17,7 @@ const usePoints = () => {
       try {
         setBackdrop(true);
         const response = await axios.get("/points");
-        setState(response.data as AccountPointResponse);
+        setState(response?.data as AccountPointResponse);
       } catch (error) {
         notification({ msg: (error as AxiosError).message, variant: "error" });
         setError(true);

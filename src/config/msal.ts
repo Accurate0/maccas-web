@@ -13,6 +13,11 @@ export const MSALConfig: Configuration = {
 };
 
 export const LoginRequest = {
+  redirectUri: `${process.env.NEXT_PUBLIC_PUBLIC_URL}/login`,
+  scopes: ["openid", "https://login.anurag.sh/f285a3b9-c589-4fae-971e-edd635df6b96/Maccas.ReadWrite"],
+};
+
+export const TokenRequest = {
   scopes: ["openid", "https://login.anurag.sh/f285a3b9-c589-4fae-971e-edd635df6b96/Maccas.ReadWrite"],
 };
 

@@ -1,16 +1,16 @@
-import { AuthenticatedTemplate, MsalProvider, UnauthenticatedTemplate } from "@azure/msal-react";
+import { AuthenticatedTemplate, MsalAuthenticationTemplate, MsalProvider } from "@azure/msal-react";
 import { Container, ThemeProvider } from "@mui/material";
 import Head from "next/head";
 import { SnackbarProvider } from "notistack";
-import { ReactNode } from "react";
+import React, { ReactNode } from "react";
 import { RecoilRoot } from "recoil";
 import Backdrop from "../components/Backdrop";
 import NavBar from "../components/NavBar";
-import { MSALInstance } from "../config/msal";
+import { LoginRequest, MSALInstance } from "../config/msal";
 import { theme } from "../styles";
 import type { AppProps } from "next/app";
-import Login from "./login";
 import { useRouter } from "next/router";
+import { InteractionType } from "@azure/msal-browser";
 
 const AppSetup = ({ children }: { children: ReactNode }) => (
   <MsalProvider instance={MSALInstance}>
@@ -33,6 +33,7 @@ const App = ({ Component, pageProps }: AppProps) => {
 
   return (
     <AppSetup>
+      <MsalAuthenticationTemplate interactionType={InteractionType.Redirect} authenticationRequest={LoginRequest} />
       <AuthenticatedTemplate>
         <NavBar />
         {router.pathname === "/doc" ? (
@@ -43,9 +44,6 @@ const App = ({ Component, pageProps }: AppProps) => {
           </Container>
         )}
       </AuthenticatedTemplate>
-      <UnauthenticatedTemplate>
-        <Login />
-      </UnauthenticatedTemplate>
     </AppSetup>
   );
 };

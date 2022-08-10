@@ -28,7 +28,7 @@ const usePointAccount = (accountId: string | undefined) => {
               }
             : undefined
         );
-        setState(response.data as OfferPointsResponse);
+        setState(response?.data as OfferPointsResponse);
       } catch (error) {
         notification({ msg: (error as AxiosError).message, variant: "error" });
         setError(true);

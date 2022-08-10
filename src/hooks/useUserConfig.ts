@@ -26,7 +26,7 @@ const useUserConfig = () => {
       try {
         setBackdrop(true);
         const response = await axios.get("/user/config");
-        setConfig(response.data as UserOptions);
+        setConfig(response?.data as UserOptions);
       } catch (error) {
         const err = error as AxiosError;
         if (err.response?.status !== 404) {

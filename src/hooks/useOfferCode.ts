@@ -31,7 +31,7 @@ const useOfferCode = (offer: Offer | undefined) => {
             : undefined
         );
 
-        setResponse(response.data as OfferResponse);
+        setResponse(response?.data as OfferResponse);
       } catch (error) {
         const err = error as AxiosError;
         if (err.response?.status === 409) {
@@ -75,8 +75,8 @@ const useOfferCode = (offer: Offer | undefined) => {
             }
           : undefined
       );
-      setResponse(response.data);
-      return response.data as OfferResponse;
+      setResponse(response?.data);
+      return response?.data as OfferResponse;
     } catch (error) {
       notification({ msg: (error as AxiosError).message, variant: "error" });
     } finally {

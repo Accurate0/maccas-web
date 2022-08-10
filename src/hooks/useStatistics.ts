@@ -23,8 +23,8 @@ const useStatistics = () => {
           axios.get("/statistics/account"),
         ]);
 
-        setTotalAccounts(totalAccountResponse.data as TotalAccountsResponse);
-        setAccounts(accountResponse.data as AccountResponse);
+        setTotalAccounts(totalAccountResponse?.data as TotalAccountsResponse);
+        setAccounts(accountResponse?.data as AccountResponse);
       } catch (error) {
         notification({ msg: (error as AxiosError).message, variant: "error" });
       } finally {

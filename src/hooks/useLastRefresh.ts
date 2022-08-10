@@ -11,7 +11,7 @@ const useLastRefresh = () => {
     const get = async () => {
       try {
         const response = await axios.get("/deals/last-refresh");
-        const lastRefreshed = moment.utc((response.data as LastRefreshInformation).lastRefresh);
+        const lastRefreshed = moment.utc((response?.data as LastRefreshInformation).lastRefresh);
         notification({ msg: `Last refreshed at ${lastRefreshed.local().format("LLL")}`, variant: "info" });
       } catch (error) {}
     };

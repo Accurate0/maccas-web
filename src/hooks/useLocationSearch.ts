@@ -18,7 +18,7 @@ const useLocationSearch = () => {
         },
       });
 
-      return response.data as RestaurantInformation;
+      return response?.data as RestaurantInformation;
     } catch (error) {
       notification({ msg: (error as AxiosError).message, variant: "error" });
     } finally {

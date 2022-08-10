@@ -14,14 +14,14 @@ const useLocations = () => {
   const search = async (latitude: number, longitude: number) => {
     try {
       setBackdrop(true);
-      const result = await axios.get("/locations", {
+      const response = await axios.get("/locations", {
         params: {
           distance: DISTANCE,
           latitude,
           longitude,
         },
       });
-      return result.data as RestaurantInformation[];
+      return response?.data as RestaurantInformation[];
     } catch (error) {
       notification({ msg: (error as AxiosError).message, variant: "error" });
     } finally {

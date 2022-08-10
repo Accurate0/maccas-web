@@ -17,7 +17,7 @@ const useOpenApi = () => {
       try {
         setBackdrop(true);
         const response = await axios.get("/docs/openapi");
-        setState(response.data as OpenApiObject);
+        setState(response?.data as OpenApiObject);
       } catch (error) {
         notification({ msg: (error as AxiosError).message, variant: "error" });
       } finally {
