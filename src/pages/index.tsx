@@ -71,7 +71,7 @@ const DealSelector: React.FC<DealSelectorProps> = () => {
         {deals?.map((o) => (
           <Grid item xs={6} md={3} key={o.dealUuid}>
             <Card square>
-              <CardMedia component="img" image={`${IMAGE_BUCKET_BASE}/${o.imageBaseName}`} alt="green iguana" />
+              <CardMedia component="img" image={`${IMAGE_BUCKET_BASE}/${o.imageBaseName}`} alt="missing image" />
               <CardContent style={{ height: isMobile ? "200px" : "170px", padding: "25px 25px 25px 25px" }}>
                 <Grid container direction="column" justifyContent="space-evenly" alignItems="flex-start" spacing={2}>
                   <Grid item xs={8}>
