@@ -12,6 +12,10 @@ import type { AppProps } from "next/app";
 import { useRouter } from "next/router";
 import { InteractionType } from "@azure/msal-browser";
 import OpenGraph from "../components/OpenGraph";
+import { config } from "@fortawesome/fontawesome-svg-core";
+import "@fortawesome/fontawesome-svg-core/styles.css";
+
+config.autoAddCss = false;
 
 const AppSetup = ({ children }: { children: ReactNode }) => (
   <MsalProvider instance={MSALInstance}>
