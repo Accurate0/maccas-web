@@ -11,6 +11,7 @@ import { theme } from "../styles";
 import type { AppProps } from "next/app";
 import { useRouter } from "next/router";
 import { InteractionType } from "@azure/msal-browser";
+import OpenGraph from "../components/OpenGraph";
 
 const AppSetup = ({ children }: { children: ReactNode }) => (
   <MsalProvider instance={MSALInstance}>
@@ -33,6 +34,7 @@ const App = ({ Component, pageProps }: AppProps) => {
 
   return (
     <AppSetup>
+      <OpenGraph />
       <MsalAuthenticationTemplate interactionType={InteractionType.Redirect} authenticationRequest={LoginRequest} />
       <AuthenticatedTemplate>
         <NavBar />
