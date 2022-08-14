@@ -21,6 +21,7 @@ import useLastRefresh from "../hooks/useLastRefresh";
 import { theme } from "../styles";
 import { Offer } from "../types";
 import { useRouter } from "next/router";
+import Image from "next/image";
 
 export interface DealSelectorProps {}
 
@@ -71,7 +72,16 @@ const DealSelector: React.FC<DealSelectorProps> = () => {
         {deals?.map((o) => (
           <Grid item xs={6} md={3} key={o.dealUuid}>
             <Card square>
-              <CardMedia component="img" image={`${IMAGE_BUCKET_BASE}/${o.imageBaseName}`} alt="missing image" />
+              <CardMedia>
+                <Image
+                  src={`${IMAGE_BUCKET_BASE}/${o.imageBaseName}`}
+                  alt="missing image"
+                  width="100%"
+                  height="100%"
+                  layout="responsive"
+                  objectFit="contain"
+                />
+              </CardMedia>
               <CardContent style={{ height: isMobile ? "200px" : "170px", padding: "25px 25px 25px 25px" }}>
                 <Grid container direction="column" justifyContent="space-evenly" alignItems="flex-start" spacing={2}>
                   <Grid item xs={8}>
