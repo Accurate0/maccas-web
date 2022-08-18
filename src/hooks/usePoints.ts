@@ -1,4 +1,5 @@
 import { AxiosError } from "axios";
+import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import { AccountPointResponse } from "../types/AccountPointResponse";
 import useAxios from "./useAxios";
@@ -11,6 +12,7 @@ const usePoints = () => {
   const setBackdrop = useSetBackdrop();
   const notification = useNotification();
   const axios = useAxios();
+  const router = useRouter();
 
   useEffect(() => {
     const get = async () => {
@@ -18,8 +20,12 @@ const usePoints = () => {
         setBackdrop(true);
         const response = await axios.get("/points");
         setState(response?.data as AccountPointResponse);
-      } catch (error) {
-        notification({ msg: (error as AxiosError).message, variant: "error" });
+      } catch (exception) {
+        const error = exception as AxiosError;
+        notification({ msg: error.message, variant: "error" });
+        if (error.response?.status === 401) {
+          router.push("/");
+        }
         setError(true);
       } finally {
         setBackdrop(false);
