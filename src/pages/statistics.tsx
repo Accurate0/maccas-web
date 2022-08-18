@@ -1,7 +1,7 @@
 import { TableContainer, Paper, Table, TableHead, TableRow, TableCell, TableBody, Grid, Chip } from "@mui/material";
 import Head from "next/head";
 import useStatistics from "../hooks/useStatistics";
-import { theme } from "../styles";
+import { theme } from "../theme";
 
 const Statistics = () => {
   const { totalAccounts, accounts } = useStatistics();

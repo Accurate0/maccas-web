@@ -1,3 +1,5 @@
+import { faStoreAlt } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Button, Grid, Typography } from "@mui/material";
 import { useRouter } from "next/router";
 import useUserConfig from "../hooks/useUserConfig";
@@ -7,17 +9,18 @@ const LocationValue = () => {
   const router = useRouter();
 
   return (
-    <>
-      <Grid container spacing={2}>
-        <Grid item alignSelf="center" alignItems="center">
-          <Button color="inherit" onClick={() => router.push("/location")}>
-            <Typography variant="caption">
-              <b>Store: {config?.storeName || "None"}</b>
-            </Typography>
-          </Button>
+    <Button color="inherit" onClick={() => router.push("/location")}>
+      <Grid item container spacing={1} direction="row">
+        <Grid item>
+          <FontAwesomeIcon icon={faStoreAlt} size="1x" />
+        </Grid>
+        <Grid item>
+          <Typography variant="caption">
+            <b>{config?.storeName || "None"}</b>
+          </Typography>
         </Grid>
       </Grid>
-    </>
+    </Button>
   );
 };
 

@@ -7,7 +7,7 @@ import { RecoilRoot } from "recoil";
 import Backdrop from "../components/Backdrop";
 import NavBar from "../components/NavBar";
 import { LoginRequest, MSALInstance } from "../config/msal";
-import { theme } from "../styles";
+import { theme } from "../theme";
 import type { AppProps } from "next/app";
 import { useRouter } from "next/router";
 import { InteractionType } from "@azure/msal-browser";

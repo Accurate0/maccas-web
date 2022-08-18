@@ -1,4 +1,13 @@
-import { Box, Button, Card, CardActions, CardContent, CardMedia, Grid, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Card,
+  CardActions,
+  CardContent,
+  CardMedia,
+  Grid,
+  Typography,
+} from "@mui/material";
 import { Container } from "@mui/system";
 import { useRouter } from "next/router";
 import { IMAGE_BUCKET_BASE } from "../../config/images";
@@ -30,7 +39,7 @@ const DealSelection: React.FC<DealSelectionProps> = () => {
               direction="column"
               alignItems="center"
               justifyContent="center"
-              style={{ minHeight: "100vh" }}
+              style={{ minHeight: "98vh" }}
               paddingTop={8}
               paddingBottom={4}
             >
@@ -52,15 +61,17 @@ const DealSelection: React.FC<DealSelectionProps> = () => {
                     </Typography>
                     <Typography gutterBottom>{code.message}</Typography>
                     <Typography component="div" gutterBottom>
-                      <Box sx={{ fontFamily: "Monospace", fontSize: "h6.fontSize" }}>{code.randomCode}</Box>
+                      <Box sx={{ fontFamily: "Monospace", fontSize: "h6.fontSize" }}>
+                        {code.randomCode}
+                      </Box>
                     </Typography>
                   </CardContent>
                   <CardActions style={{ margin: "25px 25px 25px 25px" }}>
                     <Grid container direction="column" justifyContent="space-between" spacing={2}>
                       <Grid item>
                         <Button
-                          color="success"
-                          variant="contained"
+                          color="info"
+                          variant="outlined"
                           onClick={async () => {
                             await refreshCode();
                           }}
@@ -71,7 +82,7 @@ const DealSelection: React.FC<DealSelectionProps> = () => {
                       <Grid item>
                         <Button
                           color="error"
-                          variant="outlined"
+                          variant="contained"
                           onClick={async () => {
                             await remove();
                             router.push("/");

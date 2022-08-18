@@ -2,7 +2,7 @@ import { Button, Grid, Paper, Table, TableBody, TableCell, TableContainer, Table
 import Head from "next/head";
 import { useRouter } from "next/router";
 import usePoints from "../../hooks/usePoints";
-import { theme } from "../../styles";
+import { theme } from "../../theme";
 import { AccountPointMap } from "../../types/AccountPointMap";
 
 export interface PointsProps {}

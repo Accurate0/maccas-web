@@ -1,17 +1,17 @@
 import { useMsal } from "@azure/msal-react";
+import { faArrowRightFromBracket } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Box, AppBar, Toolbar, Grid, Typography, Button, Link } from "@mui/material";
 import { useRouter } from "next/router";
-import useEnvironment from "../hooks/useEnvironment";
 import LocationValue from "./LocationValue";
 
 const NavBar = () => {
   const router = useRouter();
-  const { instance, accounts } = useMsal();
-  const { isDevelopment } = useEnvironment();
+  const { instance } = useMsal();
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="fixed" color="secondary" elevation={1}>
+      <AppBar position="fixed" color="secondary" elevation={0}>
         <Toolbar variant="dense">
           <Grid justifyContent="space-between" alignItems="baseline" container>
             <Grid item>
@@ -26,23 +26,21 @@ const NavBar = () => {
             </Grid>
             <Grid item>
               <Grid container spacing={3}>
-                {isDevelopment && (
-                  <Grid item>
-                    <Button color="inherit">
-                      <Typography variant="caption">
-                        ACCOUNT NAME: <b>{accounts[0].name}</b>
-                      </Typography>
-                    </Button>
-                  </Grid>
-                )}
                 <Grid item>
                   <LocationValue />
                 </Grid>
-                <Grid item style={{ paddingLeft: 0 }}>
+                <Grid item style={{ paddingLeft: 10 }}>
                   <Button color="inherit" onClick={() => instance.logoutRedirect()}>
-                    <Typography variant="caption">
-                      <b>Logout</b>
-                    </Typography>
+                    <Grid item container spacing={1} direction="row">
+                      <Grid item>
+                        <FontAwesomeIcon icon={faArrowRightFromBracket} size="1x" />
+                      </Grid>
+                      <Grid item>
+                        <Typography variant="caption">
+                          <b>Logout</b>
+                        </Typography>
+                      </Grid>
+                    </Grid>
                   </Button>
                 </Grid>
               </Grid>
