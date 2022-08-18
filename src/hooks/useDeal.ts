@@ -16,7 +16,7 @@ const useDeal = (offerId: string | undefined) => {
     const get = async () => {
       try {
         setBackdrop(true);
-        const response = await axios.get(`/deal/${offerId}`);
+        const response = await axios.get(`/deals/${offerId}`);
         setState(response?.data as Offer);
       } catch (error) {
         notification({ msg: (error as AxiosError).message, variant: "error" });
