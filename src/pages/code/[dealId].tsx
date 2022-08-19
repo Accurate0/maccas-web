@@ -46,10 +46,9 @@ const DealSelection: React.FC<DealSelectionProps> = () => {
               <Grid item xs={12}>
                 <Card variant="outlined">
                   <CardMedia
-                    height="380"
-                    width="380"
                     component="img"
                     image={`${IMAGE_BUCKET_BASE}/${deal?.imageBaseName}`}
+                    alt="missing image"
                   />
                   <CardContent style={{ margin: "25px 25px 25px 25px" }}>
                     <Typography sx={{ fontSize: 24 }} color="text.primary" gutterBottom>

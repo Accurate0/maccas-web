@@ -11,6 +11,7 @@ import {
 import moment from "moment";
 import { useRouter } from "next/router";
 import { IMAGE_BUCKET_BASE } from "../config/images";
+import useNotification from "../hooks/useNotification";
 import { theme } from "../theme";
 import { Offer } from "../types";
 
@@ -33,6 +34,8 @@ const isOfferValid = (deal: Offer) => {
 const DealCard: React.FC<DealCardProps> = ({ offer, onDetails: onSelect }) => {
   const router = useRouter();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const validOffer = isOfferValid(offer);
+  const notification = useNotification();
 
   return (
     <Grid item xs={6} md={3} key={offer.dealUuid}>
@@ -54,23 +57,25 @@ const DealCard: React.FC<DealCardProps> = ({ offer, onDetails: onSelect }) => {
           >
             <Grid item xs={8}>
               <Typography variant={isMobile ? "h6" : "h5"} component="div">
-                {truncate(offer.shortName, 40)}
+                {truncate(offer.shortName, isMobile ? 20 : 32)}
               </Typography>
             </Grid>
+            <Grid item container justifyContent="space-between">
+              <Grid item>
+                <Typography variant="body2">{offer.count} available</Typography>
+              </Grid>
+              <Grid item style={{ color: theme.palette.text.primary }}>
+                {validOffer ? "✅" : "❌"}
+              </Grid>
+            </Grid>
             <Grid item xs={4}>
-              <Typography variant="caption">
-                Added: {new Date(offer.CreationDateUtc).toLocaleDateString()}
-              </Typography>
-              <Typography component="span" sx={{ mb: 1.5 }} color="text.secondary">
-                <Grid container item spacing={4}>
-                  <Grid item xs={3} md={1} style={{ color: theme.palette.text.primary }}>
-                    {isOfferValid(offer) ? "✅" : "❌"}
-                  </Grid>
-                  <Grid item xs={9}>
-                    <Typography variant="caption">{offer.count} available</Typography>
-                  </Grid>
+              <Grid container direction="column" item spacing={1}>
+                <Grid item xs={12}>
+                  <Typography variant="caption">
+                    Added: {new Date(offer.CreationDateUtc).toLocaleDateString()}
+                  </Typography>
                 </Grid>
-              </Typography>
+              </Grid>
             </Grid>
           </Grid>
         </CardContent>
@@ -81,6 +86,12 @@ const DealCard: React.FC<DealCardProps> = ({ offer, onDetails: onSelect }) => {
                 color="secondary"
                 size={isMobile ? "small" : "large"}
                 onClick={() => {
+                  if (!validOffer) {
+                    notification({
+                      variant: "warning",
+                      msg: "This offer is not valid at the moment, it may not work correctly.",
+                    });
+                  }
                   router.push(`/code/${offer.dealUuid}`);
                 }}
               >
