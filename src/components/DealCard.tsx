@@ -39,7 +39,7 @@ const DealCard: React.FC<DealCardProps> = ({ offer, onDetails: onSelect }) => {
 
   return (
     <Grid item xs={6} md={3} key={offer.dealUuid}>
-      <Card style={{ opacity: !validOffer ? 0.35 : undefined }}>
+      <Card style={{ opacity: !validOffer ? 0.3 : undefined }}>
         <CardMedia
           component="img"
           image={`${IMAGE_BUCKET_BASE}/${offer.imageBaseName}`}
@@ -72,6 +72,9 @@ const DealCard: React.FC<DealCardProps> = ({ offer, onDetails: onSelect }) => {
                     Added: {new Date(offer.CreationDateUtc).toLocaleDateString()}
                   </Typography>
                 </Grid>
+                <Grid item xs={12} alignItems="baseline">
+                  <Typography variant="caption">{validOffer ? "✅" : "❌"}</Typography>
+                </Grid>
               </Grid>
             </Grid>
           </Grid>
@@ -83,14 +86,14 @@ const DealCard: React.FC<DealCardProps> = ({ offer, onDetails: onSelect }) => {
                 color="secondary"
                 size={isMobile ? "small" : "large"}
                 onClick={() => {
-                  if (validOffer) {
-                    router.push(`/code/${offer.dealUuid}`);
-                  } else {
+                  if (!validOffer) {
                     notification({
-                      variant: "error",
-                      msg: "This offer is not valid at the moment, try again later.",
+                      variant: "warning",
+                      msg: "This offer is not valid at the moment, it may not work correctly.",
                     });
                   }
+
+                  router.push(`/code/${offer.dealUuid}`);
                 }}
               >
                 Select
