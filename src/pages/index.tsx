@@ -25,6 +25,7 @@ const DealSelector: React.FC<DealSelectorProps> = () => {
         name={dialogFor?.name}
         validFromUTC={dialogFor?.validFromUTC}
         validToUTC={dialogFor?.validToUTC}
+        uuid={dialogFor?.dealUuid}
       />
       <Grid container spacing={2} paddingTop={8} paddingBottom={4}>
         {deals?.map((offer) => (

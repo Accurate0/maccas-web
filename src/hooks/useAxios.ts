@@ -1,10 +1,11 @@
 import axios, { AxiosRequestConfig } from "axios";
 import useAccessToken from "./useAccessToken";
 
-const useAxios = () => {
+const useAxios = (transformResponse: boolean = true) => {
   const tokenPromise = useAccessToken();
   const axiosInstance = axios.create({
     baseURL: process.env.NEXT_PUBLIC_API_BASE,
+    transformResponse: transformResponse === false ? (data) => data : undefined,
   });
 
   axiosInstance.interceptors.request.use(
