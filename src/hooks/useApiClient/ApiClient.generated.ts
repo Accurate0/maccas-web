@@ -25,9 +25,10 @@ export class ApiClient {
     }
 
     /**
+     * @param x_Maccas_JWT_Bypass (optional) Key to bypass JWT checks
      * @return List of currently locked deals
      */
-    get_locked_deals(  cancelToken?: CancelToken | undefined): Promise<ApiResponse<string[]>> {
+    get_locked_deals(x_Maccas_JWT_Bypass?: string | undefined , cancelToken?: CancelToken | undefined): Promise<ApiResponse<string[]>> {
         let url_ = this.baseUrl + "/admin/locked-deals";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -35,6 +36,7 @@ export class ApiClient {
             method: "GET",
             url: url_,
             headers: {
+                "X-Maccas-JWT-Bypass": x_Maccas_JWT_Bypass !== undefined && x_Maccas_JWT_Bypass !== null ? "" + x_Maccas_JWT_Bypass : "",
                 "Accept": "application/json"
             },
             cancelToken
@@ -80,10 +82,11 @@ export class ApiClient {
     }
 
     /**
+     * @param x_Maccas_JWT_Bypass (optional) Key to bypass JWT checks
      * @param duration (optional) 
      * @return Lock this deal
      */
-    lock_deal(deal_id: string, duration?: number | undefined , cancelToken?: CancelToken | undefined): Promise<ApiResponse<void>> {
+    lock_deal(deal_id: string, x_Maccas_JWT_Bypass?: string | undefined, duration?: number | undefined , cancelToken?: CancelToken | undefined): Promise<ApiResponse<void>> {
         let url_ = this.baseUrl + "/admin/locked-deals/{deal_id}?";
         if (deal_id === undefined || deal_id === null)
             throw new Error("The parameter 'deal_id' must be defined.");
@@ -98,6 +101,7 @@ export class ApiClient {
             method: "POST",
             url: url_,
             headers: {
+                "X-Maccas-JWT-Bypass": x_Maccas_JWT_Bypass !== undefined && x_Maccas_JWT_Bypass !== null ? "" + x_Maccas_JWT_Bypass : "",
             },
             cancelToken
         };
@@ -139,9 +143,10 @@ export class ApiClient {
     }
 
     /**
+     * @param x_Maccas_JWT_Bypass (optional) Key to bypass JWT checks
      * @return Unlocked deal
      */
-    unlock_deal(deal_id: string , cancelToken?: CancelToken | undefined): Promise<ApiResponse<void>> {
+    unlock_deal(deal_id: string, x_Maccas_JWT_Bypass?: string | undefined , cancelToken?: CancelToken | undefined): Promise<ApiResponse<void>> {
         let url_ = this.baseUrl + "/admin/locked-deals/{deal_id}";
         if (deal_id === undefined || deal_id === null)
             throw new Error("The parameter 'deal_id' must be defined.");
@@ -152,6 +157,7 @@ export class ApiClient {
             method: "DELETE",
             url: url_,
             headers: {
+                "X-Maccas-JWT-Bypass": x_Maccas_JWT_Bypass !== undefined && x_Maccas_JWT_Bypass !== null ? "" + x_Maccas_JWT_Bypass : "",
             },
             cancelToken
         };
@@ -712,9 +718,10 @@ export class ApiClient {
     }
 
     /**
+     * @param x_Maccas_JWT_Bypass (optional) Key to bypass JWT checks
      * @return List of all account points
      */
-    get_points(  cancelToken?: CancelToken | undefined): Promise<ApiResponse<AccountPointMap[]>> {
+    get_points(x_Maccas_JWT_Bypass?: string | undefined , cancelToken?: CancelToken | undefined): Promise<ApiResponse<AccountPointMap[]>> {
         let url_ = this.baseUrl + "/points";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -722,6 +729,7 @@ export class ApiClient {
             method: "GET",
             url: url_,
             headers: {
+                "X-Maccas-JWT-Bypass": x_Maccas_JWT_Bypass !== undefined && x_Maccas_JWT_Bypass !== null ? "" + x_Maccas_JWT_Bypass : "",
                 "Accept": "application/json"
             },
             cancelToken
@@ -768,10 +776,11 @@ export class ApiClient {
     }
 
     /**
+     * @param x_Maccas_JWT_Bypass (optional) Key to bypass JWT checks
      * @param store (optional) 
      * @return Random code for account
      */
-    get_points_by_id(account_id: string, store?: number | undefined , cancelToken?: CancelToken | undefined): Promise<ApiResponse<OfferPointsResponse>> {
+    get_points_by_id(account_id: string, x_Maccas_JWT_Bypass?: string | undefined, store?: number | undefined , cancelToken?: CancelToken | undefined): Promise<ApiResponse<OfferPointsResponse>> {
         let url_ = this.baseUrl + "/points/{account_id}?";
         if (account_id === undefined || account_id === null)
             throw new Error("The parameter 'account_id' must be defined.");
@@ -786,6 +795,7 @@ export class ApiClient {
             method: "GET",
             url: url_,
             headers: {
+                "X-Maccas-JWT-Bypass": x_Maccas_JWT_Bypass !== undefined && x_Maccas_JWT_Bypass !== null ? "" + x_Maccas_JWT_Bypass : "",
                 "Accept": "application/json"
             },
             cancelToken
@@ -1069,25 +1079,34 @@ export class ApiClient {
     }
 }
 
-export interface OfferPointsResponse {
-    offerResponse: OfferResponse;
-    pointsResponse: PointsResponse;
-}
-
-export interface AccountPointMap {
-    totalPoints: number;
-    name: string;
+export interface AccountResponse {
 }
 
 export interface OfferResponse {
-    randomCode: string;
     message: string;
+    randomCode: string;
 }
 
 export interface RestaurantInformation {
-    name: string;
     storeNumber: number;
+    name: string;
     address: RestaurantAddress;
+}
+
+export interface Offer {
+    name: string;
+    CreationDateUtc: string;
+    offerId: number;
+    localValidTo: string;
+    dealUuid: string;
+    offerPropositionId: number;
+    count: number;
+    validFromUTC: string;
+    validToUTC: string;
+    localValidFrom: string;
+    shortName: string;
+    description: string;
+    imageBaseName: string;
 }
 
 export interface PointsResponse {
@@ -1095,36 +1114,27 @@ export interface PointsResponse {
     lifeTimePoints: number;
 }
 
+export interface RestaurantAddress {
+    addressLine: string;
+}
+
+export interface AccountPointMap {
+    name: string;
+    totalPoints: number;
+}
+
 export interface UserOptions {
     storeId: string;
     storeName?: string;
 }
 
-export interface AccountResponse {
-}
-
-export interface Offer {
-    localValidFrom: string;
-    dealUuid: string;
-    validToUTC: string;
-    name: string;
-    offerPropositionId: number;
-    description: string;
-    imageBaseName: string;
-    shortName: string;
-    CreationDateUtc: string;
-    validFromUTC: string;
-    count: number;
-    localValidTo: string;
-    offerId: number;
+export interface OfferPointsResponse {
+    offerResponse: OfferResponse;
+    pointsResponse: PointsResponse;
 }
 
 export interface LastRefreshInformation {
     lastRefresh: string;
-}
-
-export interface RestaurantAddress {
-    addressLine: string;
 }
 
 function jsonParse(json: any, reviver?: any) {
