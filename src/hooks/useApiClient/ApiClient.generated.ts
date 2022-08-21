@@ -83,7 +83,7 @@ export class ApiClient {
 
     /**
      * @param x_Maccas_JWT_Bypass (optional) Key to bypass JWT checks
-     * @param duration (optional) 
+     * @param duration (optional)
      * @return Lock this deal
      */
     lock_deal(deal_id: string, x_Maccas_JWT_Bypass?: string | undefined, duration?: number | undefined , cancelToken?: CancelToken | undefined): Promise<ApiResponse<void>> {
@@ -777,7 +777,7 @@ export class ApiClient {
 
     /**
      * @param x_Maccas_JWT_Bypass (optional) Key to bypass JWT checks
-     * @param store (optional) 
+     * @param store (optional)
      * @return Random code for account
      */
     get_points_by_id(account_id: string, x_Maccas_JWT_Bypass?: string | undefined, store?: number | undefined , cancelToken?: CancelToken | undefined): Promise<ApiResponse<OfferPointsResponse>> {
@@ -1075,30 +1075,21 @@ export class ApiClient {
     }
 }
 
-export interface AccountPointMap {
-    name: string;
-    totalPoints: number;
+export interface OfferPointsResponse {
+    offerResponse: OfferResponse;
+    pointsResponse: PointsResponse;
+}
+
+export interface AccountResponse {
 }
 
 export interface LastRefreshInformation {
     lastRefresh: string;
 }
 
-export interface RestaurantAddress {
-    addressLine: string;
-}
-
-export interface AccountResponse {
-}
-
-export interface OfferResponse {
-    randomCode: string;
-    message: string;
-}
-
-export interface PointsResponse {
+export interface AccountPointMap {
+    name: string;
     totalPoints: number;
-    lifeTimePoints: number;
 }
 
 export interface UserOptions {
@@ -1106,31 +1097,40 @@ export interface UserOptions {
     storeName?: string;
 }
 
-export interface OfferPointsResponse {
-    offerResponse: OfferResponse;
-    pointsResponse: PointsResponse;
-}
-
 export interface Offer {
-    localValidFrom: string;
-    validToUTC: string;
-    localValidTo: string;
-    offerPropositionId: number;
-    name: string;
-    shortName: string;
     CreationDateUtc: string;
-    imageBaseName: string;
-    description: string;
+    name: string;
+    localValidTo: string;
     validFromUTC: string;
     offerId: number;
     dealUuid: string;
+    localValidFrom: string;
+    offerPropositionId: number;
+    shortName: string;
+    description: string;
+    imageBaseName: string;
     count: number;
+    validToUTC: string;
 }
 
 export interface RestaurantInformation {
     storeNumber: number;
     address: RestaurantAddress;
     name: string;
+}
+
+export interface RestaurantAddress {
+    addressLine: string;
+}
+
+export interface OfferResponse {
+    message: string;
+    randomCode: string;
+}
+
+export interface PointsResponse {
+    totalPoints: number;
+    lifeTimePoints: number;
 }
 
 function jsonParse(json: any, reviver?: any) {
@@ -1141,7 +1141,7 @@ function jsonParse(json: any, reviver?: any) {
     json = (function recurse(obj: any, prop?: any, parent?: any) {
         if (typeof obj !== 'object' || !obj)
             return obj;
-        
+
         if ("$ref" in obj) {
             let ref = obj.$ref;
             if (ref in byid)
@@ -1155,7 +1155,7 @@ function jsonParse(json: any, reviver?: any) {
                 obj = obj.$values;
             byid[id] = obj;
         }
-        
+
         if (Array.isArray(obj)) {
             obj = obj.map((v, i) => recurse(v, i, obj));
         } else {
