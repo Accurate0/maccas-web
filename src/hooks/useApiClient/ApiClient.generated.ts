@@ -956,10 +956,9 @@ export class ApiClient {
     }
 
     /**
-     * @param authorization Valid JWT with user id
      * @return Config for current user
      */
-    get_user_config(authorization: string , cancelToken?: CancelToken | undefined): Promise<ApiResponse<UserOptions>> {
+    get_user_config(  cancelToken?: CancelToken | undefined): Promise<ApiResponse<UserOptions>> {
         let url_ = this.baseUrl + "/user/config";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -967,7 +966,6 @@ export class ApiClient {
             method: "GET",
             url: url_,
             headers: {
-                "Authorization": authorization !== undefined && authorization !== null ? "" + authorization : "",
                 "Accept": "application/json"
             },
             cancelToken
@@ -1018,10 +1016,9 @@ export class ApiClient {
     }
 
     /**
-     * @param authorization Valid JWT with user id
      * @return Updated/created config
      */
-    update_user_config(authorization: string, body: UserOptions , cancelToken?: CancelToken | undefined): Promise<ApiResponse<void>> {
+    update_user_config(body: UserOptions , cancelToken?: CancelToken | undefined): Promise<ApiResponse<void>> {
         let url_ = this.baseUrl + "/user/config";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -1032,7 +1029,6 @@ export class ApiClient {
             method: "POST",
             url: url_,
             headers: {
-                "Authorization": authorization !== undefined && authorization !== null ? "" + authorization : "",
                 "Content-Type": "application/json",
             },
             cancelToken
@@ -1079,48 +1075,30 @@ export class ApiClient {
     }
 }
 
-export interface AccountResponse {
-}
-
-export interface OfferResponse {
-    message: string;
-    randomCode: string;
-}
-
-export interface RestaurantInformation {
-    storeNumber: number;
+export interface AccountPointMap {
     name: string;
-    address: RestaurantAddress;
-}
-
-export interface Offer {
-    name: string;
-    CreationDateUtc: string;
-    offerId: number;
-    localValidTo: string;
-    dealUuid: string;
-    offerPropositionId: number;
-    count: number;
-    validFromUTC: string;
-    validToUTC: string;
-    localValidFrom: string;
-    shortName: string;
-    description: string;
-    imageBaseName: string;
-}
-
-export interface PointsResponse {
     totalPoints: number;
-    lifeTimePoints: number;
+}
+
+export interface LastRefreshInformation {
+    lastRefresh: string;
 }
 
 export interface RestaurantAddress {
     addressLine: string;
 }
 
-export interface AccountPointMap {
-    name: string;
+export interface AccountResponse {
+}
+
+export interface OfferResponse {
+    randomCode: string;
+    message: string;
+}
+
+export interface PointsResponse {
     totalPoints: number;
+    lifeTimePoints: number;
 }
 
 export interface UserOptions {
@@ -1133,8 +1111,26 @@ export interface OfferPointsResponse {
     pointsResponse: PointsResponse;
 }
 
-export interface LastRefreshInformation {
-    lastRefresh: string;
+export interface Offer {
+    localValidFrom: string;
+    validToUTC: string;
+    localValidTo: string;
+    offerPropositionId: number;
+    name: string;
+    shortName: string;
+    CreationDateUtc: string;
+    imageBaseName: string;
+    description: string;
+    validFromUTC: string;
+    offerId: number;
+    dealUuid: string;
+    count: number;
+}
+
+export interface RestaurantInformation {
+    storeNumber: number;
+    address: RestaurantAddress;
+    name: string;
 }
 
 function jsonParse(json: any, reviver?: any) {
