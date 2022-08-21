@@ -19,17 +19,11 @@ const useOfferCode = (offer: Offer | undefined) => {
     const get = async () => {
       try {
         setBackdrop(true);
-        const response = await axios.post(
-          `/deals/${offer?.dealUuid}`,
-          undefined,
-          userConfig
-            ? {
-                params: {
-                  store: userConfig.storeId,
-                },
-              }
-            : undefined
-        );
+        const response = await axios.post(`/deals/${offer?.dealUuid}`, undefined, {
+          params: {
+            store: userConfig!.storeId,
+          },
+        });
 
         setResponse(response?.data as OfferResponse);
       } catch (error) {
@@ -45,7 +39,7 @@ const useOfferCode = (offer: Offer | undefined) => {
       }
     };
 
-    if (offer) {
+    if (offer && userConfig) {
       get();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -65,16 +59,11 @@ const useOfferCode = (offer: Offer | undefined) => {
   const refreshCode = async () => {
     try {
       setBackdrop(true);
-      const response = await axios.get(
-        `/code/${offer?.dealUuid}`,
-        userConfig
-          ? {
-              params: {
-                store: userConfig.storeId,
-              },
-            }
-          : undefined
-      );
+      const response = await axios.get(`/code/${offer?.dealUuid}`, {
+        params: {
+          store: userConfig!.storeId,
+        },
+      });
       setResponse(response?.data);
       return response?.data as OfferResponse;
     } catch (error) {

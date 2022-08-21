@@ -12,6 +12,7 @@ import moment from "moment";
 import { useRouter } from "next/router";
 import { IMAGE_BUCKET_BASE } from "../config/images";
 import useNotification from "../hooks/useNotification";
+import { useGetUserConfig } from "../hooks/useUserConfig";
 import { theme } from "../theme";
 import { Offer } from "../types";
 
@@ -36,6 +37,7 @@ const DealCard: React.FC<DealCardProps> = ({ offer, onDetails: onSelect }) => {
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const validOffer = isOfferValid(offer);
   const notification = useNotification();
+  const userConfig = useGetUserConfig();
 
   return (
     <Grid item xs={6} md={3} key={offer.dealUuid}>
@@ -93,7 +95,12 @@ const DealCard: React.FC<DealCardProps> = ({ offer, onDetails: onSelect }) => {
                     });
                   }
 
-                  router.push(`/code/${offer.dealUuid}`);
+                  if (userConfig) {
+                    router.push(`/code/${offer.dealUuid}`);
+                  } else {
+                    notification({ variant: "error", msg: "A store must be selected." });
+                    router.push("/location");
+                  }
                 }}
               >
                 Select

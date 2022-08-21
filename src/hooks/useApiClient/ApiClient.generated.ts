@@ -193,17 +193,16 @@ export class ApiClient {
     }
 
     /**
-     * @param store (optional) 
      * @return Random code for specified deal
      */
-    get_code(deal_id: string, store?: number | undefined , cancelToken?: CancelToken | undefined): Promise<ApiResponse<OfferResponse>> {
+    get_code(deal_id: string, store: number , cancelToken?: CancelToken | undefined): Promise<ApiResponse<OfferResponse>> {
         let url_ = this.baseUrl + "/code/{deal_id}?";
         if (deal_id === undefined || deal_id === null)
             throw new Error("The parameter 'deal_id' must be defined.");
         url_ = url_.replace("{deal_id}", encodeURIComponent("" + deal_id));
-        if (store === null)
-            throw new Error("The parameter 'store' cannot be null.");
-        else if (store !== undefined)
+        if (store === undefined || store === null)
+            throw new Error("The parameter 'store' must be defined and cannot be null.");
+        else
             url_ += "store=" + encodeURIComponent("" + store) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -438,17 +437,16 @@ export class ApiClient {
     /**
      * @param x_log_user_id (optional) The user id to log for
      * @param x_log_user_name (optional) The user name to log for
-     * @param store (optional) 
      * @return Added a deal
      */
-    add_deal(deal_id: string, x_log_user_id?: string | undefined, x_log_user_name?: string | undefined, store?: number | undefined , cancelToken?: CancelToken | undefined): Promise<ApiResponse<OfferResponse>> {
+    add_deal(deal_id: string, store: number, x_log_user_id?: string | undefined, x_log_user_name?: string | undefined , cancelToken?: CancelToken | undefined): Promise<ApiResponse<OfferResponse>> {
         let url_ = this.baseUrl + "/deals/{deal_id}?";
         if (deal_id === undefined || deal_id === null)
             throw new Error("The parameter 'deal_id' must be defined.");
         url_ = url_.replace("{deal_id}", encodeURIComponent("" + deal_id));
-        if (store === null)
-            throw new Error("The parameter 'store' cannot be null.");
-        else if (store !== undefined)
+        if (store === undefined || store === null)
+            throw new Error("The parameter 'store' must be defined and cannot be null.");
+        else
             url_ += "store=" + encodeURIComponent("" + store) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -512,17 +510,16 @@ export class ApiClient {
     }
 
     /**
-     * @param store (optional) 
      * @return Removed a deal
      */
-    remove_deal(deal_id: string, store?: number | undefined , cancelToken?: CancelToken | undefined): Promise<ApiResponse<void>> {
+    remove_deal(deal_id: string, store: number , cancelToken?: CancelToken | undefined): Promise<ApiResponse<void>> {
         let url_ = this.baseUrl + "/deals/{deal_id}?";
         if (deal_id === undefined || deal_id === null)
             throw new Error("The parameter 'deal_id' must be defined.");
         url_ = url_.replace("{deal_id}", encodeURIComponent("" + deal_id));
-        if (store === null)
-            throw new Error("The parameter 'store' cannot be null.");
-        else if (store !== undefined)
+        if (store === undefined || store === null)
+            throw new Error("The parameter 'store' must be defined and cannot be null.");
+        else
             url_ += "store=" + encodeURIComponent("" + store) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -715,10 +712,9 @@ export class ApiClient {
     }
 
     /**
-     * @param authorization Valid JWT with user id in allowed list
      * @return List of all account points
      */
-    get_points(authorization: string , cancelToken?: CancelToken | undefined): Promise<ApiResponse<AccountPointMap[]>> {
+    get_points(  cancelToken?: CancelToken | undefined): Promise<ApiResponse<AccountPointMap[]>> {
         let url_ = this.baseUrl + "/points";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -726,7 +722,6 @@ export class ApiClient {
             method: "GET",
             url: url_,
             headers: {
-                "Authorization": authorization !== undefined && authorization !== null ? "" + authorization : "",
                 "Accept": "application/json"
             },
             cancelToken
@@ -773,11 +768,10 @@ export class ApiClient {
     }
 
     /**
-     * @param authorization Valid JWT with user id in allowed list
      * @param store (optional) 
      * @return Random code for account
      */
-    get_points_by_id(authorization: string, account_id: string, store?: number | undefined , cancelToken?: CancelToken | undefined): Promise<ApiResponse<OfferPointsResponse>> {
+    get_points_by_id(account_id: string, store?: number | undefined , cancelToken?: CancelToken | undefined): Promise<ApiResponse<OfferPointsResponse>> {
         let url_ = this.baseUrl + "/points/{account_id}?";
         if (account_id === undefined || account_id === null)
             throw new Error("The parameter 'account_id' must be defined.");
@@ -792,7 +786,6 @@ export class ApiClient {
             method: "GET",
             url: url_,
             headers: {
-                "Authorization": authorization !== undefined && authorization !== null ? "" + authorization : "",
                 "Accept": "application/json"
             },
             cancelToken
@@ -1076,52 +1069,9 @@ export class ApiClient {
     }
 }
 
-export interface PointsResponse {
-    totalPoints: number;
-    lifeTimePoints: number;
-}
-
 export interface OfferPointsResponse {
-    pointsResponse: PointsResponse;
     offerResponse: OfferResponse;
-}
-
-export interface AccountResponse {
-}
-
-export interface UserOptions {
-    storeId: string;
-    storeName?: string;
-}
-
-export interface RestaurantAddress {
-    addressLine: string;
-}
-
-export interface Offer {
-    dealUuid: string;
-    CreationDateUtc: string;
-    count: number;
-    offerId: number;
-    name: string;
-    localValidTo: string;
-    shortName: string;
-    localValidFrom: string;
-    validFromUTC: string;
-    offerPropositionId: number;
-    validToUTC: string;
-    imageBaseName: string;
-    description: string;
-}
-
-export interface LastRefreshInformation {
-    lastRefresh: string;
-}
-
-export interface RestaurantInformation {
-    address: RestaurantAddress;
-    name: string;
-    storeNumber: number;
+    pointsResponse: PointsResponse;
 }
 
 export interface AccountPointMap {
@@ -1132,6 +1082,49 @@ export interface AccountPointMap {
 export interface OfferResponse {
     randomCode: string;
     message: string;
+}
+
+export interface RestaurantInformation {
+    name: string;
+    storeNumber: number;
+    address: RestaurantAddress;
+}
+
+export interface PointsResponse {
+    totalPoints: number;
+    lifeTimePoints: number;
+}
+
+export interface UserOptions {
+    storeId: string;
+    storeName?: string;
+}
+
+export interface AccountResponse {
+}
+
+export interface Offer {
+    localValidFrom: string;
+    dealUuid: string;
+    validToUTC: string;
+    name: string;
+    offerPropositionId: number;
+    description: string;
+    imageBaseName: string;
+    shortName: string;
+    CreationDateUtc: string;
+    validFromUTC: string;
+    count: number;
+    localValidTo: string;
+    offerId: number;
+}
+
+export interface LastRefreshInformation {
+    lastRefresh: string;
+}
+
+export interface RestaurantAddress {
+    addressLine: string;
 }
 
 function jsonParse(json: any, reviver?: any) {
