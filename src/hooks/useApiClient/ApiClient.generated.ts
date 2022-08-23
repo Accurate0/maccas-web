@@ -83,7 +83,7 @@ export class ApiClient {
 
     /**
      * @param x_Maccas_JWT_Bypass (optional) Key to bypass JWT checks
-     * @param duration (optional)
+     * @param duration (optional) 
      * @return Lock this deal
      */
     lock_deal(deal_id: string, x_Maccas_JWT_Bypass?: string | undefined, duration?: number | undefined , cancelToken?: CancelToken | undefined): Promise<ApiResponse<void>> {
@@ -777,17 +777,16 @@ export class ApiClient {
 
     /**
      * @param x_Maccas_JWT_Bypass (optional) Key to bypass JWT checks
-     * @param store (optional)
      * @return Random code for account
      */
-    get_points_by_id(account_id: string, x_Maccas_JWT_Bypass?: string | undefined, store?: number | undefined , cancelToken?: CancelToken | undefined): Promise<ApiResponse<OfferPointsResponse>> {
+    get_points_by_id(account_id: string, store: number, x_Maccas_JWT_Bypass?: string | undefined , cancelToken?: CancelToken | undefined): Promise<ApiResponse<OfferPointsResponse>> {
         let url_ = this.baseUrl + "/points/{account_id}?";
         if (account_id === undefined || account_id === null)
             throw new Error("The parameter 'account_id' must be defined.");
         url_ = url_.replace("{account_id}", encodeURIComponent("" + account_id));
-        if (store === null)
-            throw new Error("The parameter 'store' cannot be null.");
-        else if (store !== undefined)
+        if (store === undefined || store === null)
+            throw new Error("The parameter 'store' must be defined and cannot be null.");
+        else
             url_ += "store=" + encodeURIComponent("" + store) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -1080,11 +1079,35 @@ export interface OfferPointsResponse {
     pointsResponse: PointsResponse;
 }
 
-export interface AccountResponse {
+export interface RestaurantAddress {
+    addressLine: string;
 }
 
-export interface LastRefreshInformation {
-    lastRefresh: string;
+export interface OfferResponse {
+    randomCode: string;
+    message: string;
+}
+
+export interface Offer {
+    shortName: string;
+    CreationDateUtc: string;
+    description: string;
+    imageBaseName: string;
+    localValidTo: string;
+    count: number;
+    offerId: number;
+    offerPropositionId: number;
+    dealUuid: string;
+    localValidFrom: string;
+    validFromUTC: string;
+    validToUTC: string;
+    name: string;
+}
+
+export interface RestaurantInformation {
+    name: string;
+    storeNumber: number;
+    address: RestaurantAddress;
 }
 
 export interface AccountPointMap {
@@ -1092,40 +1115,16 @@ export interface AccountPointMap {
     totalPoints: number;
 }
 
+export interface LastRefreshInformation {
+    lastRefresh: string;
+}
+
 export interface UserOptions {
     storeId: string;
     storeName?: string;
 }
 
-export interface Offer {
-    CreationDateUtc: string;
-    name: string;
-    localValidTo: string;
-    validFromUTC: string;
-    offerId: number;
-    dealUuid: string;
-    localValidFrom: string;
-    offerPropositionId: number;
-    shortName: string;
-    description: string;
-    imageBaseName: string;
-    count: number;
-    validToUTC: string;
-}
-
-export interface RestaurantInformation {
-    storeNumber: number;
-    address: RestaurantAddress;
-    name: string;
-}
-
-export interface RestaurantAddress {
-    addressLine: string;
-}
-
-export interface OfferResponse {
-    message: string;
-    randomCode: string;
+export interface AccountResponse {
 }
 
 export interface PointsResponse {
@@ -1141,7 +1140,7 @@ function jsonParse(json: any, reviver?: any) {
     json = (function recurse(obj: any, prop?: any, parent?: any) {
         if (typeof obj !== 'object' || !obj)
             return obj;
-
+        
         if ("$ref" in obj) {
             let ref = obj.$ref;
             if (ref in byid)
@@ -1155,7 +1154,7 @@ function jsonParse(json: any, reviver?: any) {
                 obj = obj.$values;
             byid[id] = obj;
         }
-
+        
         if (Array.isArray(obj)) {
             obj = obj.map((v, i) => recurse(v, i, obj));
         } else {
