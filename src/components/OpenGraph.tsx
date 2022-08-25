@@ -22,8 +22,8 @@ const OpenGraph: React.FC = () => {
       <meta name="twitter:image" content="https://maccas.anurag.sh/og.jpg" />
 
       <meta name="theme-color" content="#DA291C" />
-      <link rel="manifest" href={`${process.env.NEXT_PUBLIC_PUBLIC_URL}/manifest.json`} />
-      <link rel="icon" href={`${process.env.NEXT_PUBLIC_PUBLIC_URL}/favicon.ico`} />
+      <link rel="manifest" href="manifest.json" />
+      <link rel="shortcut icon" href="favicon.ico" />
     </Head>
   );
 };
