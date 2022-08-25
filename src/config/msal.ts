@@ -12,10 +12,8 @@ export const MSALConfig: Configuration = {
   },
 };
 
-export const TOKEN_LOCAL_STORAGE = "ACCESS_TOKEN";
-
 export const LoginRequest = {
-  redirectUri: `/login`,
+  redirectUri: "/login",
   scopes: [
     "openid",
     "https://login.anurag.sh/f285a3b9-c589-4fae-971e-edd635df6b96/Maccas.ReadWrite",
@@ -32,7 +30,5 @@ export const TokenRequest = {
 export const MSALInstance = new PublicClientApplication(MSALConfig);
 
 MSALInstance.handleRedirectPromise()
-  .then((tokenResponse) => {
-    localStorage.setItem(TOKEN_LOCAL_STORAGE, tokenResponse?.accessToken ?? "");
-  })
-  .catch((error) => {});
+  .then(() => {})
+  .catch(() => {});
