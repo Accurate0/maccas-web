@@ -1,13 +1,14 @@
 import { AxiosError } from "axios";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { Offer, OfferResponse } from "../types";
+import { OfferResponse } from "../types";
+import { GetDealsOffer } from "./useApiClient/ApiClient.generated";
 import useAxios from "./useAxios";
 import useNotification from "./useNotification";
 import useSetBackdrop from "./useSetBackdrop";
 import { useGetUserConfig } from "./useUserConfig";
 
-const useOfferCode = (offer: Offer | undefined) => {
+const useOfferCode = (offer: GetDealsOffer | undefined) => {
   const [code, setResponse] = useState<OfferResponse>();
   const userConfig = useGetUserConfig();
   const setBackdrop = useSetBackdrop();

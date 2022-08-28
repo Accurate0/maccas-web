@@ -10,21 +10,21 @@ import {
 import moment from "moment";
 import { useRouter } from "next/router";
 import { IMAGE_BUCKET_BASE } from "../config/images";
+import { GetDealsOffer } from "../hooks/useApiClient/ApiClient.generated";
 import useNotification from "../hooks/useNotification";
 import { useGetUserConfig } from "../hooks/useUserConfig";
 import { theme } from "../theme";
-import { Offer } from "../types";
 import LoadableCardMedia from "./LoadableCardMedia";
 
 export interface DealCardProps {
-  offer: Offer;
+  offer: GetDealsOffer;
   onDetails: () => void;
 }
 
 const truncate = (s: string, length: number) =>
   s.length > length ? `${s.substring(0, length - 3)}...` : s;
 
-const isOfferValid = (deal: Offer) => {
+const isOfferValid = (deal: GetDealsOffer) => {
   const from = moment.utc(deal.validFromUTC);
   const to = moment.utc(deal.validToUTC);
   const now = new Date();

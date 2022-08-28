@@ -14,7 +14,6 @@ import {
   TextField,
 } from "@mui/material";
 import { theme } from "../theme";
-import { Offer } from "../hooks/useApiClient/ApiClient.generated";
 import { useState } from "react";
 
 const Admin = () => {
@@ -59,7 +58,7 @@ const Admin = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {lockedDeals?.map((o: Offer) => (
+                {lockedDeals?.map((o) => (
                   <TableRow
                     key={o.shortName}
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
