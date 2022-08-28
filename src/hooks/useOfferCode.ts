@@ -49,7 +49,11 @@ const useOfferCode = (offer: GetDealsOffer | undefined) => {
   const remove = async () => {
     try {
       setBackdrop(true);
-      await axios.delete(`/deals/${offer?.dealUuid}`);
+      await axios.delete(`/deals/${offer?.dealUuid}`, {
+        params: {
+          store: userConfig!.storeId,
+        },
+      });
     } catch (error) {
       notification({ msg: (error as AxiosError).message, variant: "error" });
     } finally {
