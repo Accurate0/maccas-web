@@ -10,8 +10,4 @@ module.exports = {
   images: {
     domains: ["i.maccas.anurag.sh"],
   },
-  i18n: {
-    locales: ["en"],
-    defaultLocale: "en",
-  },
 };
