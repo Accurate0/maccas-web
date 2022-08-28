@@ -268,7 +268,7 @@ export class ApiClient {
     /**
      * @return List of available deals
      */
-    get_deals(  cancelToken?: CancelToken | undefined): Promise<ApiResponse<Offer[]>> {
+    get_deals(  cancelToken?: CancelToken | undefined): Promise<ApiResponse<GetDealsOffer[]>> {
         let url_ = this.baseUrl + "/deals";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -292,7 +292,7 @@ export class ApiClient {
         });
     }
 
-    protected processGet_deals(response: AxiosResponse): Promise<ApiResponse<Offer[]>> {
+    protected processGet_deals(response: AxiosResponse): Promise<ApiResponse<GetDealsOffer[]>> {
         const status = response.status;
         let _headers: any = {};
         if (response.headers && typeof response.headers === "object") {
@@ -308,7 +308,7 @@ export class ApiClient {
             let result200: any = null;
             let resultData200  = _responseText;
             result200 = JSON.parse(resultData200);
-            return Promise.resolve<ApiResponse<Offer[]>>(new ApiResponse<Offer[]>(status, _headers, result200));
+            return Promise.resolve<ApiResponse<GetDealsOffer[]>>(new ApiResponse<GetDealsOffer[]>(status, _headers, result200));
 
         } else if (status === 500) {
             const _responseText = response.data;
@@ -318,7 +318,7 @@ export class ApiClient {
             const _responseText = response.data;
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
         }
-        return Promise.resolve<ApiResponse<Offer[]>>(new ApiResponse(status, _headers, null as any));
+        return Promise.resolve<ApiResponse<GetDealsOffer[]>>(new ApiResponse(status, _headers, null as any));
     }
 
     /**
@@ -380,7 +380,7 @@ export class ApiClient {
     /**
      * @return Information for specified deal
      */
-    get_deal(deal_id: string , cancelToken?: CancelToken | undefined): Promise<ApiResponse<Offer>> {
+    get_deal(deal_id: string , cancelToken?: CancelToken | undefined): Promise<ApiResponse<GetDealsOffer>> {
         let url_ = this.baseUrl + "/deals/{deal_id}";
         if (deal_id === undefined || deal_id === null)
             throw new Error("The parameter 'deal_id' must be defined.");
@@ -407,7 +407,7 @@ export class ApiClient {
         });
     }
 
-    protected processGet_deal(response: AxiosResponse): Promise<ApiResponse<Offer>> {
+    protected processGet_deal(response: AxiosResponse): Promise<ApiResponse<GetDealsOffer>> {
         const status = response.status;
         let _headers: any = {};
         if (response.headers && typeof response.headers === "object") {
@@ -423,7 +423,7 @@ export class ApiClient {
             let result200: any = null;
             let resultData200  = _responseText;
             result200 = JSON.parse(resultData200);
-            return Promise.resolve<ApiResponse<Offer>>(new ApiResponse<Offer>(status, _headers, result200));
+            return Promise.resolve<ApiResponse<GetDealsOffer>>(new ApiResponse<GetDealsOffer>(status, _headers, result200));
 
         } else if (status === 404) {
             const _responseText = response.data;
@@ -437,7 +437,7 @@ export class ApiClient {
             const _responseText = response.data;
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
         }
-        return Promise.resolve<ApiResponse<Offer>>(new ApiResponse(status, _headers, null as any));
+        return Promise.resolve<ApiResponse<GetDealsOffer>>(new ApiResponse(status, _headers, null as any));
     }
 
     /**
@@ -1074,33 +1074,45 @@ export class ApiClient {
     }
 }
 
-export interface OfferPointsResponse {
-    offerResponse: OfferResponse;
-    pointsResponse: PointsResponse;
+export interface AccountResponse {
 }
 
 export interface RestaurantAddress {
     addressLine: string;
 }
 
-export interface OfferResponse {
-    randomCode: string;
-    message: string;
+export interface OfferDatabase {
+    validFromUTC: string;
+    offerPropositionId: number;
+    localValidFrom: string;
+    validToUTC: string;
+    count: number;
+    name: string;
+    imageBaseName: string;
+    offerId: number;
+    localValidTo: string;
+    shortName: string;
+    dealUuid: string;
+    description: string;
+    CreationDateUtc: string;
 }
 
-export interface Offer {
-    shortName: string;
-    CreationDateUtc: string;
-    description: string;
-    imageBaseName: string;
-    localValidTo: string;
-    count: number;
-    offerId: number;
-    offerPropositionId: number;
-    dealUuid: string;
+export interface AccountPointMap {
+    name: string;
+    totalPoints: number;
+}
+
+export interface GetDealsOffer {
     localValidFrom: string;
+    count: number;
     validFromUTC: string;
     validToUTC: string;
+    description: string;
+    dealUuid: string;
+    CreationDateUtc: string;
+    localValidTo: string;
+    imageBaseName: string;
+    shortName: string;
     name: string;
 }
 
@@ -1110,26 +1122,28 @@ export interface RestaurantInformation {
     address: RestaurantAddress;
 }
 
-export interface AccountPointMap {
-    name: string;
-    totalPoints: number;
+export interface OfferResponse {
+    message: string;
+    randomCode: string;
 }
 
 export interface LastRefreshInformation {
     lastRefresh: string;
 }
 
-export interface UserOptions {
-    storeId: string;
-    storeName?: string;
-}
-
-export interface AccountResponse {
-}
-
 export interface PointsResponse {
     totalPoints: number;
     lifeTimePoints: number;
+}
+
+export interface UserOptions {
+    storeName?: string;
+    storeId: string;
+}
+
+export interface OfferPointsResponse {
+    pointsResponse: PointsResponse;
+    offerResponse: OfferResponse;
 }
 
 function jsonParse(json: any, reviver?: any) {

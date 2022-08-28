@@ -1,11 +1,11 @@
 import { AxiosError } from "axios";
 import { useEffect, useState } from "react";
-import { Offer } from "../types";
+import { GetDealsOffer } from "./useApiClient/ApiClient.generated";
 import useAxios from "./useAxios";
 import useNotification from "./useNotification";
 
 const useDeals = () => {
-  const [state, setState] = useState<Offer[]>();
+  const [state, setState] = useState<GetDealsOffer[]>();
   const notification = useNotification();
   const axios = useAxios();
 
@@ -13,7 +13,7 @@ const useDeals = () => {
     const get = async () => {
       try {
         const response = await axios.get("/deals");
-        setState(response?.data as Offer[]);
+        setState(response?.data as GetDealsOffer[]);
       } catch (error) {
         notification({ msg: (error as AxiosError).message, variant: "error" });
       }

@@ -2,17 +2,17 @@ import { Grid } from "@mui/material";
 import { useState } from "react";
 import useDeals from "../hooks/useDeals";
 import useLastRefresh from "../hooks/useLastRefresh";
-import { Offer } from "../types";
 import DealDialog from "../components/DealDialog";
 import DealCard from "../components/DealCard";
 import DealSkeleton from "../components/DealSkeleton";
+import { GetDealsOffer } from "../hooks/useApiClient/ApiClient.generated";
 
 export interface DealSelectorProps {}
 
 const DealSelector: React.FC<DealSelectorProps> = () => {
   const deals = useDeals();
   const [open, setOpen] = useState(false);
-  const [dialogFor, setDialogFor] = useState<Offer>();
+  const [dialogFor, setDialogFor] = useState<GetDealsOffer>();
   const handleClickOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   useLastRefresh();
