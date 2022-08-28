@@ -1,5 +1,5 @@
 import { AxiosError } from "axios";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { atom, useRecoilState, useRecoilValue } from "recoil";
 import { UserOptions } from "../types";
 import useAxios from "./useAxios";
@@ -18,6 +18,7 @@ const useUserConfig = () => {
   const [config, setConfig] = useRecoilState(UserConfig);
   const notification = useNotification();
   const axios = useAxios();
+  const [isCompleted, setIsCompleted] = useState(false);
 
   useEffect(() => {
     const get = async () => {
@@ -29,6 +30,8 @@ const useUserConfig = () => {
         if (err.response?.status !== 404) {
           notification({ msg: err.message, variant: "error" });
         }
+      } finally {
+        setIsCompleted(true);
       }
     };
 
@@ -40,6 +43,7 @@ const useUserConfig = () => {
 
   return {
     config,
+    isCompleted,
   };
 };
 

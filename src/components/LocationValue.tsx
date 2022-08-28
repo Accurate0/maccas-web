@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 import useUserConfig from "../hooks/useUserConfig";
 
 const LocationValue = () => {
-  const { config } = useUserConfig();
+  const { config, isCompleted } = useUserConfig();
   const router = useRouter();
 
   return (
@@ -16,7 +16,7 @@ const LocationValue = () => {
         </Grid>
         <Grid item>
           <Typography variant="caption">
-            <b>{config?.storeName || "Loading..."}</b>
+            <b>{config?.storeName ?? (isCompleted ? "None" : "Loading...")}</b>
           </Typography>
         </Grid>
       </Grid>
