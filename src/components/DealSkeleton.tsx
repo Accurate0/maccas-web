@@ -9,4 +9,5 @@ const DealSkeleton: React.FC = () => (
     </Stack>
   </Grid>
 );
+
 export default DealSkeleton;
