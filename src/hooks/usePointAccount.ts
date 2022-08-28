@@ -32,11 +32,11 @@ const usePointAccount = (accountId: string | undefined) => {
       }
     };
 
-    if (accountId) {
+    if (accountId && userConfig) {
       get();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [accountId]);
+  }, [accountId, userConfig]);
 
   return { pointInformation, error };
 };

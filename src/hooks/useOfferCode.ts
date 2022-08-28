@@ -44,7 +44,7 @@ const useOfferCode = (offer: GetDealsOffer | undefined) => {
       get();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [offer]);
+  }, [offer, userConfig]);
 
   const remove = async () => {
     try {
