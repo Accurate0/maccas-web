@@ -1,7 +1,6 @@
 import {
   Grid,
   Card,
-  CardMedia,
   CardContent,
   Typography,
   CardActions,
@@ -15,6 +14,7 @@ import useNotification from "../hooks/useNotification";
 import { useGetUserConfig } from "../hooks/useUserConfig";
 import { theme } from "../theme";
 import { Offer } from "../types";
+import LoadableCardMedia from "./LoadableCardMedia";
 
 export interface DealCardProps {
   offer: Offer;
@@ -42,8 +42,7 @@ const DealCard: React.FC<DealCardProps> = ({ offer, onDetails: onSelect }) => {
   return (
     <Grid item xs={6} md={3} key={offer.dealUuid}>
       <Card style={{ opacity: !validOffer ? 0.3 : undefined }}>
-        <CardMedia
-          component="img"
+        <LoadableCardMedia
           image={`${IMAGE_BUCKET_BASE}/${offer.imageBaseName}`}
           alt="missing image"
         />
