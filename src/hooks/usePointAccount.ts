@@ -18,16 +18,11 @@ const usePointAccount = (accountId: string | undefined) => {
     const get = async () => {
       try {
         setBackdrop(true);
-        const response = await axios.get(
-          `/points/${accountId}`,
-          userConfig
-            ? {
-                params: {
-                  store: userConfig.storeId,
-                },
-              }
-            : undefined
-        );
+        const response = await axios.get(`/points/${accountId}`, {
+          params: {
+            store: userConfig!.storeId,
+          },
+        });
         setState(response?.data as OfferPointsResponse);
       } catch (error) {
         notification({ msg: (error as AxiosError).message, variant: "error" });
