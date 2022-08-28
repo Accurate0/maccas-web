@@ -4,7 +4,6 @@ import { atom, useRecoilState, useRecoilValue } from "recoil";
 import { UserOptions } from "../types";
 import useAxios from "./useAxios";
 import useNotification from "./useNotification";
-import useSetBackdrop from "./useSetBackdrop";
 
 const UserConfig = atom<UserOptions | undefined>({
   key: "userConfig",
@@ -17,14 +16,12 @@ export const useGetUserConfig = () => {
 
 const useUserConfig = () => {
   const [config, setConfig] = useRecoilState(UserConfig);
-  const setBackdrop = useSetBackdrop();
   const notification = useNotification();
   const axios = useAxios();
 
   useEffect(() => {
     const get = async () => {
       try {
-        setBackdrop(true);
         const response = await axios.get("/user/config");
         setConfig(response?.data as UserOptions);
       } catch (error) {
@@ -32,8 +29,6 @@ const useUserConfig = () => {
         if (err.response?.status !== 404) {
           notification({ msg: err.message, variant: "error" });
         }
-      } finally {
-        setBackdrop(false);
       }
     };
 

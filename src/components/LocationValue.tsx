@@ -16,7 +16,7 @@ const LocationValue = () => {
         </Grid>
         <Grid item>
           <Typography variant="caption">
-            <b>{config?.storeName || "None"}</b>
+            <b>{config?.storeName || "Loading..."}</b>
           </Typography>
         </Grid>
       </Grid>

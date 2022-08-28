@@ -5,6 +5,7 @@ import useLastRefresh from "../hooks/useLastRefresh";
 import { Offer } from "../types";
 import DealDialog from "../components/DealDialog";
 import DealCard from "../components/DealCard";
+import DealSkeleton from "../components/DealSkeleton";
 
 export interface DealSelectorProps {}
 
@@ -28,15 +29,25 @@ const DealSelector: React.FC<DealSelectorProps> = () => {
         uuid={dialogFor?.dealUuid}
       />
       <Grid container spacing={2} paddingTop={8} paddingBottom={4}>
-        {deals?.map((offer) => (
-          <DealCard
-            offer={offer}
-            onDetails={() => {
-              setDialogFor(offer);
-              handleClickOpen();
-            }}
-          />
-        ))}
+        {deals ? (
+          deals?.map((offer) => (
+            <DealCard
+              offer={offer}
+              onDetails={() => {
+                setDialogFor(offer);
+                handleClickOpen();
+              }}
+            />
+          ))
+        ) : (
+          <>
+            {Array(30)
+              .fill(1)
+              .map(() => (
+                <DealSkeleton />
+              ))}
+          </>
+        )}
       </Grid>
     </>
   );
