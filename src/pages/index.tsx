@@ -42,7 +42,7 @@ const DealSelector: React.FC<DealSelectorProps> = () => {
         ) : (
           <>
             {Array(30)
-              .fill(1)
+              .fill()
               .map(() => (
                 <DealSkeleton />
               ))}
