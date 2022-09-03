@@ -25,8 +25,8 @@ const truncate = (s: string, length: number) =>
   s.length > length ? `${s.substring(0, length - 3)}...` : s;
 
 const isOfferValid = (deal: GetDealsOffer) => {
-  const from = moment.utc(deal.validFromUTC);
-  const to = moment.utc(deal.validToUTC);
+  const from = moment.utc(deal.validFromUtc);
+  const to = moment.utc(deal.validToUtc);
   const now = new Date();
 
   return moment.utc(now).isBetween(from, to);
@@ -70,7 +70,7 @@ const DealCard: React.FC<DealCardProps> = ({ offer, onDetails: onSelect }) => {
               <Grid container direction="column" item spacing={1}>
                 <Grid item xs={12}>
                   <Typography variant="caption">
-                    Added: {new Date(offer.CreationDateUtc).toLocaleDateString()}
+                    Added: {new Date(offer.creationDateUtc).toLocaleDateString()}
                   </Typography>
                 </Grid>
                 <Grid item xs={12} alignItems="baseline">

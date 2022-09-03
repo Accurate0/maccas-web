@@ -24,8 +24,8 @@ const DealSelector: React.FC<DealSelectorProps> = () => {
         onClose={handleClose}
         title={dialogFor?.shortName}
         name={dialogFor?.name}
-        validFromUTC={dialogFor?.validFromUTC}
-        validToUTC={dialogFor?.validToUTC}
+        validFromUTC={dialogFor?.validFromUtc}
+        validToUTC={dialogFor?.validToUtc}
         uuid={dialogFor?.dealUuid}
       />
       <Grid container spacing={2} paddingTop={8} paddingBottom={4}>

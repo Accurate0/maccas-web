@@ -1074,52 +1074,26 @@ export class ApiClient {
     }
 }
 
+export interface AccountPointMap {
+    totalPoints: number;
+    name: string;
+}
+
 export interface AccountResponse {
 }
 
-export interface RestaurantAddress {
-    addressLine: string;
-}
-
-export interface OfferDatabase {
-    validFromUTC: string;
-    offerPropositionId: number;
-    localValidFrom: string;
-    validToUTC: string;
-    count: number;
-    name: string;
-    imageBaseName: string;
-    offerId: number;
-    localValidTo: string;
-    shortName: string;
-    dealUuid: string;
-    description: string;
-    CreationDateUtc: string;
-}
-
-export interface AccountPointMap {
-    name: string;
-    totalPoints: number;
-}
-
 export interface GetDealsOffer {
-    localValidFrom: string;
-    count: number;
-    validFromUTC: string;
-    validToUTC: string;
+    creationDateUtc: string;
     description: string;
-    dealUuid: string;
-    CreationDateUtc: string;
-    localValidTo: string;
-    imageBaseName: string;
+    validFromUtc: string;
+    name: string;
+    validToUtc: string;
     shortName: string;
-    name: string;
-}
-
-export interface RestaurantInformation {
-    name: string;
-    storeNumber: number;
-    address: RestaurantAddress;
+    count: number;
+    imageBaseName: string;
+    validToLocal: string;
+    validFromLocal: string;
+    dealUuid: string;
 }
 
 export interface OfferResponse {
@@ -1131,19 +1105,45 @@ export interface LastRefreshInformation {
     lastRefresh: string;
 }
 
+export interface OfferPointsResponse {
+    pointsResponse: PointsResponse;
+    offerResponse: OfferResponse;
+}
+
 export interface PointsResponse {
     totalPoints: number;
     lifeTimePoints: number;
 }
 
-export interface UserOptions {
-    storeName?: string;
-    storeId: string;
+export interface OfferDatabase {
+    dealUuid: string;
+    localValidTo: string;
+    validToUTC: string;
+    localValidFrom: string;
+    name: string;
+    CreationDateUtc: string;
+    offerPropositionId: number;
+    originalImageBaseName: string;
+    validFromUTC: string;
+    offerId: number;
+    description: string;
+    shortName: string;
+    imageBaseName: string;
 }
 
-export interface OfferPointsResponse {
-    pointsResponse: PointsResponse;
-    offerResponse: OfferResponse;
+export interface RestaurantInformation {
+    storeNumber: number;
+    address: RestaurantAddress;
+    name: string;
+}
+
+export interface UserOptions {
+    storeId: string;
+    storeName?: string;
+}
+
+export interface RestaurantAddress {
+    addressLine: string;
 }
 
 function jsonParse(json: any, reviver?: any) {

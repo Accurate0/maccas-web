@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import { ApiException, OfferDatabase } from "./useApiClient/ApiClient.generated";
+import { ApiException, GetDealsOffer } from "./useApiClient/ApiClient.generated";
 import useApiClient from "./useApiClient/useApiClient";
 import useNotification from "./useNotification";
 import useSetBackdrop from "./useSetBackdrop";
 
 const useLockedDeals = () => {
-  const [state, setState] = useState<OfferDatabase[] | undefined>();
+  const [state, setState] = useState<GetDealsOffer[] | undefined>();
   const apiClient = useApiClient();
   const setBackdrop = useSetBackdrop();
   const notification = useNotification();
@@ -24,7 +24,7 @@ const useLockedDeals = () => {
             }
             return null;
           })
-          .filter((f) => f !== null) as OfferDatabase[];
+          .filter((f) => f !== null) as GetDealsOffer[];
 
         setState(lockedOffers);
       } catch (error) {
