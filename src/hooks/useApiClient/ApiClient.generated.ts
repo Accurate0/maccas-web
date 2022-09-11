@@ -847,7 +847,7 @@ export class ApiClient {
     /**
      * @return Account statistics
      */
-    get_accounts(  cancelToken?: CancelToken | undefined): Promise<ApiResponse<AccountResponse>> {
+    get_accounts(  cancelToken?: CancelToken | undefined): Promise<ApiResponse<{ [key: string]: number; }>> {
         let url_ = this.baseUrl + "/statistics/account";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -871,7 +871,7 @@ export class ApiClient {
         });
     }
 
-    protected processGet_accounts(response: AxiosResponse): Promise<ApiResponse<AccountResponse>> {
+    protected processGet_accounts(response: AxiosResponse): Promise<ApiResponse<{ [key: string]: number; }>> {
         const status = response.status;
         let _headers: any = {};
         if (response.headers && typeof response.headers === "object") {
@@ -886,7 +886,7 @@ export class ApiClient {
             let result200: any = null;
             let resultData200  = _responseText;
             result200 = JSON.parse(resultData200);
-            return Promise.resolve<ApiResponse<AccountResponse>>(new ApiResponse<AccountResponse>(status, _headers, result200));
+            return Promise.resolve<ApiResponse<{ [key: string]: number; }>>(new ApiResponse<{ [key: string]: number; }>(status, _headers, result200));
 
         } else if (status === 500) {
             const _responseText = response.data;
@@ -896,7 +896,7 @@ export class ApiClient {
             const _responseText = response.data;
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
         }
-        return Promise.resolve<ApiResponse<AccountResponse>>(new ApiResponse(status, _headers, null as any));
+        return Promise.resolve<ApiResponse<{ [key: string]: number; }>>(new ApiResponse(status, _headers, null as any));
     }
 
     /**
@@ -1075,30 +1075,27 @@ export class ApiClient {
 }
 
 export interface AccountPointMap {
-    totalPoints: number;
     name: string;
+    totalPoints: number;
 }
 
 export interface AccountResponse {
+
+    [key: string]: number | any;
 }
 
 export interface GetDealsOffer {
-    creationDateUtc: string;
-    description: string;
-    validFromUtc: string;
-    name: string;
-    validToUtc: string;
-    shortName: string;
     count: number;
-    imageBaseName: string;
-    validToLocal: string;
-    validFromLocal: string;
+    creationDateUtc: string;
     dealUuid: string;
-}
-
-export interface OfferResponse {
-    message: string;
-    randomCode: string;
+    description: string;
+    imageBaseName: string;
+    name: string;
+    shortName: string;
+    validFromLocal: string;
+    validFromUtc: string;
+    validToLocal: string;
+    validToUtc: string;
 }
 
 export interface LastRefreshInformation {
@@ -1106,44 +1103,33 @@ export interface LastRefreshInformation {
 }
 
 export interface OfferPointsResponse {
-    pointsResponse: PointsResponse;
     offerResponse: OfferResponse;
+    pointsResponse: PointsResponse;
+}
+
+export interface OfferResponse {
+    message: string;
+    randomCode: string;
 }
 
 export interface PointsResponse {
-    totalPoints: number;
     lifeTimePoints: number;
+    totalPoints: number;
 }
 
-export interface OfferDatabase {
-    dealUuid: string;
-    localValidTo: string;
-    validToUTC: string;
-    localValidFrom: string;
-    name: string;
-    CreationDateUtc: string;
-    offerPropositionId: number;
-    originalImageBaseName: string;
-    validFromUTC: string;
-    offerId: number;
-    description: string;
-    shortName: string;
-    imageBaseName: string;
+export interface RestaurantAddress {
+    addressLine: string;
 }
 
 export interface RestaurantInformation {
-    storeNumber: number;
     address: RestaurantAddress;
     name: string;
+    storeNumber: number;
 }
 
 export interface UserOptions {
     storeId: string;
     storeName?: string;
-}
-
-export interface RestaurantAddress {
-    addressLine: string;
 }
 
 function jsonParse(json: any, reviver?: any) {
