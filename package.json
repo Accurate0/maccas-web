@@ -3,27 +3,27 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@azure/msal-browser": "^2.28.2",
-    "@azure/msal-react": "^1.4.6",
+    "@azure/msal-browser": "^2.29.0",
+    "@azure/msal-react": "^1.4.8",
     "@emotion/react": "^11.10.4",
     "@emotion/styled": "^11.10.4",
     "@fortawesome/fontawesome-svg-core": "^6.2.0",
     "@fortawesome/free-regular-svg-icons": "^6.2.0",
     "@fortawesome/free-solid-svg-icons": "^6.2.0",
     "@fortawesome/react-fontawesome": "^0.2.0",
-    "@mui/icons-material": "^5.10.3",
-    "@mui/material": "^5.10.4",
-    "@stoplight/elements": "^7.6.5",
-    "axios": "^0.27.2",
+    "@mui/icons-material": "^5.10.6",
+    "@mui/material": "^5.10.8",
+    "@stoplight/elements": "^7.7.2",
+    "axios": "^1.0.0",
     "moment": "^2.29.4",
-    "next": "^12.3.0",
+    "next": "^12.3.1",
     "notistack": "^2.0.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-error-boundary": "^3.1.4",
     "react-scripts": "5.0.1",
     "recoil": "^0.7.5",
-    "web-vitals": "^3.0.1"
+    "web-vitals": "^3.0.3"
   },
   "scripts": {
     "dev": "next dev",
@@ -32,7 +32,8 @@
     "export": "next build && next export",
     "lint": "next lint",
     "lint:fix": "eslint --fix --ext .ts,.tsx .",
-    "generate:client": "nswag run nswag/config.json"
+    "generate:client": "nswag run nswag/config.json",
+    "update-packages": "ncu -u"
   },
   "eslintConfig": {
     "extends": [
@@ -54,11 +55,12 @@
     ]
   },
   "devDependencies": {
-    "@next/eslint-plugin-next": "^12.3.0",
-    "@types/node": "^18.7.16",
-    "@types/react": "^18.0.19",
+    "@next/eslint-plugin-next": "^12.3.1",
+    "@types/node": "^18.8.2",
+    "@types/react": "^18.0.21",
     "@types/react-dom": "^18.0.6",
-    "nswag": "^13.16.1",
-    "typescript": "^4.8.3"
+    "nswag": "^13.17.0",
+    "typescript": "^4.8.4",
+    "npm-check-updates": "^16.3.8"
   }
 }
