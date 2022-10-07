@@ -14,7 +14,7 @@
     "@mui/icons-material": "^5.10.6",
     "@mui/material": "^5.10.8",
     "@stoplight/elements": "^7.7.2",
-    "axios": "^1.1.0",
+    "axios": "^1.1.2",
     "moment": "^2.29.4",
     "next": "^12.3.1",
     "notistack": "^2.0.5",
