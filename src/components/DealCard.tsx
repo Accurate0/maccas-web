@@ -10,6 +10,7 @@ import {
 import moment from "moment";
 import { useRouter } from "next/router";
 import { IMAGE_BUCKET_BASE } from "../config/images";
+import { TIME_OFFSET } from "../config/time";
 import { GetDealsOffer } from "../hooks/useApiClient/ApiClient.generated";
 import useNotification from "../hooks/useNotification";
 import { useGetUserConfig } from "../hooks/useUserConfig";
@@ -25,8 +26,8 @@ const truncate = (s: string, length: number) =>
   s.length > length ? `${s.substring(0, length - 3)}...` : s;
 
 const isOfferValid = (deal: GetDealsOffer) => {
-  const from = moment.utc(deal.validFromUtc);
-  const to = moment.utc(deal.validToUtc);
+  const from = moment.utc(deal.validFromUtc).add(TIME_OFFSET, "hours");
+  const to = moment.utc(deal.validToUtc).add(TIME_OFFSET, "hours");
   const now = new Date();
 
   return moment.utc(now).isBetween(from, to);
