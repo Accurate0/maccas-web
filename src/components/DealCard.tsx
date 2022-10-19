@@ -61,7 +61,7 @@ const DealCard: React.FC<DealCardProps> = ({ offer, onDetails: onSelect }) => {
         }}
       >
         <CardContent
-          style={{ height: isMobile ? "90px" : "170px", padding: "25px 25px 25px 25px" }}
+          style={{ height: isMobile ? "80px" : "170px", padding: "25px 25px 25px 25px" }}
         >
           <Grid container item direction="row" justifyContent="space-between">
             <Grid item>
