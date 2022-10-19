@@ -67,7 +67,7 @@ const DealCard: React.FC<DealCardProps> = ({ offer, onDetails: onSelect }) => {
             <Grid item>
               <Grid item>
                 <Typography variant={isMobile ? "h6" : "h5"} component="div">
-                  {truncate(offer.shortName, isMobile ? 25 : 32)}
+                  {truncate(offer.shortName, isMobile ? 20 : 32)}
                 </Typography>
                 <Typography variant="body2">{offer.count} available</Typography>
               </Grid>
