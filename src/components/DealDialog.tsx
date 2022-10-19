@@ -9,6 +9,7 @@ import {
   DialogActions,
   Button,
   IconButton,
+  Typography,
 } from "@mui/material";
 import moment from "moment";
 import { TIME_OFFSET } from "../config/time";
@@ -22,6 +23,7 @@ export interface DealDialogProps {
   validToUTC?: string;
   name?: string;
   uuid?: string;
+  creationDateUtc?: string;
 }
 
 const DealDialog: React.FC<DealDialogProps> = ({
@@ -32,6 +34,7 @@ const DealDialog: React.FC<DealDialogProps> = ({
   validToUTC,
   name,
   uuid,
+  creationDateUtc,
 }) => {
   const notification = useNotification();
 
@@ -49,6 +52,9 @@ const DealDialog: React.FC<DealDialogProps> = ({
             </DialogContentText>
             <DialogContentText>
               <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  Added: {new Date(creationDateUtc ?? 0).toLocaleDateString()}
+                </Grid>
                 <Grid item>UUID: {uuid}</Grid>
                 <Grid item>
                   <IconButton

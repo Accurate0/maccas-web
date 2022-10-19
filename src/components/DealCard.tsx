@@ -41,47 +41,48 @@ const DealCard: React.FC<DealCardProps> = ({ offer, onDetails: onSelect }) => {
   const userConfig = useGetUserConfig();
 
   return (
-    <Grid item xs={6} md={3} key={offer.dealUuid}>
-      <Card style={{ opacity: !validOffer ? 0.3 : undefined }}>
-        <LoadableCardMedia
-          image={`${IMAGE_BUCKET_BASE}/${offer.imageBaseName}`}
-          alt="missing image"
-        />
+    <Grid item xs={12} md={3} key={offer.dealUuid}>
+      <Card
+        style={{ opacity: !validOffer ? 0.3 : undefined, cursor: "pointer" }}
+        onClick={() => {
+          if (!validOffer) {
+            notification({
+              variant: "warning",
+              msg: "This offer is not valid at the moment, it may not work correctly.",
+            });
+          }
+
+          if (userConfig) {
+            router.push(`/code/${offer.dealUuid}`);
+          } else {
+            notification({ variant: "error", msg: "A store must be selected." });
+            router.push("/location");
+          }
+        }}
+      >
         <CardContent
-          style={{ height: isMobile ? "200px" : "170px", padding: "25px 25px 25px 25px" }}
+          style={{ height: isMobile ? "90px" : "170px", padding: "25px 25px 25px 25px" }}
         >
-          <Grid
-            container
-            direction="column"
-            justifyContent="space-evenly"
-            alignItems="flex-start"
-            spacing={2}
-          >
-            <Grid item xs={8}>
+          <Grid container item direction="row" justifyContent="space-between">
+            <Grid item xs={6}>
               <Typography variant={isMobile ? "h6" : "h5"} component="div">
                 {truncate(offer.shortName, isMobile ? 20 : 32)}
               </Typography>
-            </Grid>
-            <Grid item container justifyContent="space-between">
               <Grid item>
                 <Typography variant="body2">{offer.count} available</Typography>
               </Grid>
             </Grid>
-            <Grid item xs={4}>
-              <Grid container direction="column" item spacing={1}>
-                <Grid item xs={12}>
-                  <Typography variant="caption">
-                    Added: {new Date(offer.creationDateUtc).toLocaleDateString()}
-                  </Typography>
-                </Grid>
-                <Grid item xs={12} alignItems="baseline">
-                  <Typography variant="caption">{validOffer ? "✅" : "❌"}</Typography>
-                </Grid>
-              </Grid>
+
+            <Grid item xs={6} style={{ flexBasis: "auto" }}>
+              <LoadableCardMedia
+                image={`${IMAGE_BUCKET_BASE}/${offer.imageBaseName}`}
+                alt="missing image"
+                style={{ height: 90, width: 90, display: "flex" }}
+              />
             </Grid>
           </Grid>
         </CardContent>
-        <CardActions>
+        {/* <CardActions>
           <Grid container justifyContent="space-between">
             <Grid item>
               <Button
@@ -116,7 +117,7 @@ const DealCard: React.FC<DealCardProps> = ({ offer, onDetails: onSelect }) => {
               </Button>
             </Grid>
           </Grid>
-        </CardActions>
+        </CardActions> */}
       </Card>
     </Grid>
   );

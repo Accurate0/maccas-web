@@ -14,6 +14,7 @@ import { InteractionType } from "@azure/msal-browser";
 import OpenGraph from "../components/OpenGraph";
 import { config } from "@fortawesome/fontawesome-svg-core";
 import "@fortawesome/fontawesome-svg-core/styles.css";
+import "../index.css";
 
 config.autoAddCss = false;
 
@@ -39,7 +40,10 @@ const App = ({ Component, pageProps }: AppProps) => {
   return (
     <AppSetup>
       <OpenGraph />
-      <MsalAuthenticationTemplate interactionType={InteractionType.Redirect} authenticationRequest={LoginRequest} />
+      <MsalAuthenticationTemplate
+        interactionType={InteractionType.Redirect}
+        authenticationRequest={LoginRequest}
+      />
       <AuthenticatedTemplate>
         <NavBar />
         {router.pathname === "/doc" ? (

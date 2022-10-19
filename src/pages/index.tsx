@@ -27,6 +27,7 @@ const DealSelector: React.FC<DealSelectorProps> = () => {
         validFromUTC={dialogFor?.validFromUtc}
         validToUTC={dialogFor?.validToUtc}
         uuid={dialogFor?.dealUuid}
+        creationDateUtc={dialogFor?.creationDateUtc}
       />
       <Grid container spacing={2} paddingTop={8} paddingBottom={4}>
         {deals ? (
