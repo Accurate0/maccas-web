@@ -1,13 +1,9 @@
-import { useMsal } from "@azure/msal-react";
-import { faArrowRightFromBracket } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Box, AppBar, Toolbar, Grid, Typography, Button, Link } from "@mui/material";
+import { Box, AppBar, Toolbar, Grid, Typography, Link } from "@mui/material";
 import { useRouter } from "next/router";
 import LocationValue from "./LocationValue";
 
 const NavBar = () => {
   const router = useRouter();
-  const { instance } = useMsal();
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -28,20 +24,6 @@ const NavBar = () => {
               <Grid container spacing={3}>
                 <Grid item>
                   <LocationValue />
-                </Grid>
-                <Grid item style={{ paddingLeft: 10 }}>
-                  <Button color="inherit" onClick={() => instance.logoutRedirect()}>
-                    <Grid item container spacing={1} direction="row">
-                      <Grid item>
-                        <FontAwesomeIcon icon={faArrowRightFromBracket} size="1x" />
-                      </Grid>
-                      <Grid item>
-                        <Typography variant="caption">
-                          <b>Logout</b>
-                        </Typography>
-                      </Grid>
-                    </Grid>
-                  </Button>
                 </Grid>
               </Grid>
             </Grid>

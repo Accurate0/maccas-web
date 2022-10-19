@@ -56,16 +56,15 @@ const DealCard: React.FC<DealCardProps> = ({ offer, onDetails: onSelect }) => {
           style={{ height: isMobile ? "90px" : "170px", padding: "25px 25px 25px 25px" }}
         >
           <Grid container item direction="row" justifyContent="space-between">
-            <Grid item xs={6}>
-              <Typography variant={isMobile ? "h6" : "h5"} component="div">
-                {truncate(offer.shortName, isMobile ? 20 : 32)}
-              </Typography>
+            <Grid item>
               <Grid item>
+                <Typography variant={isMobile ? "h6" : "h5"} component="div">
+                  {truncate(offer.shortName, isMobile ? 25 : 32)}
+                </Typography>
                 <Typography variant="body2">{offer.count} available</Typography>
               </Grid>
             </Grid>
-
-            <Grid item xs={6} style={{ flexBasis: "auto" }}>
+            <Grid item style={{ flexBasis: "auto" }}>
               <LoadableCardMedia
                 image={`${IMAGE_BUCKET_BASE}/${offer.imageBaseName}`}
                 alt="missing image"
