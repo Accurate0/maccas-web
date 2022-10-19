@@ -1,4 +1,14 @@
-import { Button, Dialog, DialogTitle, Grid, IconButton, List, ListItem, ListItemText, TextField } from "@mui/material";
+import {
+  Button,
+  Dialog,
+  DialogTitle,
+  Grid,
+  IconButton,
+  List,
+  ListItem,
+  ListItemText,
+  TextField,
+} from "@mui/material";
 import { useState } from "react";
 import useLocationSearch from "../hooks/useLocationSearch";
 import { useUpdateUserConfig } from "../hooks/useUserConfig";
@@ -45,7 +55,10 @@ const LocationSelection = () => {
         case "prompt":
           navigator.geolocation.getCurrentPosition(
             async (position) => {
-              const response = await searchByPosition(position.coords.latitude, position.coords.longitude);
+              const response = await searchByPosition(
+                position.coords.latitude,
+                position.coords.longitude
+              );
               if (response?.length) {
                 setRestaurants(response);
                 setDialogOpen(true);
@@ -81,7 +94,11 @@ const LocationSelection = () => {
         <DialogTitle>Nearby Locations</DialogTitle>
         <List sx={{ pt: 0 }}>
           {restaurants.map((restaurant) => (
-            <ListItem button onClick={() => handleListItemClick(restaurant)} key={restaurant.storeNumber.toString()}>
+            <ListItem
+              button
+              onClick={() => handleListItemClick(restaurant)}
+              key={restaurant.storeNumber.toString()}
+            >
               <ListItemText primary={restaurant.name} secondary={restaurant.address.addressLine} />
             </ListItem>
           ))}
@@ -103,6 +120,7 @@ const LocationSelection = () => {
               helperText={error ? "Enter location" : undefined}
               error={error}
               type="text"
+              style={{ backgroundColor: "white" }}
               onChange={(e) => setValue(e.target.value)}
               InputProps={{
                 endAdornment: (
