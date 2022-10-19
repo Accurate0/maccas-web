@@ -1,12 +1,4 @@
-import {
-  Grid,
-  Card,
-  CardContent,
-  Typography,
-  CardActions,
-  Button,
-  useMediaQuery,
-} from "@mui/material";
+import { Grid, Card, CardContent, Typography, useMediaQuery } from "@mui/material";
 import moment from "moment";
 import { useRouter } from "next/router";
 import { IMAGE_BUCKET_BASE } from "../config/images";
@@ -82,42 +74,6 @@ const DealCard: React.FC<DealCardProps> = ({ offer, onDetails: onSelect }) => {
             </Grid>
           </Grid>
         </CardContent>
-        {/* <CardActions>
-          <Grid container justifyContent="space-between">
-            <Grid item>
-              <Button
-                color="secondary"
-                size={isMobile ? "small" : "large"}
-                onClick={() => {
-                  if (!validOffer) {
-                    notification({
-                      variant: "warning",
-                      msg: "This offer is not valid at the moment, it may not work correctly.",
-                    });
-                  }
-
-                  if (userConfig) {
-                    router.push(`/code/${offer.dealUuid}`);
-                  } else {
-                    notification({ variant: "error", msg: "A store must be selected." });
-                    router.push("/location");
-                  }
-                }}
-              >
-                Select
-              </Button>
-            </Grid>
-            <Grid item>
-              <Button
-                color="secondary"
-                size={isMobile ? "small" : "large"}
-                onClick={() => onSelect()}
-              >
-                Details
-              </Button>
-            </Grid>
-          </Grid>
-        </CardActions> */}
       </Card>
     </Grid>
   );
