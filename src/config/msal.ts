@@ -8,23 +8,17 @@ export const MSALConfig: Configuration = {
   },
   cache: {
     cacheLocation: "localStorage",
-    storeAuthStateInCookie: false,
+    storeAuthStateInCookie: true,
   },
 };
 
 export const LoginRequest = {
   redirectUri: "/login",
-  scopes: [
-    "openid",
-    "https://login.anurag.sh/f285a3b9-c589-4fae-971e-edd635df6b96/Maccas.ReadWrite",
-  ],
+  scopes: ["openid"],
 };
 
 export const TokenRequest = {
-  scopes: [
-    "openid",
-    "https://login.anurag.sh/f285a3b9-c589-4fae-971e-edd635df6b96/Maccas.ReadWrite",
-  ],
+  scopes: ["openid"],
 };
 
 export const MSALInstance = new PublicClientApplication(MSALConfig);

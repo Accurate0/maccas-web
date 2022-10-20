@@ -11,7 +11,7 @@ const useAccessToken = () => {
       ...TokenRequest,
       account: accounts[0] ?? undefined,
     })
-    .then((token) => token.accessToken)
+    .then((token) => token.idToken)
     .catch(() => {
       if (inProgress === InteractionStatus.None) {
         instance.acquireTokenRedirect(LoginRequest);
