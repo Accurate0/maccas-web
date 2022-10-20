@@ -41,7 +41,7 @@ const App = ({ Component, pageProps }: AppProps) => {
     <AppSetup>
       <OpenGraph />
       <MsalAuthenticationTemplate
-        interactionType={InteractionType.Redirect}
+        interactionType={InteractionType.Silent}
         authenticationRequest={LoginRequest}
       />
       <AuthenticatedTemplate>
