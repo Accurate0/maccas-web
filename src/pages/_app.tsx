@@ -1,12 +1,17 @@
-import { AuthenticatedTemplate, MsalAuthenticationTemplate, MsalProvider } from "@azure/msal-react";
+import {
+  AuthenticatedTemplate,
+  MsalAuthenticationTemplate,
+  MsalProvider,
+  useMsalAuthentication,
+} from "@azure/msal-react";
 import { Container, ThemeProvider } from "@mui/material";
 import Head from "next/head";
 import { SnackbarProvider } from "notistack";
-import React, { ReactNode } from "react";
+import React, { ReactNode, useEffect } from "react";
 import { RecoilRoot } from "recoil";
 import Backdrop from "../components/Backdrop";
 import NavBar from "../components/NavBar";
-import { LoginRequest, MSALInstance } from "../config/msal";
+import { LoginRequest, MSALInstance, TokenRequest } from "../config/msal";
 import { theme } from "../theme";
 import type { AppProps } from "next/app";
 import { useRouter } from "next/router";
@@ -37,13 +42,18 @@ const AppSetup = ({ children }: { children: ReactNode }) => (
 const App = ({ Component, pageProps }: AppProps) => {
   const router = useRouter();
 
+  const { login, error } = useMsalAuthentication(InteractionType.Silent, TokenRequest);
+
+  useEffect(() => {
+    if (error) {
+      login(InteractionType.Popup, LoginRequest);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [error]);
+
   return (
     <AppSetup>
       <OpenGraph />
-      <MsalAuthenticationTemplate
-        interactionType={InteractionType.Silent}
-        authenticationRequest={LoginRequest}
-      />
       <AuthenticatedTemplate>
         <NavBar />
         {router.pathname === "/doc" ? (
