@@ -22,7 +22,3 @@ export const TokenRequest = {
 };
 
 export const MSALInstance = new PublicClientApplication(MSALConfig);
-
-MSALInstance.handleRedirectPromise()
-  .then(() => {})
-  .catch(() => {});
