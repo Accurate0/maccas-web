@@ -45,7 +45,7 @@ const App = ({ Component, pageProps }: AppProps) => {
 
   useEffect(() => {
     if (error) {
-      login(InteractionType.Popup, LoginRequest);
+      login(InteractionType.Redirect, LoginRequest);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [error]);
