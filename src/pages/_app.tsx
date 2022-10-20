@@ -41,7 +41,6 @@ const AppSetup = ({ children }: { children: ReactNode }) => (
 
 const App = ({ Component, pageProps }: AppProps) => {
   const router = useRouter();
-
   const { login, error } = useMsalAuthentication(InteractionType.Silent, TokenRequest);
 
   useEffect(() => {
