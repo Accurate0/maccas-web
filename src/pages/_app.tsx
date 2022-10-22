@@ -1,9 +1,4 @@
-import {
-  AuthenticatedTemplate,
-  MsalAuthenticationTemplate,
-  MsalProvider,
-  useMsalAuthentication,
-} from "@azure/msal-react";
+import { AuthenticatedTemplate, MsalProvider, useMsalAuthentication } from "@azure/msal-react";
 import { Container, ThemeProvider } from "@mui/material";
 import Head from "next/head";
 import { SnackbarProvider } from "notistack";
@@ -44,6 +39,7 @@ const App = ({ Component, pageProps }: AppProps) => {
   const { login, error } = useMsalAuthentication(InteractionType.Silent, TokenRequest);
 
   useEffect(() => {
+    console.log(error);
     if (error) {
       login(InteractionType.Redirect, LoginRequest);
     }
