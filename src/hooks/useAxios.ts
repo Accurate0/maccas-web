@@ -12,7 +12,6 @@ const useAxios = (transformResponse: boolean = true) => {
     async (config: AxiosRequestConfig) => {
       const accessToken = await tokenPromise;
       config.headers = config.headers ?? {};
-      console.log(accessToken);
 
       if (accessToken) {
         config.headers["Authorization"] = `Bearer ${accessToken}`;

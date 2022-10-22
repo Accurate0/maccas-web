@@ -18,11 +18,26 @@ import "../index.css";
 
 config.autoAddCss = false;
 
+const Authentication = () => {
+  const { login, error } = useMsalAuthentication(InteractionType.Silent, TokenRequest);
+
+  useEffect(() => {
+    console.log(error);
+    if (error instanceof InteractionRequiredAuthError) {
+      login(InteractionType.Redirect, LoginRequest);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [error]);
+
+  return null;
+};
+
 const AppSetup = ({ children }: { children: ReactNode }) => (
   <MsalProvider instance={MSALInstance}>
     <RecoilRoot>
       <ThemeProvider theme={theme}>
         <SnackbarProvider>
+          <Authentication />
           <Backdrop />
           <Head>
             <title>Maccas</title>
@@ -36,14 +51,6 @@ const AppSetup = ({ children }: { children: ReactNode }) => (
 
 const App = ({ Component, pageProps }: AppProps) => {
   const router = useRouter();
-  const { login, error } = useMsalAuthentication(InteractionType.Silent, TokenRequest);
-
-  useEffect(() => {
-    if (error instanceof InteractionRequiredAuthError) {
-      login(InteractionType.Redirect, LoginRequest);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [error]);
 
   return (
     <AppSetup>
