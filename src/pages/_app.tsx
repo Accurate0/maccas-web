@@ -10,7 +10,7 @@ import { LoginRequest, MSALInstance, TokenRequest } from "../config/msal";
 import { theme } from "../theme";
 import type { AppProps } from "next/app";
 import { useRouter } from "next/router";
-import { InteractionType } from "@azure/msal-browser";
+import { InteractionRequiredAuthError, InteractionType } from "@azure/msal-browser";
 import OpenGraph from "../components/OpenGraph";
 import { config } from "@fortawesome/fontawesome-svg-core";
 import "@fortawesome/fontawesome-svg-core/styles.css";
@@ -39,8 +39,7 @@ const App = ({ Component, pageProps }: AppProps) => {
   const { login, error } = useMsalAuthentication(InteractionType.Silent, TokenRequest);
 
   useEffect(() => {
-    console.log(error);
-    if (error) {
+    if (error instanceof InteractionRequiredAuthError) {
       login(InteractionType.Redirect, LoginRequest);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
