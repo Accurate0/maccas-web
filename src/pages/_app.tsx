@@ -22,7 +22,6 @@ const Authentication = () => {
   const { login, error } = useMsalAuthentication(InteractionType.Silent, TokenRequest);
 
   useEffect(() => {
-    console.log(error);
     if (error instanceof InteractionRequiredAuthError) {
       login(InteractionType.Redirect, LoginRequest);
     }
