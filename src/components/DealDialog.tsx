@@ -54,7 +54,7 @@ const DealDialog: React.FC<DealDialogProps> = ({
                 <Grid item xs={12}>
                   Added: {new Date(creationDateUtc ?? 0).toLocaleDateString()}
                 </Grid>
-                <Grid item>UUID: {uuid}</Grid>
+                <Grid item>UUID:</Grid>
                 <Grid item>
                   <IconButton
                     color="info"
@@ -65,7 +65,7 @@ const DealDialog: React.FC<DealDialogProps> = ({
                       notification({ variant: "info", msg: "Copied" });
                     }}
                   >
-                    <FontAwesomeIcon icon={faClipboard} size="lg" />
+                    <FontAwesomeIcon icon={faClipboard} size="1x" />
                   </IconButton>
                 </Grid>
               </Grid>

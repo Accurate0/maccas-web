@@ -40,36 +40,51 @@ const DealCard: React.FC<DealCardProps> = ({ offer, onDetails: onSelect }) => {
   const notification = useNotification();
   const userConfig = useGetUserConfig();
 
+  const onDealSelect = () => {
+    if (!validOffer) {
+      notification({
+        variant: "warning",
+        msg: "This offer is not valid at the moment, it may not work correctly.",
+      });
+    }
+
+    if (userConfig) {
+      router.push(`/code/${offer.dealUuid}`);
+    } else {
+      notification({ variant: "error", msg: "A store must be selected." });
+      router.push("/location");
+    }
+  };
+
   return isMobile ? (
     <Grid item xs={12} md={3} key={offer.dealUuid}>
       <Card
         style={{ opacity: !validOffer ? 0.3 : undefined, cursor: "pointer" }}
-        onClick={() => {
-          if (!validOffer) {
-            notification({
-              variant: "warning",
-              msg: "This offer is not valid at the moment, it may not work correctly.",
-            });
-          }
-
-          if (userConfig) {
-            router.push(`/code/${offer.dealUuid}`);
-          } else {
-            notification({ variant: "error", msg: "A store must be selected." });
-            router.push("/location");
-          }
-        }}
+        onClick={onDealSelect}
       >
         <CardContent
           style={{ height: isMobile ? "80px" : "170px", padding: "25px 25px 25px 25px" }}
         >
           <Grid container item direction="row" justifyContent="space-between">
-            <Grid item>
-              <Grid item>
+            <Grid item xs={8} container direction="column">
+              <Grid item xs>
                 <Typography variant={isMobile ? "h6" : "h5"} component="div">
                   {truncate(offer.shortName, isMobile ? 20 : 32)}
                 </Typography>
+              </Grid>
+              <Grid item xs>
                 <Typography variant="body2">{offer.count} available</Typography>
+              </Grid>
+              <Grid item xs>
+                <Typography
+                  variant="body2"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onSelect();
+                  }}
+                >
+                  <b>Details</b>
+                </Typography>
               </Grid>
             </Grid>
             <Grid item style={{ flexBasis: "auto" }}>
@@ -127,25 +142,7 @@ const DealCard: React.FC<DealCardProps> = ({ offer, onDetails: onSelect }) => {
         <CardActions>
           <Grid container justifyContent="space-between">
             <Grid item>
-              <Button
-                color="secondary"
-                size={isMobile ? "small" : "large"}
-                onClick={() => {
-                  if (!validOffer) {
-                    notification({
-                      variant: "warning",
-                      msg: "This offer is not valid at the moment, it may not work correctly.",
-                    });
-                  }
-
-                  if (userConfig) {
-                    router.push(`/code/${offer.dealUuid}`);
-                  } else {
-                    notification({ variant: "error", msg: "A store must be selected." });
-                    router.push("/location");
-                  }
-                }}
-              >
+              <Button color="secondary" size={isMobile ? "small" : "large"} onClick={onDealSelect}>
                 Select
               </Button>
             </Grid>
