@@ -75,9 +75,10 @@ const DealCard: React.FC<DealCardProps> = ({ offer, onDetails: onSelect }) => {
               <Grid item xs>
                 <Typography variant="body2">{offer.count} available</Typography>
               </Grid>
-              <Grid item xs>
+              <Grid item xs={3}>
                 <Typography
                   variant="body2"
+                  style={{ width: 20 }}
                   onClick={(e) => {
                     e.stopPropagation();
                     onSelect();

@@ -15,6 +15,7 @@ import useOfferCode from "../../hooks/useOfferCode";
 import useDeal from "../../hooks/useDeal";
 import Head from "next/head";
 import ErrorPage from "next/error";
+import LoadableCardMedia from "../../components/LoadableCardMedia";
 
 export interface DealSelectionProps {}
 
@@ -45,8 +46,7 @@ const DealSelection: React.FC<DealSelectionProps> = () => {
             >
               <Grid item xs={12}>
                 <Card variant="outlined">
-                  <CardMedia
-                    component="img"
+                  <LoadableCardMedia
                     image={`${IMAGE_BUCKET_BASE}/${deal?.imageBaseName}`}
                     alt="missing image"
                   />
