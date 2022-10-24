@@ -1,13 +1,4 @@
-import {
-  Box,
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  CardMedia,
-  Grid,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Card, CardActions, CardContent, Grid, Typography } from "@mui/material";
 import { Container } from "@mui/system";
 import { useRouter } from "next/router";
 import { IMAGE_BUCKET_BASE } from "../../config/images";
