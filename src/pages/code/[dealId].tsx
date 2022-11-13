@@ -1,7 +1,6 @@
 import { Box, Button, Card, CardActions, CardContent, Grid, Typography } from "@mui/material";
 import { Container } from "@mui/system";
 import { useRouter } from "next/router";
-import { IMAGE_BUCKET_BASE } from "../../config/images";
 import useOfferCode from "../../hooks/useOfferCode";
 import useDeal from "../../hooks/useDeal";
 import Head from "next/head";
@@ -37,10 +36,7 @@ const DealSelection: React.FC<DealSelectionProps> = () => {
             >
               <Grid item xs={12}>
                 <Card variant="outlined">
-                  <LoadableCardMedia
-                    image={`${IMAGE_BUCKET_BASE}/${deal?.imageBaseName}`}
-                    alt="missing image"
-                  />
+                  <LoadableCardMedia image={deal.imageUrl} alt="missing image" />
                   <CardContent style={{ margin: "25px 25px 25px 25px" }}>
                     <Typography sx={{ fontSize: 24 }} color="text.primary" gutterBottom>
                       Offer
