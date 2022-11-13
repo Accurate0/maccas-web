@@ -9,7 +9,6 @@ import {
 } from "@mui/material";
 import moment from "moment";
 import { useRouter } from "next/router";
-import { IMAGE_BUCKET_BASE } from "../config/images";
 import { TIME_OFFSET } from "../config/time";
 import { GetDealsOffer } from "../hooks/useApiClient/ApiClient.generated";
 import useNotification from "../hooks/useNotification";
@@ -90,7 +89,7 @@ const DealCard: React.FC<DealCardProps> = ({ offer, onDetails: onSelect }) => {
             </Grid>
             <Grid item style={{ flexBasis: "auto" }}>
               <LoadableCardMedia
-                image={`${IMAGE_BUCKET_BASE}/${offer.imageBaseName}`}
+                image={offer.imageUrl}
                 alt="missing image"
                 style={{ height: 90, width: 90, display: "flex" }}
               />
@@ -102,10 +101,7 @@ const DealCard: React.FC<DealCardProps> = ({ offer, onDetails: onSelect }) => {
   ) : (
     <Grid item xs={6} md={3} key={offer.dealUuid}>
       <Card style={{ opacity: !validOffer ? 0.3 : undefined }}>
-        <LoadableCardMedia
-          image={`${IMAGE_BUCKET_BASE}/${offer.imageBaseName}`}
-          alt="missing image"
-        />
+        <LoadableCardMedia image={offer.imageUrl} alt="missing image" />
         <CardContent
           style={{ height: isMobile ? "200px" : "170px", padding: "25px 25px 25px 25px" }}
         >
