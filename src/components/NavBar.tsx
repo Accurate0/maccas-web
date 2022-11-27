@@ -1,9 +1,13 @@
-import { Box, AppBar, Toolbar, Grid, Typography, Link } from "@mui/material";
+import { useMsal } from "@azure/msal-react";
+import { Box, AppBar, Toolbar, Grid, Typography, Link, Button } from "@mui/material";
 import { useRouter } from "next/router";
+import useEnvironment from "../hooks/useEnvironment";
 import LocationValue from "./LocationValue";
 
 const NavBar = () => {
   const router = useRouter();
+  const { isDevelopment } = useEnvironment();
+  const { instance } = useMsal();
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -27,6 +31,11 @@ const NavBar = () => {
                 </Grid>
               </Grid>
             </Grid>
+            {isDevelopment && (
+              <Grid item>
+                <Button onClick={() => instance.logoutRedirect()}>Logout</Button>
+              </Grid>
+            )}
           </Grid>
         </Toolbar>
       </AppBar>
