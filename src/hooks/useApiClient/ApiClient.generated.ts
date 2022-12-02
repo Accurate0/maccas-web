@@ -441,11 +441,9 @@ export class ApiClient {
     }
 
     /**
-     * @param x_log_user_id (optional) The user id to log for
-     * @param x_log_user_name (optional) The user name to log for
      * @return Added a deal
      */
-    add_deal(deal_id: string, store: number, x_log_user_id?: string | undefined, x_log_user_name?: string | undefined , cancelToken?: CancelToken | undefined): Promise<ApiResponse<OfferResponse>> {
+    add_deal(deal_id: string, store: number , cancelToken?: CancelToken | undefined): Promise<ApiResponse<OfferResponse>> {
         let url_ = this.baseUrl + "/deals/{deal_id}?";
         if (deal_id === undefined || deal_id === null)
             throw new Error("The parameter 'deal_id' must be defined.");
@@ -460,8 +458,6 @@ export class ApiClient {
             method: "POST",
             url: url_,
             headers: {
-                "x-log-user-id": x_log_user_id !== undefined && x_log_user_id !== null ? "" + x_log_user_id : "",
-                "x-log-user-name": x_log_user_name !== undefined && x_log_user_name !== null ? "" + x_log_user_name : "",
                 "Accept": "application/json"
             },
             cancelToken
@@ -1072,6 +1068,62 @@ export class ApiClient {
         }
         return Promise.resolve<ApiResponse<void>>(new ApiResponse(status, _headers, null as any));
     }
+
+    /**
+     * @return Spending information for this user
+     */
+    get_user_spending(  cancelToken?: CancelToken | undefined): Promise<ApiResponse<UserSpending>> {
+        let url_ = this.baseUrl + "/user/spending";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: AxiosRequestConfig = {
+            method: "GET",
+            url: url_,
+            headers: {
+                "Accept": "application/json"
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processGet_user_spending(_response);
+        });
+    }
+
+    protected processGet_user_spending(response: AxiosResponse): Promise<ApiResponse<UserSpending>> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (let k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        let _mappings: { source: any, target: any }[] = [];
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            result200 = JSON.parse(resultData200);
+            return Promise.resolve<ApiResponse<UserSpending>>(new ApiResponse<UserSpending>(status, _headers, result200));
+
+        } else if (status === 500) {
+            const _responseText = response.data;
+            return throwException("Internal Server Error", status, _responseText, _headers);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<ApiResponse<UserSpending>>(new ApiResponse(status, _headers, null as any));
+    }
 }
 
 export interface AccountPointMap {
@@ -1095,9 +1147,7 @@ export interface GetDealsOffer {
     name: string;
     price?: number;
     shortName: string;
-    validFromLocal: string;
     validFromUtc: string;
-    validToLocal: string;
     validToUtc: string;
 
     [key: string]: any;
@@ -1147,6 +1197,12 @@ export interface RestaurantInformation {
 export interface UserOptions {
     storeId: string;
     storeName?: string;
+
+    [key: string]: any;
+}
+
+export interface UserSpending {
+    total: number;
 
     [key: string]: any;
 }
