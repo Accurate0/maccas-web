@@ -6,7 +6,7 @@ import React, { ReactNode, useEffect } from "react";
 import { RecoilRoot } from "recoil";
 import Backdrop from "../components/Backdrop";
 import NavBar from "../components/NavBar";
-import { LoginRequest, MSALInstance } from "../config/msal";
+import { LoginRequest, MSALInstance, TokenRequest } from "../config/msal";
 import { theme } from "../theme";
 import type { AppProps } from "next/app";
 import { useRouter } from "next/router";
@@ -19,7 +19,7 @@ import "../index.css";
 config.autoAddCss = false;
 
 const Authentication = () => {
-  const { login, error } = useMsalAuthentication(InteractionType.Redirect, LoginRequest);
+  const { login, error } = useMsalAuthentication(InteractionType.Silent, TokenRequest);
 
   useEffect(() => {
     if (error instanceof InteractionRequiredAuthError) {
