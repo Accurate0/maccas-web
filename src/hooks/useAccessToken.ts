@@ -1,6 +1,6 @@
 import { InteractionStatus } from "@azure/msal-browser";
 import { useMsal } from "@azure/msal-react";
-import { LoginRequest, TokenRequest } from "../config/msal";
+import { TokenRequest } from "../config/msal";
 
 const useAccessToken = () => {
   const { instance, inProgress } = useMsal();
@@ -14,7 +14,7 @@ const useAccessToken = () => {
     .then((token) => token.accessToken)
     .catch(() => {
       if (inProgress === InteractionStatus.None) {
-        instance.acquireTokenRedirect(LoginRequest);
+        instance.logoutRedirect();
       }
     });
 
