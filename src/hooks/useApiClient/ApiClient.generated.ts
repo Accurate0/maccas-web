@@ -1202,6 +1202,7 @@ export interface UserOptions {
 }
 
 export interface UserSpending {
+    items: GetDealsOffer[];
     total: number;
 
     [key: string]: any;

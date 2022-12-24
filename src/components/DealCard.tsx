@@ -17,6 +17,10 @@ import { theme } from "../theme";
 import LoadableCardMedia from "./LoadableCardMedia";
 
 export interface DealCardProps {
+  disableButtons?: boolean;
+  forceMobile?: boolean;
+  ignoreValidity?: boolean;
+  hideCount?: boolean;
   offer: GetDealsOffer;
   onDetails: () => void;
 }
@@ -32,34 +36,47 @@ const isOfferValid = (deal: GetDealsOffer) => {
   return moment.utc(now).isBetween(from, to);
 };
 
-const DealCard: React.FC<DealCardProps> = ({ offer, onDetails: onSelect }) => {
+const DealCard: React.FC<DealCardProps> = ({
+  offer,
+  onDetails: onSelect,
+  forceMobile,
+  disableButtons,
+  ignoreValidity,
+  hideCount,
+}) => {
   const router = useRouter();
-  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const breakpoint = useMediaQuery(theme.breakpoints.down("md"));
+  const isMobile = forceMobile ?? breakpoint;
   const validOffer = isOfferValid(offer);
   const notification = useNotification();
   const userConfig = useGetUserConfig();
 
   const onDealSelect = () => {
-    if (!validOffer) {
-      notification({
-        variant: "warning",
-        msg: "This offer is not valid at the moment, it may not work correctly.",
-      });
-    }
+    if (!disableButtons) {
+      if (!validOffer) {
+        notification({
+          variant: "warning",
+          msg: "This offer is not valid at the moment, it may not work correctly.",
+        });
+      }
 
-    if (userConfig) {
-      router.push(`/code/${offer.dealUuid}`);
-    } else {
-      notification({ variant: "error", msg: "A store must be selected." });
-      router.push("/location");
+      if (userConfig) {
+        router.push(`/code/${offer.dealUuid}`);
+      } else {
+        notification({ variant: "error", msg: "A store must be selected." });
+        router.push("/location");
+      }
     }
   };
 
   return isMobile ? (
     <Grid item xs={12} md={3} key={offer.dealUuid}>
       <Card
-        style={{ opacity: !validOffer ? 0.3 : undefined, cursor: "pointer" }}
-        onClick={onDealSelect}
+        style={{
+          opacity: ignoreValidity ? undefined : !validOffer ? 0.3 : undefined,
+          cursor: disableButtons ? undefined : "pointer",
+        }}
+        onClick={disableButtons ? undefined : onDealSelect}
       >
         <CardContent
           style={{ height: isMobile ? "80px" : "170px", padding: "25px 25px 25px 25px" }}
@@ -71,21 +88,27 @@ const DealCard: React.FC<DealCardProps> = ({ offer, onDetails: onSelect }) => {
                   {truncate(offer.shortName, isMobile ? 20 : 32)}
                 </Typography>
               </Grid>
-              <Grid item xs>
-                <Typography variant="body2">{offer.count} available</Typography>
-              </Grid>
-              <Grid item xs={3}>
-                <Typography
-                  variant="body2"
-                  style={{ width: 20 }}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onSelect();
-                  }}
-                >
-                  <b>Details</b>
-                </Typography>
-              </Grid>
+              {!hideCount && (
+                <Grid item xs>
+                  <Typography variant="body2">{offer.count} available</Typography>
+                </Grid>
+              )}
+              {!disableButtons && (
+                <Grid item xs={3}>
+                  <Typography
+                    variant="body2"
+                    style={{ width: 20 }}
+                    onClick={(e) => {
+                      if (!disableButtons) {
+                        e.stopPropagation();
+                        onSelect();
+                      }
+                    }}
+                  >
+                    <b>Details</b>
+                  </Typography>
+                </Grid>
+              )}
             </Grid>
             <Grid item style={{ flexBasis: "auto" }}>
               <LoadableCardMedia
@@ -139,7 +162,12 @@ const DealCard: React.FC<DealCardProps> = ({ offer, onDetails: onSelect }) => {
         <CardActions>
           <Grid container justifyContent="space-between">
             <Grid item>
-              <Button color="secondary" size={isMobile ? "small" : "large"} onClick={onDealSelect}>
+              <Button
+                color="secondary"
+                size={isMobile ? "small" : "large"}
+                onClick={onDealSelect}
+                disabled={disableButtons}
+              >
                 Select
               </Button>
             </Grid>
@@ -148,6 +176,7 @@ const DealCard: React.FC<DealCardProps> = ({ offer, onDetails: onSelect }) => {
                 color="secondary"
                 size={isMobile ? "small" : "large"}
                 onClick={() => onSelect()}
+                disabled={disableButtons}
               >
                 Details
               </Button>
