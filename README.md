@@ -1,6 +1,6 @@
 # maccas-web
 
-- Frontend for [maccas-api](https://github.com/Accurate0/maccas-api)
+Frontend for [maccas-api](https://github.com/Accurate0/maccas-api)
 
 ## Design
 
