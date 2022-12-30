@@ -6,6 +6,10 @@ on:
   push:
     branches:
       - main
+    paths-ignore:
+      - ".github/dependabot.yml"
+      - ".vscode/**"
+      - "resources/**"
 
 concurrency:
   group: environment-${{ github.ref }}-${{ github.workflow }}
