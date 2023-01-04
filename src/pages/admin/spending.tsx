@@ -19,7 +19,7 @@ const Admin = () => {
   return (
     <div style={{ paddingTop: "3vh" }}>
       <Head>
-        <title>Maccas | Admin</title>
+        <title>Maccas | Admin - Spending</title>
       </Head>
       <Grid
         paddingTop={8}
