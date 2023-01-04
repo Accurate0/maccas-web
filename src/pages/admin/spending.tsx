@@ -48,7 +48,6 @@ const Admin = () => {
                           forceMobile
                           ignoreValidity
                           tall
-                          showPrice
                           offer={o}
                           onDetails={() => {}}
                         />

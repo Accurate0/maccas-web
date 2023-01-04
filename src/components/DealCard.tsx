@@ -84,7 +84,7 @@ const DealCard: React.FC<DealCardProps> = ({
       >
         <CardContent
           style={{
-            height: tall ? "120px" : isMobile ? "80px" : "170px",
+            height: tall ? "140px" : isMobile ? "80px" : "170px",
             padding: "25px 25px 25px 25px",
           }}
         >
