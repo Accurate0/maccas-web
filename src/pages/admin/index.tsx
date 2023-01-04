@@ -1,6 +1,6 @@
 import Head from "next/head";
 import "@stoplight/elements/styles.min.css";
-import useLockedDeals from "../hooks/useLockedDeals";
+import useLockedDeals from "../../hooks/useLockedDeals";
 import {
   Grid,
   TableContainer,
@@ -12,8 +12,9 @@ import {
   TableBody,
   Button,
   TextField,
+  Typography,
 } from "@mui/material";
-import { theme } from "../theme";
+import { theme } from "../../theme";
 import { useState } from "react";
 
 const Admin = () => {
@@ -28,16 +29,22 @@ const Admin = () => {
       <Grid
         paddingTop={8}
         paddingBottom={2}
-        spacing={1}
+        spacing={2}
         container
         justifyContent="center"
         alignItems="center"
       >
         <Grid item xs={12}>
           <Grid container spacing={2}>
-            <Grid item>UUID to lock: </Grid>
             <Grid item>
-              <TextField value={uuidToLock} onChange={(e) => setUuidToLock(e.target.value)} />
+              <Typography color="white">UUID to lock:</Typography>
+            </Grid>
+            <Grid item>
+              <TextField
+                color="primary"
+                value={uuidToLock}
+                onChange={(e) => setUuidToLock(e.target.value)}
+              />
             </Grid>
             <Grid item>
               <Button variant="contained" onClick={() => lockDeal(uuidToLock)}>

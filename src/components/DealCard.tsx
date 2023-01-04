@@ -23,6 +23,8 @@ export interface DealCardProps {
   hideCount?: boolean;
   offer: GetDealsOffer;
   onDetails: () => void;
+  showPrice?: boolean;
+  tall?: boolean;
 }
 
 const truncate = (s: string, length: number) =>
@@ -43,6 +45,8 @@ const DealCard: React.FC<DealCardProps> = ({
   disableButtons,
   ignoreValidity,
   hideCount,
+  showPrice,
+  tall,
 }) => {
   const router = useRouter();
   const breakpoint = useMediaQuery(theme.breakpoints.down("md"));
@@ -79,7 +83,10 @@ const DealCard: React.FC<DealCardProps> = ({
         onClick={disableButtons ? undefined : onDealSelect}
       >
         <CardContent
-          style={{ height: isMobile ? "80px" : "170px", padding: "25px 25px 25px 25px" }}
+          style={{
+            height: tall ? "120px" : isMobile ? "80px" : "170px",
+            padding: "25px 25px 25px 25px",
+          }}
         >
           <Grid container item direction="row" justifyContent="space-between">
             <Grid item xs={8} container direction="column">
@@ -91,6 +98,11 @@ const DealCard: React.FC<DealCardProps> = ({
               {!hideCount && (
                 <Grid item xs>
                   <Typography variant="body2">{offer.count} available</Typography>
+                </Grid>
+              )}
+              {showPrice && (
+                <Grid item xs>
+                  <Typography variant="body2">${offer.price ?? 0}</Typography>
                 </Grid>
               )}
               {!disableButtons && (
