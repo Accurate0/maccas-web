@@ -23,7 +23,6 @@ export interface DealCardProps {
   hideCount?: boolean;
   offer: GetDealsOffer;
   onDetails: () => void;
-  showPrice?: boolean;
   tall?: boolean;
 }
 
@@ -45,7 +44,6 @@ const DealCard: React.FC<DealCardProps> = ({
   disableButtons,
   ignoreValidity,
   hideCount,
-  showPrice,
   tall,
 }) => {
   const router = useRouter();
@@ -98,11 +96,6 @@ const DealCard: React.FC<DealCardProps> = ({
               {!hideCount && (
                 <Grid item xs>
                   <Typography variant="body2">{offer.count} available</Typography>
-                </Grid>
-              )}
-              {showPrice && (
-                <Grid item xs>
-                  <Typography variant="body2">${offer.price ?? 0}</Typography>
                 </Grid>
               )}
               {!disableButtons && (
