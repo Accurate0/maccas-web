@@ -2191,11 +2191,12 @@
   dependencies:
     "@sinonjs/commons" "^1.7.0"
 
-"@stoplight/elements-core@~7.7.7":
-  version "7.7.7"
-  resolved "https://registry.yarnpkg.com/@stoplight/elements-core/-/elements-core-7.7.7.tgz#af629612258cd306037bda4e1b8dd244aed56518"
-  integrity sha512-usXA2kHtuYMHaUii6OzCDgPvBMvssA9M9ddnNmFS+hOM96n7nf3XDjh8kbUhftNYcxpdY7njqWuBerXTyVXEiQ==
+"@stoplight/elements-core@~7.7.8":
+  version "7.7.8"
+  resolved "https://registry.yarnpkg.com/@stoplight/elements-core/-/elements-core-7.7.8.tgz#ced5a665cbe9e16731633f4d8a817f214857c602"
+  integrity sha512-vPHwTxt9sDpZ9ck1N5C8cVuGXP8dGH4/L8OuyXlq8UK6XrvBfBtpKVI3IWPhTFnBqq1wrdRq/TPtN8yGFLYGOA==
   dependencies:
+    "@stoplight/http-spec" "^5.1.4"
     "@stoplight/json" "^3.18.1"
     "@stoplight/json-schema-ref-parser" "^9.0.5"
     "@stoplight/json-schema-sampler" "0.2.3"
@@ -2223,12 +2224,12 @@
     util "^0.12.4"
     xml-formatter "^2.6.1"
 
-"@stoplight/elements@^7.7.7":
-  version "7.7.7"
-  resolved "https://registry.yarnpkg.com/@stoplight/elements/-/elements-7.7.7.tgz#f6f973edda8667fd20344a3ff3867947e07adb26"
-  integrity sha512-K9ikKNKk1Ilgi4cChQPqxOADMRSNTz5Zw+P7FcGsQYMv4GkJXb31xyeO37DylaBk+L8PA5kQxoaErrvtbQ36Tg==
+"@stoplight/elements@^7.7.8":
+  version "7.7.8"
+  resolved "https://registry.yarnpkg.com/@stoplight/elements/-/elements-7.7.8.tgz#1b082dd6d83f9e29e7c48e6d7f22e7f9074bd800"
+  integrity sha512-fmW64gRMJWvOJa5AYlgnbOoCffjKfh+coCi7tP7ddvWR163lx61sXRKSoUwcSm1dLN/3zbukDJb8s9DYpFfvCg==
   dependencies:
-    "@stoplight/elements-core" "~7.7.7"
+    "@stoplight/elements-core" "~7.7.8"
     "@stoplight/http-spec" "^5.1.4"
     "@stoplight/json" "^3.18.1"
     "@stoplight/mosaic" "^1.33.0"
@@ -2326,18 +2327,7 @@
     jotai "^1.4.5"
     lodash "^4.17.19"
 
-"@stoplight/json@^3.12.0", "@stoplight/json@^3.18.1":
-  version "3.18.1"
-  resolved "https://registry.yarnpkg.com/@stoplight/json/-/json-3.18.1.tgz#725b34b24e8b0c0f73113362be54c7a4f294cdba"
-  integrity sha512-QmELAqBS8DC+8YuG7+OvDVP6RaUVi8bzN0KKW2UEcZg+0a1sqeeZgfW079AmJIZg8HEN7udAt4iozIB8Dm0t1Q==
-  dependencies:
-    "@stoplight/ordered-object-literal" "^1.0.2"
-    "@stoplight/types" "^13.0.0"
-    jsonc-parser "~2.2.1"
-    lodash "^4.17.21"
-    safe-stable-stringify "^1.1"
-
-"@stoplight/json@^3.20.1":
+"@stoplight/json@^3.12.0", "@stoplight/json@^3.18.1", "@stoplight/json@^3.20.1":
   version "3.20.1"
   resolved "https://registry.yarnpkg.com/@stoplight/json/-/json-3.20.1.tgz#a500c5a0ef3232ec3b2fd36c4456b28085d919ae"
   integrity sha512-FXfud+uWgIj1xv6nUO9WnmgmnVikaxJcbtR4XQt4C42n5c2qua3U05Z/3B57hP5TJRSj+tpn9ID6/bFeyYYlEg==
@@ -2486,7 +2476,7 @@
     use-resize-observer "^9.0.2"
     zustand "^3.5.2"
 
-"@stoplight/ordered-object-literal@^1.0.1", "@stoplight/ordered-object-literal@^1.0.2":
+"@stoplight/ordered-object-literal@^1.0.1":
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/@stoplight/ordered-object-literal/-/ordered-object-literal-1.0.3.tgz#1f24572623459c61238ae72176fadac5c40e0a54"
   integrity sha512-cjJ7PPkhgTXNMTkevAlmyrx9xOOCaI3c6rEeYb6VitL1o1WcZtrz9KyFyISmTmUa7yYTiy2IS/ud9S8s2sn3+A==
@@ -2516,15 +2506,7 @@
     "@types/json-schema" "^7.0.4"
     utility-types "^3.10.0"
 
-"@stoplight/types@^13.0.0", "@stoplight/types@^13.6.0":
-  version "13.6.0"
-  resolved "https://registry.yarnpkg.com/@stoplight/types/-/types-13.6.0.tgz#96c6aaae05858b36f589821cd52c95aa9b205ce7"
-  integrity sha512-dzyuzvUjv3m1wmhPfq82lCVYGcXG0xUYgqnWfCq3PCVR4BKFhjdkHrnJ+jIDoMKvXb05AZP/ObQF6+NpDo29IQ==
-  dependencies:
-    "@types/json-schema" "^7.0.4"
-    utility-types "^3.10.0"
-
-"@stoplight/types@^13.7.0":
+"@stoplight/types@^13.0.0", "@stoplight/types@^13.6.0", "@stoplight/types@^13.7.0":
   version "13.7.0"
   resolved "https://registry.yarnpkg.com/@stoplight/types/-/types-13.7.0.tgz#717d9e3ef068e8f143d045e9bc89b97da06933c4"
   integrity sha512-7ePIccfTxjEhruv8VrkDv5whP5qd9ijRzAWEbjYpUYnDfaqPTfq8/wMMjMCAKIecboxsAVD9LZy/3puXddGsDQ==
