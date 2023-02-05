@@ -1,4 +1,13 @@
-import { Box, Button, Card, CardActions, CardContent, Container, Grid, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Card,
+  CardActions,
+  CardContent,
+  Container,
+  Grid,
+  Typography,
+} from "@mui/material";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import usePointAccount from "../../hooks/usePointAccount";
@@ -8,7 +17,7 @@ export interface PointAccountProps {}
 
 const PointAccount: React.FC<PointAccountProps> = () => {
   const router = useRouter();
-  const accountId = router.query["accountId"] as string | undefined;
+  const accountId = router.query["accountId"] as string;
   const { pointInformation, error } = usePointAccount(accountId);
 
   return (

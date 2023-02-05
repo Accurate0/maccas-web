@@ -1,32 +1,27 @@
 import { AxiosError } from "axios";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { OfferResponse } from "../types";
-import { GetDealsOffer } from "./useApiClient/ApiClient.generated";
-import useAxios from "./useAxios";
+import { GetDealsOffer, OfferResponse } from "./useApiClient/ApiClient.generated";
+import useApiClient from "./useApiClient/useApiClient";
 import useNotification from "./useNotification";
 import useSetBackdrop from "./useSetBackdrop";
 import { useGetUserConfig } from "./useUserConfig";
 
-const useOfferCode = (offer: GetDealsOffer | undefined) => {
+const useOfferCode = (offer: GetDealsOffer) => {
   const [code, setResponse] = useState<OfferResponse>();
   const userConfig = useGetUserConfig();
   const setBackdrop = useSetBackdrop();
   const notification = useNotification();
-  const axios = useAxios();
+  const apiClient = useApiClient();
   const router = useRouter();
 
   useEffect(() => {
     const get = async () => {
       try {
         setBackdrop(true);
-        const response = await axios.post(`/deals/${offer?.dealUuid}`, undefined, {
-          params: {
-            store: userConfig!.storeId,
-          },
-        });
+        const response = await apiClient.add_deal(offer?.dealUuid, userConfig!.storeId);
 
-        setResponse(response?.data as OfferResponse);
+        setResponse(response?.result as OfferResponse);
       } catch (error) {
         const err = error as AxiosError;
         if (err.response?.status === 409) {
@@ -49,11 +44,7 @@ const useOfferCode = (offer: GetDealsOffer | undefined) => {
   const remove = async () => {
     try {
       setBackdrop(true);
-      await axios.delete(`/deals/${offer?.dealUuid}`, {
-        params: {
-          store: userConfig!.storeId,
-        },
-      });
+      await apiClient.remove_deal(offer.dealUuid, userConfig!.storeId);
     } catch (error) {
       notification({ msg: (error as AxiosError).message, variant: "error" });
     } finally {
@@ -64,13 +55,9 @@ const useOfferCode = (offer: GetDealsOffer | undefined) => {
   const refreshCode = async () => {
     try {
       setBackdrop(true);
-      const response = await axios.get(`/code/${offer?.dealUuid}`, {
-        params: {
-          store: userConfig!.storeId,
-        },
-      });
-      setResponse(response?.data);
-      return response?.data as OfferResponse;
+      const response = await apiClient.get_code(offer.dealUuid, userConfig!.storeId);
+      setResponse(response.result);
+      return response.result;
     } catch (error) {
       notification({ msg: (error as AxiosError).message, variant: "error" });
     } finally {

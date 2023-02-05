@@ -1,24 +1,18 @@
 import { AxiosError } from "axios";
-import { RestaurantInformation } from "../types";
-import useAxios from "./useAxios";
+import useApiClient from "./useApiClient/useApiClient";
 import useNotification from "./useNotification";
 import useSetBackdrop from "./useSetBackdrop";
 
 const useLocationSearch = () => {
   const setBackdrop = useSetBackdrop();
   const notification = useNotification();
-  const axios = useAxios();
+  const apiClient = useApiClient();
 
   const search = async (text: string) => {
     try {
       setBackdrop(true);
-      const response = await axios.get("/locations/search", {
-        params: {
-          text: encodeURIComponent(text),
-        },
-      });
-
-      return response?.data as RestaurantInformation;
+      const response = await apiClient.search_locations(text);
+      return response.result;
     } catch (error) {
       notification({ msg: (error as AxiosError).message, variant: "error" });
     } finally {

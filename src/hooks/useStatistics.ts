@@ -1,17 +1,15 @@
 import { AxiosError } from "axios";
 import { useEffect, useState } from "react";
-import { AccountResponse } from "../types/AccountResponse";
-import { TotalAccountsResponse } from "../types/TotalAccountsResponse";
-import useAxios from "./useAxios";
+import useApiClient from "./useApiClient/useApiClient";
 import useNotification from "./useNotification";
 import useSetBackdrop from "./useSetBackdrop";
 
 const useStatistics = () => {
-  const [totalAccounts, setTotalAccounts] = useState<TotalAccountsResponse>();
-  const [accounts, setAccounts] = useState<AccountResponse>();
+  const [totalAccounts, setTotalAccounts] = useState<number>();
+  const [accounts, setAccounts] = useState<{ [key: string]: number }>();
   const setBackdrop = useSetBackdrop();
   const notification = useNotification();
-  const axios = useAxios();
+  const apiClient = useApiClient();
 
   useEffect(() => {
     const get = async () => {
@@ -19,12 +17,12 @@ const useStatistics = () => {
         setBackdrop(true);
 
         const [totalAccountResponse, accountResponse] = await Promise.all([
-          axios.get("/statistics/total-accounts"),
-          axios.get("/statistics/account"),
+          apiClient.get_total_accounts(),
+          apiClient.get_accounts(),
         ]);
 
-        setTotalAccounts(totalAccountResponse?.data as TotalAccountsResponse);
-        setAccounts(accountResponse?.data as AccountResponse);
+        setTotalAccounts(totalAccountResponse?.result);
+        setAccounts(accountResponse?.result);
       } catch (error) {
         notification({ msg: (error as AxiosError).message, variant: "error" });
       } finally {

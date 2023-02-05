@@ -11,7 +11,7 @@ export interface DealSelectionProps {}
 
 const DealSelection: React.FC<DealSelectionProps> = () => {
   const router = useRouter();
-  const dealId = router.query["dealId"] as string | undefined;
+  const dealId = router.query["dealId"] as string;
   const { deal, error } = useDeal(dealId);
   const { code, remove, refreshCode } = useOfferCode(deal);
 

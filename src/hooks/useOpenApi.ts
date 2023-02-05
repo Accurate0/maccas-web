@@ -1,6 +1,6 @@
 import { AxiosError } from "axios";
 import { useEffect, useState } from "react";
-import useAxios from "./useAxios";
+import useApiClient from "./useApiClient/useApiClient";
 import useNotification from "./useNotification";
 import useSetBackdrop from "./useSetBackdrop";
 
@@ -10,14 +10,14 @@ const useOpenApi = () => {
   const [state, setState] = useState<OpenApiObject>();
   const setBackdrop = useSetBackdrop();
   const notification = useNotification();
-  const axios = useAxios();
+  const apiClient = useApiClient();
 
   useEffect(() => {
     const get = async () => {
       try {
         setBackdrop(true);
-        const response = await axios.get("/docs/openapi");
-        setState(response?.data as OpenApiObject);
+        const response = await apiClient.get_openapi();
+        setState(JSON.parse(response?.result) as OpenApiObject);
       } catch (error) {
         notification({ msg: (error as AxiosError).message, variant: "error" });
       } finally {

@@ -259,7 +259,7 @@ export class ApiClient {
     /**
      * @return Random code for specified deal
      */
-    get_code(deal_id: string, store: number , cancelToken?: CancelToken | undefined): Promise<ApiResponse<OfferResponse>> {
+    get_code(deal_id: string, store: string , cancelToken?: CancelToken | undefined): Promise<ApiResponse<OfferResponse>> {
         let url_ = this.baseUrl + "/code/{deal_id}?";
         if (deal_id === undefined || deal_id === null)
             throw new Error("The parameter 'deal_id' must be defined.");
@@ -382,7 +382,7 @@ export class ApiClient {
     /**
      * @return Last Refresh of Cache
      */
-    last_refresh(  cancelToken?: CancelToken | undefined): Promise<ApiResponse<LastRefreshInformation>> {
+    get_last_refresh(  cancelToken?: CancelToken | undefined): Promise<ApiResponse<LastRefreshInformation>> {
         let url_ = this.baseUrl + "/deals/last-refresh";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -402,11 +402,11 @@ export class ApiClient {
                 throw _error;
             }
         }).then((_response: AxiosResponse) => {
-            return this.processLast_refresh(_response);
+            return this.processGet_last_refresh(_response);
         });
     }
 
-    protected processLast_refresh(response: AxiosResponse): Promise<ApiResponse<LastRefreshInformation>> {
+    protected processGet_last_refresh(response: AxiosResponse): Promise<ApiResponse<LastRefreshInformation>> {
         const status = response.status;
         let _headers: any = {};
         if (response.headers && typeof response.headers === "object") {
@@ -501,7 +501,7 @@ export class ApiClient {
     /**
      * @return Added a deal
      */
-    add_deal(deal_id: string, store: number , cancelToken?: CancelToken | undefined): Promise<ApiResponse<OfferResponse>> {
+    add_deal(deal_id: string, store: string , cancelToken?: CancelToken | undefined): Promise<ApiResponse<OfferResponse>> {
         let url_ = this.baseUrl + "/deals/{deal_id}?";
         if (deal_id === undefined || deal_id === null)
             throw new Error("The parameter 'deal_id' must be defined.");
@@ -572,7 +572,7 @@ export class ApiClient {
     /**
      * @return Removed a deal
      */
-    remove_deal(deal_id: string, store: number , cancelToken?: CancelToken | undefined): Promise<ApiResponse<void>> {
+    remove_deal(deal_id: string, store: string , cancelToken?: CancelToken | undefined): Promise<ApiResponse<void>> {
         let url_ = this.baseUrl + "/deals/{deal_id}?";
         if (deal_id === undefined || deal_id === null)
             throw new Error("The parameter 'deal_id' must be defined.");
@@ -636,9 +636,64 @@ export class ApiClient {
     }
 
     /**
+     * @return JSON OpenApi spec
+     */
+    get_openapi(  cancelToken?: CancelToken | undefined): Promise<ApiResponse<string>> {
+        let url_ = this.baseUrl + "/docs/openapi";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: AxiosRequestConfig = {
+            method: "GET",
+            url: url_,
+            headers: {
+                "Accept": "text/plain"
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processGet_openapi(_response);
+        });
+    }
+
+    protected processGet_openapi(response: AxiosResponse): Promise<ApiResponse<string>> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (let k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            result200 = resultData200;
+            return Promise.resolve<ApiResponse<string>>(new ApiResponse<string>(status, _headers, result200));
+
+        } else if (status === 500) {
+            const _responseText = response.data;
+            return throwException("Internal Server Error", status, _responseText, _headers);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<ApiResponse<string>>(new ApiResponse(status, _headers, null as any));
+    }
+
+    /**
      * @return Server is healthy
      */
-    status(  cancelToken?: CancelToken | undefined): Promise<ApiResponse<void>> {
+    get_status(  cancelToken?: CancelToken | undefined): Promise<ApiResponse<void>> {
         let url_ = this.baseUrl + "/health/status";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -657,11 +712,11 @@ export class ApiClient {
                 throw _error;
             }
         }).then((_response: AxiosResponse) => {
-            return this.processStatus(_response);
+            return this.processGet_status(_response);
         });
     }
 
-    protected processStatus(response: AxiosResponse): Promise<ApiResponse<void>> {
+    protected processGet_status(response: AxiosResponse): Promise<ApiResponse<void>> {
         const status = response.status;
         let _headers: any = {};
         if (response.headers && typeof response.headers === "object") {
@@ -884,7 +939,7 @@ export class ApiClient {
      * @param x_Maccas_JWT_Bypass (optional) Key to bypass JWT checks
      * @return Random code for account
      */
-    get_points_by_id(account_id: string, store: number, x_Maccas_JWT_Bypass?: string | undefined , cancelToken?: CancelToken | undefined): Promise<ApiResponse<OfferPointsResponse>> {
+    get_points_by_id(account_id: string, store: string, x_Maccas_JWT_Bypass?: string | undefined , cancelToken?: CancelToken | undefined): Promise<ApiResponse<OfferPointsResponse>> {
         let url_ = this.baseUrl + "/points/{account_id}?";
         if (account_id === undefined || account_id === null)
             throw new Error("The parameter 'account_id' must be defined.");

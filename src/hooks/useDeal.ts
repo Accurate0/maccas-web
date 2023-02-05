@@ -5,7 +5,7 @@ import useApiClient from "./useApiClient/useApiClient";
 import useNotification from "./useNotification";
 import useSetBackdrop from "./useSetBackdrop";
 
-const useDeal = (offerId: string | undefined) => {
+const useDeal = (offerId: string) => {
   const [deal, setState] = useState<GetDealsOffer>();
   const [error, setError] = useState<boolean>(false);
   const setBackdrop = useSetBackdrop();
@@ -16,10 +16,8 @@ const useDeal = (offerId: string | undefined) => {
     const get = async () => {
       try {
         setBackdrop(true);
-        if (offerId) {
-          const response = await apiClient.get_deal(offerId);
-          setState(response.result);
-        }
+        const response = await apiClient.get_deal(offerId);
+        setState(response.result);
       } catch (error) {
         notification({ msg: (error as AxiosError).message, variant: "error" });
         setError(true);

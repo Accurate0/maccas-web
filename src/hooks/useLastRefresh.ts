@@ -1,18 +1,20 @@
 import moment from "moment";
 import { useEffect } from "react";
-import { LastRefreshInformation } from "../types";
-import useAxios from "./useAxios";
+import useApiClient from "./useApiClient/useApiClient";
 import useNotification from "./useNotification";
 
 const useLastRefresh = () => {
-  const axios = useAxios();
+  const apiClient = useApiClient();
   const notification = useNotification();
   useEffect(() => {
     const get = async () => {
       try {
-        const response = await axios.get("/deals/last-refresh");
-        const lastRefreshed = moment.utc((response?.data as LastRefreshInformation).lastRefresh);
-        notification({ msg: `Last refreshed at ${lastRefreshed.local().format("LLL")}`, variant: "info" });
+        const response = await apiClient.get_last_refresh();
+        const lastRefreshed = moment.utc(response.result.lastRefresh);
+        notification({
+          msg: `Last refreshed at ${lastRefreshed.local().format("LLL")}`,
+          variant: "info",
+        });
       } catch (error) {}
     };
 
