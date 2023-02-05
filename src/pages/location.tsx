@@ -15,8 +15,8 @@ import { useUpdateUserConfig } from "../hooks/useUserConfig";
 import MyLocationIcon from "@mui/icons-material/MyLocation";
 import useNotification from "../hooks/useNotification";
 import useLocations from "../hooks/useLocations";
-import { RestaurantInformation } from "../types";
 import Head from "next/head";
+import { RestaurantInformation } from "../hooks/useApiClient/ApiClient.generated";
 
 const options: PositionOptions = {
   enableHighAccuracy: true,

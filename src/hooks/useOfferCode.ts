@@ -7,7 +7,7 @@ import useNotification from "./useNotification";
 import useSetBackdrop from "./useSetBackdrop";
 import { useGetUserConfig } from "./useUserConfig";
 
-const useOfferCode = (offer: GetDealsOffer) => {
+const useOfferCode = (offer: GetDealsOffer | undefined) => {
   const [code, setResponse] = useState<OfferResponse>();
   const userConfig = useGetUserConfig();
   const setBackdrop = useSetBackdrop();
@@ -19,9 +19,10 @@ const useOfferCode = (offer: GetDealsOffer) => {
     const get = async () => {
       try {
         setBackdrop(true);
-        const response = await apiClient.add_deal(offer?.dealUuid, userConfig!.storeId);
-
-        setResponse(response?.result as OfferResponse);
+        if (offer) {
+          const response = await apiClient.add_deal(offer.dealUuid, userConfig!.storeId);
+          setResponse(response?.result as OfferResponse);
+        }
       } catch (error) {
         const err = error as AxiosError;
         if (err.response?.status === 409) {
@@ -44,7 +45,9 @@ const useOfferCode = (offer: GetDealsOffer) => {
   const remove = async () => {
     try {
       setBackdrop(true);
-      await apiClient.remove_deal(offer.dealUuid, userConfig!.storeId);
+      if (offer) {
+        await apiClient.remove_deal(offer.dealUuid, userConfig!.storeId);
+      }
     } catch (error) {
       notification({ msg: (error as AxiosError).message, variant: "error" });
     } finally {
@@ -55,9 +58,11 @@ const useOfferCode = (offer: GetDealsOffer) => {
   const refreshCode = async () => {
     try {
       setBackdrop(true);
-      const response = await apiClient.get_code(offer.dealUuid, userConfig!.storeId);
-      setResponse(response.result);
-      return response.result;
+      if (offer) {
+        const response = await apiClient.get_code(offer.dealUuid, userConfig!.storeId);
+        setResponse(response.result);
+        return response.result;
+      }
     } catch (error) {
       notification({ msg: (error as AxiosError).message, variant: "error" });
     } finally {

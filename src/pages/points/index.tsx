@@ -11,11 +11,11 @@ import {
 } from "@mui/material";
 import Head from "next/head";
 import { useRouter } from "next/router";
+import { AccountPointMap } from "../../hooks/useApiClient/ApiClient.generated";
 import useNotification from "../../hooks/useNotification";
 import usePoints from "../../hooks/usePoints";
 import { useGetUserConfig } from "../../hooks/useUserConfig";
 import { theme } from "../../theme";
-import { AccountPointMap } from "../../types/AccountPointMap";
 
 export interface PointsProps {}
 
