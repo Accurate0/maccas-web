@@ -1,4 +1,4 @@
-import axios, { AxiosRequestConfig } from "axios";
+import axios, { InternalAxiosRequestConfig } from "axios";
 import { useMemo } from "react";
 import useAccessToken from "./useAccessToken";
 
@@ -12,7 +12,7 @@ const useAxios = () => {
     });
 
     axiosInstance.interceptors.request.use(
-      async (config: AxiosRequestConfig) => {
+      async (config: InternalAxiosRequestConfig) => {
         const accessToken = await tokenPromise;
         config.headers = config.headers ?? {};
 
