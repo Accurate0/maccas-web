@@ -61,6 +61,6 @@
     "@types/react-dom": "^18.0.11",
     "nswag": "^13.18.2",
     "typescript": "^4.9.5",
-    "npm-check-updates": "^16.7.9"
+    "npm-check-updates": "^16.7.10"
   }
 }
