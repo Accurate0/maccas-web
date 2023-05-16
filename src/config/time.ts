@@ -1,1 +1,1 @@
-export const TIME_OFFSET = 3;
+export const TIME_OFFSET = 2;
