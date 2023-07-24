@@ -20,7 +20,7 @@ import UserConfigProvider from "../components/UserConfigProvider";
 config.autoAddCss = false;
 
 const Authentication = () => {
-  const { login, error } = useMsalAuthentication(InteractionType.Silent, TokenRequest);
+  const { login, error } = useMsalAuthentication(InteractionType.Redirect, TokenRequest);
 
   useEffect(() => {
     if (error instanceof InteractionRequiredAuthError) {
