@@ -20,7 +20,7 @@ import UserConfigProvider from "../components/UserConfigProvider";
 config.autoAddCss = false;
 
 const Authentication = () => {
-  const { login, error } = useMsalAuthentication(InteractionType.Redirect, TokenRequest);
+  const { login, error } = useMsalAuthentication(InteractionType.Silent, TokenRequest);
 
   useEffect(() => {
     if (error instanceof InteractionRequiredAuthError) {
@@ -58,13 +58,9 @@ const App = ({ Component, pageProps }: AppProps) => {
       <AuthenticatedTemplate>
         <UserConfigProvider />
         <NavBar />
-        {router.pathname === "/doc" ? (
+        <Container>
           <Component {...pageProps} />
-        ) : (
-          <Container>
-            <Component {...pageProps} />
-          </Container>
-        )}
+        </Container>
       </AuthenticatedTemplate>
     </AppSetup>
   );
