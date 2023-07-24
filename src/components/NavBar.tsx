@@ -9,7 +9,6 @@ import {
   Button,
   useMediaQuery,
   Drawer,
-  ClickAwayListener,
 } from "@mui/material";
 import { useRouter } from "next/router";
 import useEnvironment from "../hooks/useEnvironment";
@@ -17,7 +16,7 @@ import LocationValue from "./LocationValue";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowDown91, faBars, faMoneyBill } from "@fortawesome/free-solid-svg-icons";
 import { theme } from "../theme";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 const NavBar = () => {
   const router = useRouter();
