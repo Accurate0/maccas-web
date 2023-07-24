@@ -15,6 +15,7 @@ import OpenGraph from "../components/OpenGraph";
 import { config } from "@fortawesome/fontawesome-svg-core";
 import "@fortawesome/fontawesome-svg-core/styles.css";
 import "../index.css";
+import UserConfigProvider from "../components/UserConfigProvider";
 
 config.autoAddCss = false;
 
@@ -55,6 +56,7 @@ const App = ({ Component, pageProps }: AppProps) => {
     <AppSetup>
       <OpenGraph />
       <AuthenticatedTemplate>
+        <UserConfigProvider />
         <NavBar />
         {router.pathname === "/doc" ? (
           <Component {...pageProps} />
