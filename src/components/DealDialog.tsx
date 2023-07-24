@@ -13,6 +13,7 @@ import {
 import moment from "moment";
 import { TIME_OFFSET } from "../config/time";
 import useNotification from "../hooks/useNotification";
+import useEnvironment from "../hooks/useEnvironment";
 
 export interface DealDialogProps {
   onClose: () => void;
@@ -36,6 +37,7 @@ const DealDialog: React.FC<DealDialogProps> = ({
   creationDateUtc,
 }) => {
   const notification = useNotification();
+  const { isDevelopment } = useEnvironment();
 
   return (
     <Dialog open={open} onClose={onClose}>
@@ -54,20 +56,24 @@ const DealDialog: React.FC<DealDialogProps> = ({
                 <Grid item xs={12}>
                   Added: {new Date(creationDateUtc ?? 0).toLocaleDateString()}
                 </Grid>
-                <Grid item>UUID:</Grid>
-                <Grid item>
-                  <IconButton
-                    color="info"
-                    size="small"
-                    style={{ width: "5px", padding: 0 }}
-                    onClick={() => {
-                      navigator.clipboard.writeText(uuid ?? "");
-                      notification({ variant: "info", msg: "Copied" });
-                    }}
-                  >
-                    <FontAwesomeIcon icon={faClipboard} size="1x" />
-                  </IconButton>
-                </Grid>
+                {isDevelopment && (
+                  <>
+                    <Grid item>UUID:</Grid>
+                    <Grid item>
+                      <IconButton
+                        color="info"
+                        size="small"
+                        style={{ width: "5px", padding: 0 }}
+                        onClick={() => {
+                          navigator.clipboard.writeText(uuid ?? "");
+                          notification({ variant: "info", msg: "Copied" });
+                        }}
+                      >
+                        <FontAwesomeIcon icon={faClipboard} size="1x" />
+                      </IconButton>
+                    </Grid>
+                  </>
+                )}
               </Grid>
             </DialogContentText>
           </Grid>

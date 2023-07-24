@@ -13,7 +13,7 @@ const useNotification = () => {
   useEffect(() => {
     if (conf?.msg) {
       enqueueSnackbar(conf.msg, {
-        variant: conf.variant ?? ("default" as VariantType),
+        variant: conf.variant ?? ("default" as const),
         autoHideDuration: 3000,
       });
     }

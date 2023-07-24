@@ -9,7 +9,7 @@ const LocationValue = () => {
   const router = useRouter();
 
   return (
-    <Button color="inherit" onClick={() => router.push("/location")}>
+    <Button sx={{ color: "white" }} onClick={() => router.push("/location")}>
       <Grid item container spacing={1} direction="row">
         <Grid item>
           <FontAwesomeIcon icon={faStoreAlt} size="1x" />
