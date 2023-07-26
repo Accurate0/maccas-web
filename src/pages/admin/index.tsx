@@ -1,5 +1,4 @@
 import Head from "next/head";
-import "@stoplight/elements/styles.min.css";
 import useLockedDeals from "../../hooks/useLockedDeals";
 import {
   Grid,
