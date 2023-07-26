@@ -17,6 +17,7 @@ export const LoginRequest = {
 };
 
 export const TokenRequest = {
+  redirectUri: "/",
   scopes: ["openid"],
 };
 
