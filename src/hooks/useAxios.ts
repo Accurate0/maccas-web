@@ -13,7 +13,7 @@ const useAxios = () => {
     });
 
     axiosRetry(axiosInstance, {
-      retries: 3,
+      retries: 5,
       retryCondition: (error) => {
         if (error.response?.status && error.response.status >= 500) {
           return true;
