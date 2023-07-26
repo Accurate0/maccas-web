@@ -50,8 +50,6 @@ const AppSetup = ({ children }: { children: ReactNode }) => (
 );
 
 const App = ({ Component, pageProps }: AppProps) => {
-  const router = useRouter();
-
   return (
     <AppSetup>
       <OpenGraph />
