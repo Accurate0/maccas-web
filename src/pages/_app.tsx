@@ -9,7 +9,6 @@ import NavBar from "../components/NavBar";
 import { LoginRequest, MSALInstance, TokenRequest } from "../config/msal";
 import { theme } from "../theme";
 import type { AppProps } from "next/app";
-import { useRouter } from "next/router";
 import { InteractionRequiredAuthError, InteractionType } from "@azure/msal-browser";
 import OpenGraph from "../components/OpenGraph";
 import { config } from "@fortawesome/fontawesome-svg-core";
