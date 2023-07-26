@@ -1,5 +1,5 @@
 import { AuthenticatedTemplate, MsalProvider, useMsalAuthentication } from "@azure/msal-react";
-import { Container, ThemeProvider } from "@mui/material";
+import { Container, ThemeProvider, useMediaQuery } from "@mui/material";
 import Head from "next/head";
 import { SnackbarProvider } from "notistack";
 import React, { ReactNode, useEffect } from "react";
@@ -49,11 +49,13 @@ const AppSetup = ({ children }: { children: ReactNode }) => (
 );
 
 const App = ({ Component, pageProps }: AppProps) => {
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+
   return (
     <AppSetup>
       <OpenGraph />
       <AuthenticatedTemplate>
-        <UserConfigProvider />
+        {isMobile && <UserConfigProvider />}
         <NavBar />
         <Container>
           <Component {...pageProps} />
