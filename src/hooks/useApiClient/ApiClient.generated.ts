@@ -25,10 +25,9 @@ export class ApiClient {
     }
 
     /**
-     * @param x_Maccas_JWT_Bypass (optional) Key to bypass JWT checks
      * @return List of currently locked deals
      */
-    get_locked_deals(x_Maccas_JWT_Bypass?: string | null | undefined, cancelToken?: CancelToken | undefined): Promise<ApiResponse<string[]>> {
+    get_locked_deals( cancelToken?: CancelToken | undefined): Promise<ApiResponse<string[]>> {
         let url_ = this.baseUrl + "/admin/locked-deals";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -36,7 +35,6 @@ export class ApiClient {
             method: "GET",
             url: url_,
             headers: {
-                "X-Maccas-JWT-Bypass": x_Maccas_JWT_Bypass !== undefined && x_Maccas_JWT_Bypass !== null ? "" + x_Maccas_JWT_Bypass : "",
                 "Accept": "application/json"
             },
             cancelToken
@@ -82,11 +80,10 @@ export class ApiClient {
     }
 
     /**
-     * @param x_Maccas_JWT_Bypass (optional) Key to bypass JWT checks
      * @param duration (optional) 
      * @return Lock this deal
      */
-    lock_deal(deal_id: string, x_Maccas_JWT_Bypass?: string | null | undefined, duration?: number | null | undefined, cancelToken?: CancelToken | undefined): Promise<ApiResponse<void>> {
+    lock_deal(deal_id: string, duration?: number | null | undefined, cancelToken?: CancelToken | undefined): Promise<ApiResponse<void>> {
         let url_ = this.baseUrl + "/admin/locked-deals/{deal_id}?";
         if (deal_id === undefined || deal_id === null)
             throw new Error("The parameter 'deal_id' must be defined.");
@@ -99,7 +96,6 @@ export class ApiClient {
             method: "POST",
             url: url_,
             headers: {
-                "X-Maccas-JWT-Bypass": x_Maccas_JWT_Bypass !== undefined && x_Maccas_JWT_Bypass !== null ? "" + x_Maccas_JWT_Bypass : "",
             },
             cancelToken
         };
@@ -141,10 +137,9 @@ export class ApiClient {
     }
 
     /**
-     * @param x_Maccas_JWT_Bypass (optional) Key to bypass JWT checks
      * @return Unlocked deal
      */
-    unlock_deal(deal_id: string, x_Maccas_JWT_Bypass?: string | null | undefined, cancelToken?: CancelToken | undefined): Promise<ApiResponse<void>> {
+    unlock_deal(deal_id: string, cancelToken?: CancelToken | undefined): Promise<ApiResponse<void>> {
         let url_ = this.baseUrl + "/admin/locked-deals/{deal_id}";
         if (deal_id === undefined || deal_id === null)
             throw new Error("The parameter 'deal_id' must be defined.");
@@ -155,7 +150,6 @@ export class ApiClient {
             method: "DELETE",
             url: url_,
             headers: {
-                "X-Maccas-JWT-Bypass": x_Maccas_JWT_Bypass !== undefined && x_Maccas_JWT_Bypass !== null ? "" + x_Maccas_JWT_Bypass : "",
             },
             cancelToken
         };
@@ -197,10 +191,9 @@ export class ApiClient {
     }
 
     /**
-     * @param x_Maccas_JWT_Bypass (optional) Key to bypass JWT checks
      * @return List of currently locked deals
      */
-    get_all_user_spending(x_Maccas_JWT_Bypass?: string | null | undefined, cancelToken?: CancelToken | undefined): Promise<ApiResponse<{ [key: string]: AdminUserSpending; }>> {
+    get_all_user_spending( cancelToken?: CancelToken | undefined): Promise<ApiResponse<{ [key: string]: AdminUserSpending; }>> {
         let url_ = this.baseUrl + "/admin/user/spending";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -208,7 +201,6 @@ export class ApiClient {
             method: "GET",
             url: url_,
             headers: {
-                "X-Maccas-JWT-Bypass": x_Maccas_JWT_Bypass !== undefined && x_Maccas_JWT_Bypass !== null ? "" + x_Maccas_JWT_Bypass : "",
                 "Accept": "application/json"
             },
             cancelToken
