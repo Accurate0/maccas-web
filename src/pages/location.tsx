@@ -39,7 +39,12 @@ const LocationSelection = () => {
     if (trimmedText) {
       const resp = await search(trimmedText);
       if (resp) {
-        await updateConfig({ storeId: resp.storeNumber.toString(), storeName: resp.name });
+        if (resp?.length) {
+          setRestaurants(resp);
+          setDialogOpen(true);
+        } else {
+          notification({ msg: "No locations found nearby", variant: "error" });
+        }
       }
       setError(false);
     } else {

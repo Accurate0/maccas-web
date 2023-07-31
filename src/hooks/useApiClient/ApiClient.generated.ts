@@ -20,7 +20,7 @@ export class ApiClient {
 
         this.instance = instance ? instance : axios.create();
 
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://api.anurag.sh/maccas/v1";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://api.maccas.one/v1";
 
     }
 
@@ -806,7 +806,7 @@ export class ApiClient {
     /**
      * @return Closest location near specified text
      */
-    search_locations(text: string, cancelToken?: CancelToken | undefined): Promise<ApiResponse<RestaurantInformation>> {
+    search_locations(text: string, cancelToken?: CancelToken | undefined): Promise<ApiResponse<RestaurantInformation[]>> {
         let url_ = this.baseUrl + "/locations/search?";
         if (text === undefined || text === null)
             throw new Error("The parameter 'text' must be defined and cannot be null.");
@@ -834,7 +834,7 @@ export class ApiClient {
         });
     }
 
-    protected processSearch_locations(response: AxiosResponse): Promise<ApiResponse<RestaurantInformation>> {
+    protected processSearch_locations(response: AxiosResponse): Promise<ApiResponse<RestaurantInformation[]>> {
         const status = response.status;
         let _headers: any = {};
         if (response.headers && typeof response.headers === "object") {
@@ -850,7 +850,7 @@ export class ApiClient {
             let result200: any = null;
             let resultData200  = _responseText;
             result200 = JSON.parse(resultData200);
-            return Promise.resolve<ApiResponse<RestaurantInformation>>(new ApiResponse<RestaurantInformation>(status, _headers, result200));
+            return Promise.resolve<ApiResponse<RestaurantInformation[]>>(new ApiResponse<RestaurantInformation[]>(status, _headers, result200));
 
         } else if (status === 404) {
             const _responseText = response.data;
@@ -864,7 +864,7 @@ export class ApiClient {
             const _responseText = response.data;
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
         }
-        return Promise.resolve<ApiResponse<RestaurantInformation>>(new ApiResponse(status, _headers, null as any));
+        return Promise.resolve<ApiResponse<RestaurantInformation[]>>(new ApiResponse(status, _headers, null as any));
     }
 
     /**
