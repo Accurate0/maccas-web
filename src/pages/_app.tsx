@@ -1,15 +1,25 @@
-import { AuthenticatedTemplate, MsalProvider, useMsalAuthentication } from "@azure/msal-react";
+import {
+  AuthenticatedTemplate,
+  MsalProvider,
+  useIsAuthenticated,
+  useMsal,
+  useMsalAuthentication,
+} from "@azure/msal-react";
 import { Container, ThemeProvider, useMediaQuery } from "@mui/material";
 import Head from "next/head";
 import { SnackbarProvider } from "notistack";
-import React, { ReactNode, useEffect } from "react";
+import React, { ReactNode, useEffect, useState } from "react";
 import { RecoilRoot } from "recoil";
 import Backdrop from "../components/Backdrop";
 import NavBar from "../components/NavBar";
 import { LoginRequest, MSALInstance, TokenRequest } from "../config/msal";
 import { theme } from "../theme";
 import type { AppProps } from "next/app";
-import { InteractionRequiredAuthError, InteractionType } from "@azure/msal-browser";
+import {
+  InteractionRequiredAuthError,
+  InteractionStatus,
+  InteractionType,
+} from "@azure/msal-browser";
 import OpenGraph from "../components/OpenGraph";
 import { config } from "@fortawesome/fontawesome-svg-core";
 import "@fortawesome/fontawesome-svg-core/styles.css";
@@ -19,14 +29,35 @@ import UserConfigProvider from "../components/UserConfigProvider";
 config.autoAddCss = false;
 
 const Authentication = () => {
-  const { login, error } = useMsalAuthentication(InteractionType.Silent, TokenRequest);
+  const [hasPerformedLogin, setHasPerformedLogin] = useState(false);
+  const { instance, inProgress } = useMsal();
+  const isAuthenticated = useIsAuthenticated();
 
   useEffect(() => {
-    if (error instanceof InteractionRequiredAuthError) {
-      login(InteractionType.Redirect, LoginRequest);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [error]);
+    let isCancelled = false;
+
+    const performLogin = async () => {
+      if (
+        !hasPerformedLogin &&
+        !isAuthenticated &&
+        inProgress === InteractionStatus.None &&
+        !isCancelled
+      ) {
+        setHasPerformedLogin(true);
+        if (!window.parent || window.parent === window) {
+          await instance.loginRedirect(LoginRequest);
+        } else {
+          await instance.loginPopup(LoginRequest);
+        }
+      }
+    };
+
+    performLogin();
+
+    return () => {
+      isCancelled = true;
+    };
+  }, [instance, isAuthenticated, inProgress, hasPerformedLogin]);
 
   return null;
 };

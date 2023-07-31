@@ -13,12 +13,12 @@ export const MSALConfig: Configuration = {
 };
 export const LoginRequest = {
   redirectUri: "/login",
-  scopes: ["openid"],
+  scopes: [],
 };
 
 export const TokenRequest = {
   redirectUri: "/",
-  scopes: ["openid"],
+  scopes: [],
 };
 
 export const MSALInstance = new PublicClientApplication(MSALConfig);
