@@ -1,7 +1,7 @@
 import { AxiosError } from "axios";
 import { useEffect, useState } from "react";
 import { atom, useRecoilState, useRecoilValue } from "recoil";
-import { UserOptions } from "./useApiClient/ApiClient.generated";
+import { ApiException, UserOptions } from "./useApiClient/ApiClient.generated";
 import useApiClient from "./useApiClient/useApiClient";
 import useNotification from "./useNotification";
 
@@ -26,8 +26,8 @@ const useUserConfig = () => {
         const response = await apiClient.get_user_config();
         setConfig(response.result);
       } catch (error) {
-        const err = error as AxiosError;
-        if (err.response?.status !== 404) {
+        const err = error as ApiException;
+        if (err.status !== 404) {
           notification({ msg: err.message, variant: "error" });
         }
       } finally {
