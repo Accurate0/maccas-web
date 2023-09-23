@@ -3,7 +3,6 @@ import {
   MsalProvider,
   useIsAuthenticated,
   useMsal,
-  useMsalAuthentication,
 } from "@azure/msal-react";
 import { Container, ThemeProvider, useMediaQuery } from "@mui/material";
 import Head from "next/head";
@@ -12,14 +11,10 @@ import React, { ReactNode, useEffect, useState } from "react";
 import { RecoilRoot } from "recoil";
 import Backdrop from "../components/Backdrop";
 import NavBar from "../components/NavBar";
-import { LoginRequest, MSALInstance, TokenRequest } from "../config/msal";
+import { LoginRequest, MSALInstance } from "../config/msal";
 import { theme } from "../theme";
 import type { AppProps } from "next/app";
-import {
-  InteractionRequiredAuthError,
-  InteractionStatus,
-  InteractionType,
-} from "@azure/msal-browser";
+import { InteractionStatus } from "@azure/msal-browser";
 import OpenGraph from "../components/OpenGraph";
 import { config } from "@fortawesome/fontawesome-svg-core";
 import "@fortawesome/fontawesome-svg-core/styles.css";

@@ -59,6 +59,9 @@
     "@types/node": "^20.4.4",
     "@types/react": "^18.2.15",
     "@types/react-dom": "^18.2.7",
+    "eslint": "^8.50.0",
+    "eslint-config-next": "^13.5.2",
+    "eslint-plugin-next": "^0.0.0",
     "npm-check-updates": "^16.10.16",
     "nswag": "^13.19.0",
     "typescript": "^5.1.6"

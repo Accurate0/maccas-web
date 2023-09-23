@@ -32,6 +32,7 @@ const Spending = () => {
         </Grid>
         {deals?.map((o) => (
           <DealCard
+            key={o.dealUuid}
             hideCount
             disableButtons
             forceMobile

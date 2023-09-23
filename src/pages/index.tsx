@@ -33,6 +33,7 @@ const DealSelector: React.FC<DealSelectorProps> = () => {
         {deals ? (
           deals?.map((offer) => (
             <DealCard
+              key={offer.dealUuid}
               offer={offer}
               onDetails={() => {
                 setDialogFor(offer);
@@ -44,8 +45,8 @@ const DealSelector: React.FC<DealSelectorProps> = () => {
           <>
             {Array(30)
               .fill(1)
-              .map(() => (
-                <DealSkeleton />
+              .map((i) => (
+                <DealSkeleton key={i} />
               ))}
           </>
         )}

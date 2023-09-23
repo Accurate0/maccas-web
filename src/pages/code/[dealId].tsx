@@ -1,5 +1,13 @@
-import { Box, Button, Card, CardActions, CardContent, Grid, Typography } from "@mui/material";
-import { Container } from "@mui/system";
+import {
+  Box,
+  Button,
+  Card,
+  CardActions,
+  CardContent,
+  Grid,
+  Typography,
+  Container,
+} from "@mui/material";
 import { useRouter } from "next/router";
 import useOfferCode from "../../hooks/useOfferCode";
 import useDeal from "../../hooks/useDeal";
@@ -74,7 +82,7 @@ const DealSelection: React.FC<DealSelectionProps> = () => {
                             router.push("/");
                           }}
                         >
-                          I don't want to use this
+                          I don&apos;t want to use this
                         </Button>
                       </Grid>
                     </Grid>

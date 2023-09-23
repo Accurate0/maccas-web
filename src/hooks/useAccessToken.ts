@@ -1,7 +1,7 @@
 import { InteractionStatus } from "@azure/msal-browser";
 import { useMsal } from "@azure/msal-react";
 import { TokenRequest } from "../config/msal";
-import useUserRole, { RoleClaimName, UserRole } from "./useUserRole";
+import useUserRole, { RoleClaimName } from "./useUserRole";
 
 const useAccessToken = () => {
   const { instance, inProgress } = useMsal();

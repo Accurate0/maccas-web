@@ -33,7 +33,7 @@ const Admin = () => {
             {Object.values(spendingDetails ?? {})
               .sort((s1: AdminUserSpending, s2: AdminUserSpending) => s2.total - s1.total)
               .map((o: AdminUserSpending) => (
-                <Accordion>
+                <Accordion key={o.name}>
                   <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                     <Typography sx={{ width: "50%", flexShrink: 0 }}>{o.name}</Typography>
                     <Typography sx={{ color: "text.secondary" }}>${o.total}</Typography>
@@ -42,6 +42,7 @@ const Admin = () => {
                     <Grid container spacing={2} direction="column">
                       {o.items?.map((o) => (
                         <DealCard
+                          key={o.dealUuid}
                           hideCount
                           disableButtons
                           forceMobile
