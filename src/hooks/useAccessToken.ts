@@ -14,7 +14,6 @@ const useAccessToken = () => {
       account: accounts[0] ?? undefined,
     })
     .then((resp) => {
-      console.log(resp);
       setUserRole((resp.idTokenClaims as any)[RoleClaimName]);
       return resp.idToken;
     })
