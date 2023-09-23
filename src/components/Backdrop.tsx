@@ -11,7 +11,9 @@ export const BackdropSelector = selector<boolean>({
   get: ({ get }) => get(BackdropState) > 0,
   set: ({ set, get }, newValue) => {
     const oldValue = get(BackdropState);
-    newValue ? set(BackdropState, oldValue + 1) : set(BackdropState, oldValue - 1 < 0 ? 0 : oldValue - 1);
+    newValue
+      ? set(BackdropState, oldValue + 1)
+      : set(BackdropState, oldValue - 1 < 0 ? 0 : oldValue - 1);
   },
 });
 

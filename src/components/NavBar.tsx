@@ -16,7 +16,8 @@ import LocationValue from "./LocationValue";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowDown91, faBars, faMoneyBill } from "@fortawesome/free-solid-svg-icons";
 import { theme } from "../theme";
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import useUserRole, { UserRole } from "../hooks/useUserRole";
 
 const NavBar = () => {
   const router = useRouter();
@@ -24,6 +25,11 @@ const NavBar = () => {
   const [open, setOpen] = useState(false);
   const { instance } = useMsal();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const [userRole] = useUserRole();
+  const showPoints = useMemo(
+    () => userRole === UserRole.Admin || userRole === UserRole.Privileged,
+    [userRole]
+  );
 
   const rightButtons = (direction: "row" | "column") => (
     <Grid
@@ -34,20 +40,22 @@ const NavBar = () => {
       onClick={() => setOpen(false)}
       onKeyDown={() => setOpen(false)}
     >
-      <Grid item>
-        <Button sx={{ color: "white" }} onClick={() => router.push("/points")}>
-          <Grid item container spacing={1} direction="row">
-            <Grid item>
-              <FontAwesomeIcon icon={faArrowDown91} size="1x" />
+      {showPoints && (
+        <Grid item>
+          <Button sx={{ color: "white" }} onClick={() => router.push("/points")}>
+            <Grid item container spacing={1} direction="row">
+              <Grid item>
+                <FontAwesomeIcon icon={faArrowDown91} size="1x" />
+              </Grid>
+              <Grid item>
+                <Typography variant="caption">
+                  <b>Points</b>
+                </Typography>
+              </Grid>
             </Grid>
-            <Grid item>
-              <Typography variant="caption">
-                <b>Points</b>
-              </Typography>
-            </Grid>
-          </Grid>
-        </Button>
-      </Grid>
+          </Button>
+        </Grid>
+      )}
       <Grid item>
         <Button sx={{ color: "white" }} onClick={() => router.push("/spending")}>
           <Grid item container spacing={1} direction="row">
