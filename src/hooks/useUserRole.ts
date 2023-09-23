@@ -11,8 +11,8 @@ const userRole = atom<UserRole>(UserRole.None);
 
 const useUserRole = () => {
   const [role, setUserRoleOriginal] = useAtom(userRole);
-  const setUserRole = (newRole: string) => {
-    switch (newRole.toLowerCase()) {
+  const setUserRole = (newRole?: string) => {
+    switch (newRole?.toLowerCase()) {
       case "admin":
         setUserRoleOriginal(UserRole.Admin);
         break;

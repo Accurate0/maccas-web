@@ -1,4 +1,3 @@
-import { InteractionStatus } from "@azure/msal-browser";
 import { useMsal } from "@azure/msal-react";
 import { TokenRequest } from "../config/msal";
 import useUserRole, { RoleClaimName } from "./useUserRole";
@@ -16,13 +15,7 @@ const useAccessToken = () => {
     .then((resp) => {
       setUserRole((resp.idTokenClaims as any)[RoleClaimName]);
       return resp.idToken;
-    })
-    .catch(() => {
-      if (inProgress === InteractionStatus.None) {
-        instance.logoutRedirect();
-      }
     });
-
   return tokenPromise;
 };
 
