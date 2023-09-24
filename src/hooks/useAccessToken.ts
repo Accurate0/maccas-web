@@ -17,9 +17,9 @@ const useAccessToken = () => {
       setUserRole((resp.idTokenClaims as any)[RoleClaimName]);
       return resp.idToken;
     })
-    .catch(async (error) => {
-      if (error instanceof InteractionRequiredAuthError && inProgress === InteractionStatus.None) {
-        await instance.acquireTokenRedirect(LoginRequest);
+    .catch(() => {
+      if (inProgress === InteractionStatus.None) {
+        instance.logoutRedirect();
       }
     });
   return tokenPromise;
