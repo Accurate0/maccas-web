@@ -1,6 +1,7 @@
 import { useMsal } from "@azure/msal-react";
-import { TokenRequest } from "../config/msal";
+import { LoginRequest, TokenRequest } from "../config/msal";
 import useUserRole, { RoleClaimName } from "./useUserRole";
+import { InteractionRequiredAuthError, InteractionStatus } from "@azure/msal-browser";
 
 const useAccessToken = () => {
   const { instance, inProgress } = useMsal();
@@ -15,6 +16,11 @@ const useAccessToken = () => {
     .then((resp) => {
       setUserRole((resp.idTokenClaims as any)[RoleClaimName]);
       return resp.idToken;
+    })
+    .catch(async (error) => {
+      if (error instanceof InteractionRequiredAuthError && inProgress === InteractionStatus.None) {
+        await instance.acquireTokenRedirect(LoginRequest);
+      }
     });
   return tokenPromise;
 };
