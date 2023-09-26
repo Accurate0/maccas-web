@@ -38,4 +38,4 @@ jobs:
         run: vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
 
       - name: Update Alias
-        run: vercel alias set https://maccas-web-anuragsh.vercel.app dev.maccas.one --token=${{ secrets.VERCEL_TOKEN }}
+        run: vercel alias set https://maccas-web-v2-anuragsh.vercel.app dev.maccas.one --token=${{ secrets.VERCEL_TOKEN }}
