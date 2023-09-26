@@ -1,5 +1,3 @@
-import { faClipboard } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   Dialog,
   DialogTitle,
@@ -8,12 +6,8 @@ import {
   DialogContentText,
   DialogActions,
   Button,
-  IconButton,
 } from "@mui/material";
 import moment from "moment";
-import { TIME_OFFSET } from "../config/time";
-import useNotification from "../hooks/useNotification";
-import useEnvironment from "../hooks/useEnvironment";
 
 export interface DealDialogProps {
   onClose: () => void;
@@ -33,12 +27,8 @@ const DealDialog: React.FC<DealDialogProps> = ({
   validFromUTC,
   validToUTC,
   name,
-  uuid,
   creationDateUtc,
 }) => {
-  const notification = useNotification();
-  const { isDevelopment } = useEnvironment();
-
   return (
     <Dialog open={open} onClose={onClose}>
       <DialogTitle>{title}</DialogTitle>
@@ -46,34 +36,16 @@ const DealDialog: React.FC<DealDialogProps> = ({
         <Grid container spacing={2}>
           <Grid item>
             <DialogContentText>
-              Valid From: {moment.utc(validFromUTC).local().add(TIME_OFFSET, "hours").format("LLL")}
+              Valid From: {moment.utc(validFromUTC).local().add(2, "hours").format("LLL")}
             </DialogContentText>
             <DialogContentText>
-              Valid To: {moment.utc(validToUTC).local().add(TIME_OFFSET, "hours").format("LLL")}
+              Valid To: {moment.utc(validToUTC).local().add(2, "hours").format("LLL")}
             </DialogContentText>
             <DialogContentText>
               <Grid container spacing={2}>
                 <Grid item xs={12}>
                   Added: {new Date(creationDateUtc ?? 0).toLocaleDateString()}
                 </Grid>
-                {isDevelopment && (
-                  <>
-                    <Grid item>UUID:</Grid>
-                    <Grid item>
-                      <IconButton
-                        color="info"
-                        size="small"
-                        style={{ width: "5px", padding: 0 }}
-                        onClick={() => {
-                          navigator.clipboard.writeText(uuid ?? "");
-                          notification({ variant: "info", msg: "Copied" });
-                        }}
-                      >
-                        <FontAwesomeIcon icon={faClipboard} size="1x" />
-                      </IconButton>
-                    </Grid>
-                  </>
-                )}
               </Grid>
             </DialogContentText>
           </Grid>

@@ -4,6 +4,7 @@ import { atom, useRecoilState, useRecoilValue } from "recoil";
 import { ApiException, UserOptions } from "./useApiClient/ApiClient.generated";
 import useApiClient from "./useApiClient/useApiClient";
 import useNotification from "./useNotification";
+import { useLocation } from "react-router";
 
 const UserConfig = atom<UserOptions | undefined>({
   key: "userConfig",
@@ -15,6 +16,7 @@ export const useGetUserConfig = () => {
 };
 
 const useUserConfig = () => {
+  const location = useLocation();
   const [config, setConfig] = useRecoilState(UserConfig);
   const notification = useNotification();
   const apiClient = useApiClient();
@@ -35,7 +37,7 @@ const useUserConfig = () => {
       }
     };
 
-    if (!config) {
+    if (!config && location.pathname !== "/login") {
       get();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

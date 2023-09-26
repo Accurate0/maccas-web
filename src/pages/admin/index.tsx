@@ -1,4 +1,3 @@
-import Head from "next/head";
 import useLockedDeals from "../../hooks/useLockedDeals";
 import {
   Grid,
@@ -22,9 +21,6 @@ const Admin = () => {
 
   return (
     <div style={{ paddingTop: "3vh" }}>
-      <Head>
-        <title>Maccas | Admin</title>
-      </Head>
       <Grid
         paddingTop={8}
         paddingBottom={2}

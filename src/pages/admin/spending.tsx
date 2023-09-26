@@ -1,4 +1,3 @@
-import Head from "next/head";
 import {
   Grid,
   Paper,
@@ -12,14 +11,11 @@ import { AdminUserSpending } from "../../hooks/useApiClient/ApiClient.generated"
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import DealCard from "../../components/DealCard";
 
-const Admin = () => {
+const AdminSpending = () => {
   const { spendingDetails } = useAllUserSpending();
 
   return (
     <div style={{ paddingTop: "3vh" }}>
-      <Head>
-        <title>Maccas | Admin - Spending</title>
-      </Head>
       <Grid
         paddingTop={8}
         paddingBottom={2}
@@ -63,4 +59,4 @@ const Admin = () => {
   );
 };
 
-export default Admin;
+export default AdminSpending;

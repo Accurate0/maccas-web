@@ -1,4 +1,3 @@
-import { useMsal } from "@azure/msal-react";
 import {
   Box,
   AppBar,
@@ -10,26 +9,23 @@ import {
   useMediaQuery,
   Drawer,
 } from "@mui/material";
-import { useRouter } from "next/router";
-import useEnvironment from "../hooks/useEnvironment";
 import LocationValue from "./LocationValue";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowDown91, faBars, faMoneyBill } from "@fortawesome/free-solid-svg-icons";
-import { theme } from "../theme";
 import { useMemo, useState } from "react";
-import useUserRole, { UserRole } from "../hooks/useUserRole";
+import { theme } from "../theme";
+import { useLocation, useNavigate } from "react-router-dom";
+import { UserRole } from "../hooks/useApiClient/ApiClient.generated";
+import useAuthentication from "../hooks/useAuthentication";
 
 const NavBar = () => {
-  const router = useRouter();
-  const { isDevelopment } = useEnvironment();
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
-  const { instance } = useMsal();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
-  const [userRole] = useUserRole();
-  const showPoints = useMemo(
-    () => userRole === UserRole.Admin || userRole === UserRole.Privileged,
-    [userRole]
-  );
+  const { role } = useAuthentication();
+  const showPoints = useMemo(() => role === UserRole.Admin || role === UserRole.Privileged, [role]);
+  const location = useLocation();
+  const showLocation = location.pathname !== "/login";
 
   const rightButtons = (direction: "row" | "column") => (
     <Grid
@@ -42,7 +38,7 @@ const NavBar = () => {
     >
       {showPoints && (
         <Grid item>
-          <Button sx={{ color: "white" }} onClick={() => router.push("/points")}>
+          <Button sx={{ color: "white" }} onClick={() => navigate("/points")}>
             <Grid item container spacing={1} direction="row">
               <Grid item>
                 <FontAwesomeIcon icon={faArrowDown91} size="1x" />
@@ -57,7 +53,7 @@ const NavBar = () => {
         </Grid>
       )}
       <Grid item>
-        <Button sx={{ color: "white" }} onClick={() => router.push("/spending")}>
+        <Button sx={{ color: "white" }} onClick={() => navigate("/spending")}>
           <Grid item container spacing={1} direction="row">
             <Grid item>
               <FontAwesomeIcon icon={faMoneyBill} size="1x" />
@@ -70,12 +66,9 @@ const NavBar = () => {
           </Grid>
         </Button>
       </Grid>
-      <Grid item>
-        <LocationValue />
-      </Grid>
-      {isDevelopment && (
+      {showLocation && (
         <Grid item>
-          <Button onClick={() => instance.logoutRedirect()}>Logout</Button>
+          <LocationValue />
         </Grid>
       )}
     </Grid>
@@ -89,7 +82,7 @@ const NavBar = () => {
             <Grid item>
               <Typography variant="h6" color="inherit" component="div">
                 <Link
-                  onClick={() => router.push("/")}
+                  onClick={() => navigate("/")}
                   style={{ textDecoration: "none", color: "inherit", cursor: "pointer" }}
                 >
                   Maccas

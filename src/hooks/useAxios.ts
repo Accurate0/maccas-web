@@ -1,14 +1,14 @@
 import axios, { InternalAxiosRequestConfig } from "axios";
 import { useMemo } from "react";
-import useAccessToken from "./useAccessToken";
 import axiosRetry from "axios-retry";
+import { useAuthentication } from "./useAuthentication";
 
 const useAxios = () => {
-  const tokenPromise = useAccessToken();
+  const { state } = useAuthentication();
 
   return useMemo(() => {
     const axiosInstance = axios.create({
-      baseURL: process.env.NEXT_PUBLIC_API_BASE,
+      baseURL: import.meta.env.VITE_API_BASE,
       transformResponse: (data) => data,
     });
 
@@ -24,11 +24,10 @@ const useAxios = () => {
 
     axiosInstance.interceptors.request.use(
       async (config: InternalAxiosRequestConfig) => {
-        const accessToken = await tokenPromise;
         config.headers = config.headers ?? {};
 
-        if (accessToken) {
-          config.headers["Authorization"] = `Bearer ${accessToken}`;
+        if (state) {
+          config.headers["Authorization"] = `Bearer ${state.token}`;
         }
         config.headers["Content-Type"] = "application/json";
         return config;
@@ -39,7 +38,7 @@ const useAxios = () => {
     );
 
     return axiosInstance;
-  }, [tokenPromise]);
+  }, [state]);
 };
 
 export default useAxios;

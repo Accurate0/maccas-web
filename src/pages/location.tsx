@@ -15,7 +15,6 @@ import { useUpdateUserConfig } from "../hooks/useUserConfig";
 import MyLocationIcon from "@mui/icons-material/MyLocation";
 import useNotification from "../hooks/useNotification";
 import useLocations from "../hooks/useLocations";
-import Head from "next/head";
 import { RestaurantInformation } from "../hooks/useApiClient/ApiClient.generated";
 
 const options: PositionOptions = {
@@ -92,9 +91,6 @@ const LocationSelection = () => {
 
   return (
     <>
-      <Head>
-        <title>Maccas | Location</title>
-      </Head>
       <Dialog onClose={handleClose} open={dialogOpen}>
         <DialogTitle>Nearby Locations</DialogTitle>
         <List sx={{ pt: 0 }}>
@@ -137,6 +133,7 @@ const LocationSelection = () => {
               onKeyDown={(e) => {
                 if (e.key === "Enter") {
                   console.log(e);
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
                   searchAndUpdate((e.target as any).value ?? undefined);
                   e.preventDefault();
                 }

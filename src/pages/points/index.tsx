@@ -9,27 +9,23 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import Head from "next/head";
-import { useRouter } from "next/router";
 import { AccountPointMap } from "../../hooks/useApiClient/ApiClient.generated";
 import useNotification from "../../hooks/useNotification";
 import usePoints from "../../hooks/usePoints";
 import { useGetUserConfig } from "../../hooks/useUserConfig";
 import { theme } from "../../theme";
+import { useNavigate } from "react-router";
 
 export interface PointsProps {}
 
 const Points: React.FC<PointsProps> = () => {
   const { points } = usePoints();
-  const router = useRouter();
+  const navigate = useNavigate();
   const notification = useNotification();
   const userConfig = useGetUserConfig();
 
   return (
     <>
-      <Head>
-        <title>Maccas | Points</title>
-      </Head>
       <Grid
         paddingTop={8}
         paddingBottom={2}
@@ -61,10 +57,10 @@ const Points: React.FC<PointsProps> = () => {
                         color="secondary"
                         onClick={() => {
                           if (userConfig) {
-                            router.push(`/points/${p.name}`);
+                            navigate(`/points/${p.name}`);
                           } else {
                             notification({ variant: "error", msg: "A store must be selected." });
-                            router.push("/location");
+                            navigate("/location");
                           }
                         }}
                       >

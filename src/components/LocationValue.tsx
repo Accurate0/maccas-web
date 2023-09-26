@@ -1,15 +1,15 @@
 import { faStoreAlt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Button, Grid, Typography } from "@mui/material";
-import { useRouter } from "next/router";
 import useUserConfig from "../hooks/useUserConfig";
+import { useNavigate } from "react-router-dom";
 
 const LocationValue = () => {
   const { config, isCompleted } = useUserConfig();
-  const router = useRouter();
+  const navigate = useNavigate();
 
   return (
-    <Button sx={{ color: "white" }} onClick={() => router.push("/location")}>
+    <Button sx={{ color: "white" }} onClick={() => navigate("/location")}>
       <Grid item container spacing={1} direction="row">
         <Grid item>
           <FontAwesomeIcon icon={faStoreAlt} size="1x" />

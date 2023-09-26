@@ -8,13 +8,12 @@ import {
   CardActions,
 } from "@mui/material";
 import moment from "moment";
-import { useRouter } from "next/router";
-import { TIME_OFFSET } from "../config/time";
 import { GetDealsOffer } from "../hooks/useApiClient/ApiClient.generated";
 import useNotification from "../hooks/useNotification";
 import { useGetUserConfig } from "../hooks/useUserConfig";
 import { theme } from "../theme";
 import LoadableCardMedia from "./LoadableCardMedia";
+import { useNavigate } from "react-router";
 
 export interface DealCardProps {
   disableButtons?: boolean;
@@ -30,8 +29,8 @@ const truncate = (s: string, length: number) =>
   s.length > length ? `${s.substring(0, length - 3)}...` : s;
 
 const isOfferValid = (deal: GetDealsOffer) => {
-  const from = moment.utc(deal.validFromUtc).add(TIME_OFFSET, "hours");
-  const to = moment.utc(deal.validToUtc).add(TIME_OFFSET, "hours");
+  const from = moment.utc(deal.validFromUtc).add(2, "hours");
+  const to = moment.utc(deal.validToUtc).add(2, "hours");
   const now = new Date();
 
   return moment.utc(now).isBetween(from, to);
@@ -46,7 +45,7 @@ const DealCard: React.FC<DealCardProps> = ({
   hideCount,
   tall,
 }) => {
-  const router = useRouter();
+  const navigate = useNavigate();
   const breakpoint = useMediaQuery(theme.breakpoints.down("md"));
   const isMobile = forceMobile ?? breakpoint;
   const validOffer = isOfferValid(offer);
@@ -63,10 +62,10 @@ const DealCard: React.FC<DealCardProps> = ({
       }
 
       if (userConfig) {
-        router.push(`/code/${offer.dealUuid}`);
+        navigate(`/code/${offer.dealUuid}`);
       } else {
         notification({ variant: "error", msg: "A store must be selected." });
-        router.push("/location");
+        navigate("/location");
       }
     }
   };

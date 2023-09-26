@@ -47,7 +47,6 @@ const DealSelector: React.FC<DealSelectorProps> = () => {
               .fill(1)
               .map(() => (
                 // key breaks this, idk why, keys are for nerds
-                // eslint-disable-next-line react/jsx-key
                 <DealSkeleton />
               ))}
           </>

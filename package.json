@@ -1,10 +1,17 @@
 {
   "name": "maccas-web",
-  "version": "0.1.0",
   "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview",
+    "generate:client": "nswag run nswag/config.json",
+    "update-packages": "ncu -u"
+  },
   "dependencies": {
-    "@azure/msal-browser": "^2.38.0",
-    "@azure/msal-react": "^1.5.9",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@fortawesome/fontawesome-svg-core": "^6.4.0",
@@ -17,53 +24,26 @@
     "axios-retry": "^3.5.1",
     "jotai": "^2.4.2",
     "moment": "^2.29.4",
-    "next": "^13.4.12",
     "notistack": "^2.0.8",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-error-boundary": "^4.0.10",
-    "recoil": "^0.7.7",
-    "web-vitals": "^3.4.0"
-  },
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "export": "next build && next export",
-    "lint": "next lint",
-    "lint:fix": "eslint --fix --ext .ts,.tsx .",
-    "generate:client": "nswag run nswag/config.json",
-    "update-packages": "ncu -u"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest",
-      "plugin:@next/next/recommended"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+    "react-router": "^6.16.0",
+    "react-router-dom": "^6.16.0",
+    "recoil": "^0.7.7"
   },
   "devDependencies": {
-    "@next/eslint-plugin-next": "^13.4.12",
-    "@types/node": "^20.4.4",
     "@types/react": "^18.2.15",
     "@types/react-dom": "^18.2.7",
-    "eslint": "^8.50.0",
-    "eslint-config-next": "^13.5.2",
-    "eslint-plugin-next": "^0.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "@vitejs/plugin-react-swc": "^3.3.2",
+    "eslint": "^8.45.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.3",
     "npm-check-updates": "^16.10.16",
     "nswag": "^13.19.0",
-    "typescript": "^5.1.6"
+    "typescript": "^5.0.2",
+    "vite": "^4.4.5"
   }
 }
