@@ -2,5 +2,12 @@
     "github": {
         "silent": true,
         "enabled": false
-    }
+    },
+    "routes": [
+        {
+            "src": "/[^.]+",
+            "dest": "/",
+            "status": 200
+        }
+    ]
 }
