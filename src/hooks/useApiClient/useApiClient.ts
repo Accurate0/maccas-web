@@ -7,4 +7,7 @@ const useApiClient = () => {
   return useMemo(() => new ApiClient(import.meta.env.VITE_API_BASE, axios), [axios]);
 };
 
+export const useUnauthenticatedApiClient = () =>
+  useMemo(() => new ApiClient(import.meta.env.VITE_API_BASE), []);
+
 export default useApiClient;
