@@ -26,6 +26,61 @@ export class ApiClient {
     }
 
     /**
+     * @return Unlocked deal
+     */
+    registration_token( cancelToken?: CancelToken | undefined): Promise<ApiResponse<string>> {
+        let url_ = this.baseUrl + "/admin/auth/register";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: AxiosRequestConfig = {
+            method: "POST",
+            url: url_,
+            headers: {
+                "Accept": "text/plain"
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processRegistration_token(_response);
+        });
+    }
+
+    protected processRegistration_token(response: AxiosResponse): Promise<ApiResponse<string>> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (let k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            result200 = resultData200;
+            return Promise.resolve<ApiResponse<string>>(new ApiResponse<string>(status, _headers, result200));
+
+        } else if (status === 500) {
+            const _responseText = response.data;
+            return throwException("Internal Server Error", status, _responseText, _headers);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<ApiResponse<string>>(new ApiResponse(status, _headers, null as any));
+    }
+
+    /**
      * @return List of currently locked deals
      */
     get_locked_deals( cancelToken?: CancelToken | undefined): Promise<ApiResponse<string[]>> {
@@ -296,9 +351,9 @@ export class ApiClient {
             result200 = JSON.parse(resultData200);
             return Promise.resolve<ApiResponse<TokenResponse>>(new ApiResponse<TokenResponse>(status, _headers, result200));
 
-        } else if (status === 404) {
+        } else if (status === 401) {
             const _responseText = response.data;
-            return throwException("Deal not found", status, _responseText, _headers);
+            return throwException("Account doesn\'t exist", status, _responseText, _headers);
 
         } else if (status === 500) {
             const _responseText = response.data;
@@ -312,7 +367,75 @@ export class ApiClient {
     }
 
     /**
-     * @return Random code for specified deal
+     * @return Register a new account using a shared token
+     */
+    register(token: string, body: RegistrationRequest, cancelToken?: CancelToken | undefined): Promise<ApiResponse<TokenResponse>> {
+        let url_ = this.baseUrl + "/auth/register?";
+        if (token === undefined || token === null)
+            throw new Error("The parameter 'token' must be defined and cannot be null.");
+        else
+            url_ += "token=" + encodeURIComponent("" + token) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: AxiosRequestConfig = {
+            data: content_,
+            method: "POST",
+            url: url_,
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processRegister(_response);
+        });
+    }
+
+    protected processRegister(response: AxiosResponse): Promise<ApiResponse<TokenResponse>> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (let k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        let _mappings: { source: any, target: any }[] = [];
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            result200 = JSON.parse(resultData200);
+            return Promise.resolve<ApiResponse<TokenResponse>>(new ApiResponse<TokenResponse>(status, _headers, result200));
+
+        } else if (status === 401) {
+            const _responseText = response.data;
+            return throwException("Account doesn\'t exist", status, _responseText, _headers);
+
+        } else if (status === 500) {
+            const _responseText = response.data;
+            return throwException("Internal Server Error", status, _responseText, _headers);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<ApiResponse<TokenResponse>>(new ApiResponse(status, _headers, null as any));
+    }
+
+    /**
+     * @return Trade previous access and refresh token for new ones
      */
     get_token(body: TokenRequest, cancelToken?: CancelToken | undefined): Promise<ApiResponse<TokenResponse>> {
         let url_ = this.baseUrl + "/auth/token";
@@ -359,10 +482,6 @@ export class ApiClient {
             let resultData200  = _responseText;
             result200 = JSON.parse(resultData200);
             return Promise.resolve<ApiResponse<TokenResponse>>(new ApiResponse<TokenResponse>(status, _headers, result200));
-
-        } else if (status === 404) {
-            const _responseText = response.data;
-            return throwException("Deal not found", status, _responseText, _headers);
 
         } else if (status === 500) {
             const _responseText = response.data;
@@ -1475,6 +1594,13 @@ export interface OfferResponse {
 export interface PointsResponse {
     lifeTimePoints: number;
     totalPoints: number;
+
+    [key: string]: any;
+}
+
+export interface RegistrationRequest {
+    password: string;
+    username: string;
 
     [key: string]: any;
 }
