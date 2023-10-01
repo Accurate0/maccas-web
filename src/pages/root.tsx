@@ -2,9 +2,12 @@ import { Outlet, useNavigate } from "react-router";
 import NavBar from "../components/NavBar";
 import { useEffect } from "react";
 import useAuthentication from "../hooks/useAuthentication";
-import { Container } from "@mui/material";
+import { Container, useMediaQuery } from "@mui/material";
+import { theme } from "../theme";
+import UserConfigProvider from "../components/UserConfigProvider";
 
 const Root = () => {
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const navigate = useNavigate();
   const { state } = useAuthentication();
 
@@ -17,6 +20,7 @@ const Root = () => {
   return (
     <>
       <NavBar />
+      {isMobile && <UserConfigProvider />}
       <Container>
         <Outlet />
       </Container>
