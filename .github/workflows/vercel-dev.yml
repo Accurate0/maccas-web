@@ -8,9 +8,9 @@ on:
     branches:
       - main
     paths-ignore:
-      - ".github/dependabot.yml"
-      - ".vscode/**"
-      - "resources/**"
+      - '.github/dependabot.yml'
+      - '.vscode/**'
+      - 'resources/**'
 
 concurrency:
   group: environment-${{ github.ref }}-${{ github.workflow }}
@@ -20,9 +20,9 @@ jobs:
   build-deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: pnpm/action-setup@v2
+      - uses: oven-sh/setup-bun@v1
         with:
-          version: latest
+          bun-version: latest
 
       - uses: actions/checkout@v4
 
