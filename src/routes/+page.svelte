@@ -54,37 +54,42 @@
   <div class="p-8">
     <Accordion.Root multiple>
       {#each data.deals ?? [] as deal}
-        <Accordion.Item value={deal.dealUuid}>
-          <Accordion.Trigger on:click={() => handleOnClick(deal.dealUuid)}>
-            <Card.Header
-              ><img alt={deal.shortName} src={deal.imageUrl} class="w-[90px]" /></Card.Header
-            >
-            <Card.Content>
-              <Card.Title>{deal.shortName}</Card.Title>
-              <Card.Description class="pt-2"
-                >{isOfferValid(deal) ? '✅' : '❌'} {deal.count} available</Card.Description
-              >
-            </Card.Content>
-          </Accordion.Trigger>
-          <Accordion.Content>
-            <Alert.Root>
-              {#await promiseMap[deal.dealUuid]}
-                <Skeleton class="h-6 w-auto" />
-              {:then response}
-                <div class="grid grid-cols-2">
-                  <div class="self-center">
-                    <Code />
-                  </div>
-                  <div>
-                    <code>
-                      {response.data.randomCode}
-                    </code>
+        <Card.Root class="w-full mb-8">
+          <Accordion.Item value={deal.dealUuid}>
+            <Accordion.Trigger on:click={() => handleOnClick(deal.dealUuid)}>
+              <div class="grid-flow-col grid gap-4 place-content-stretch w-full">
+                <div class="pl-4">
+                  <img alt={deal.shortName} src={deal.imageUrl} class="w-[90px] p-0" />
+                </div>
+                <div class="pl-4 pt-0 text-left">
+                  <div>{deal.shortName}</div>
+                  <div class="pt-2 text-left">
+                    {isOfferValid(deal) ? '✅' : '❌'}
+                    {deal.count} available
                   </div>
                 </div>
-              {/await}
-            </Alert.Root>
-          </Accordion.Content>
-        </Accordion.Item>
+              </div>
+            </Accordion.Trigger>
+            <Accordion.Content class="px-4">
+              <Alert.Root>
+                {#await promiseMap[deal.dealUuid]}
+                  <Skeleton class="h-6 w-auto" />
+                {:then response}
+                  <div class="grid grid-cols-2">
+                    <div class="self-center">
+                      <Code />
+                    </div>
+                    <div>
+                      <code>
+                        {response.data.randomCode}
+                      </code>
+                    </div>
+                  </div>
+                {/await}
+              </Alert.Root>
+            </Accordion.Content>
+          </Accordion.Item>
+        </Card.Root>
 
         <!-- <Card.Footer>
             <Button class="w-full">Select</Button>
