@@ -47,7 +47,7 @@ const Login = () => {
 
   return (
     <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
-      <Sheet sx={{ padding: 2 }}>
+      <Sheet sx={{ padding: "40px" }}>
         <form autoComplete="off" onSubmit={handleSubmit}>
           <Stack spacing={1}>
             <Typography level="h3">Login</Typography>
