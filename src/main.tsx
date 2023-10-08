@@ -32,10 +32,6 @@ const router = createBrowserRouter([
         element: <Login />,
       },
       {
-        path: "/location",
-        element: <LocationSelection />,
-      },
-      {
         path: "/code/:dealId",
         element: <DealSelection />,
       },
