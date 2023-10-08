@@ -19,12 +19,14 @@ const useUserConfig = () => {
   const location = useLocation();
   const notification = useNotification();
   const apiClient = useApiClient();
+  const [, setConfig] = useRecoilState(UserConfig);
 
   return useQuery({
     queryKey: ["user-config"],
     queryFn: async () => {
       try {
         const response = await apiClient.get_user_config();
+        setConfig(response.result);
         return response.result;
       } catch (error) {
         const err = error as ApiException;
@@ -52,7 +54,6 @@ export const useUpdateUserConfig = () => {
       setConfig(c);
       try {
         await apiClient.update_user_config(c);
-        notification({ msg: `${c.storeName} selected`, variant: "info" });
       } catch (error) {
         const err = error as AxiosError;
         notification({ msg: err.message, variant: "error" });

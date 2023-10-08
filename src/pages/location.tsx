@@ -23,7 +23,11 @@ const options: PositionOptions = {
   maximumAge: 0,
 };
 
-const LocationSelection = () => {
+interface LocationSelectionProps {
+  onDone: () => void;
+}
+
+const LocationSelection = ({ onDone }: LocationSelectionProps) => {
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
   const [restaurants, setRestaurants] = useState<RestaurantInformation[]>([]);
   const [value, setValue] = useState<string>();
@@ -87,6 +91,7 @@ const LocationSelection = () => {
   const handleListItemClick = (value: RestaurantInformation) => {
     updateConfig.mutate({ storeId: value.storeNumber.toString(), storeName: value.name });
     handleClose();
+    onDone();
   };
 
   return (

@@ -8,7 +8,7 @@ import { GetDealsOffer, UserRole } from "../hooks/useApiClient/ApiClient.generat
 import { Grid } from "@mui/material";
 import LocationModal from "../components/LocationModal";
 import { Button } from "@mui/joy";
-import useUserConfig from "../hooks/useUserConfig";
+import useUserConfig, { useGetUserConfig } from "../hooks/useUserConfig";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowDown91, faStoreAlt } from "@fortawesome/free-solid-svg-icons";
 import useAuthentication from "../hooks/useAuthentication";
@@ -23,7 +23,8 @@ const DealSelector: React.FC<DealSelectorProps> = () => {
   const handleClickOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const navigate = useNavigate();
-  const config = useUserConfig();
+  const config = useGetUserConfig();
+  const { status } = useUserConfig();
   const { role } = useAuthentication();
   const showPoints = useMemo(() => role === UserRole.Admin || role === UserRole.Privileged, [role]);
 
@@ -66,9 +67,7 @@ const DealSelector: React.FC<DealSelectorProps> = () => {
                 <FontAwesomeIcon icon={faStoreAlt} size="1x" />
               </Grid>
               <Grid item>
-                <b>
-                  {config.data?.storeName ?? (config.status === "success" ? "None" : "Loading...")}
-                </b>
+                <b>{config?.storeName ?? (status === "success" ? "None" : "Loading...")}</b>
               </Grid>
             </Grid>
           </Button>

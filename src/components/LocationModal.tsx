@@ -11,7 +11,7 @@ const LocationModal = ({ open, setOpen }: LocationModalProps) => {
     <Modal onClose={() => setOpen(false)} keepMounted open={open}>
       <ModalDialog size="lg">
         <ModalClose />
-        <LocationSelection />
+        <LocationSelection onDone={() => setOpen(false)} />
       </ModalDialog>
     </Modal>
   );
