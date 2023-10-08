@@ -4,7 +4,6 @@ import "./index.css";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { Provider } from "jotai";
 import { RecoilRoot } from "recoil";
-import { SnackbarProvider } from "notistack";
 import Backdrop from "./components/Backdrop";
 import Root from "./pages/root";
 import DealSelector from "./pages";
@@ -66,10 +65,8 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <Provider>
       <RecoilRoot>
-        <SnackbarProvider>
-          <Backdrop />
-          <RouterProvider router={router} />
-        </SnackbarProvider>
+        <Backdrop />
+        <RouterProvider router={router} />
       </RecoilRoot>
     </Provider>
   </React.StrictMode>

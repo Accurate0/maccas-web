@@ -7,6 +7,7 @@ import { theme } from "../theme";
 import LoadableCardMedia from "./LoadableCardMedia";
 import { useNavigate } from "react-router";
 import { Button, Card, CardActions, CardContent } from "@mui/joy";
+import { truncate } from "../utils/truncate";
 
 export interface DealCardProps {
   disableButtons?: boolean;
@@ -17,9 +18,6 @@ export interface DealCardProps {
   onDetails: () => void;
   tall?: boolean;
 }
-
-const truncate = (s: string, length: number) =>
-  s.length > length ? `${s.substring(0, length - 3)}...` : s;
 
 const isOfferValid = (deal: GetDealsOffer) => {
   const from = moment.utc(deal.validFromUtc).add(2, "hours");

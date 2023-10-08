@@ -1,5 +1,7 @@
-import { useSnackbar, VariantType } from "notistack";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
+
+export type VariantType = "default" | "error" | "success" | "warning" | "info";
 
 interface NotificationConf {
   msg?: string;
@@ -8,14 +10,22 @@ interface NotificationConf {
 
 const useNotification = () => {
   const [conf, setConf] = useState<NotificationConf>({});
-  const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
     if (conf?.msg) {
-      enqueueSnackbar(conf.msg, {
-        variant: conf.variant ?? ("default" as const),
-        autoHideDuration: 3000,
-      });
+      switch (conf?.variant) {
+        case "info":
+        case "default":
+        case "warning":
+          toast.message(conf.msg);
+          break;
+        case "error":
+          toast.error(conf.msg);
+          break;
+        case "success":
+          toast.success(conf.msg);
+          break;
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [conf]);

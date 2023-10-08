@@ -1,5 +1,5 @@
 import { Modal, ModalClose, ModalDialog } from "@mui/joy";
-import LocationSelection from "../pages/location";
+import LocationSelection from "./LocationSelection";
 
 interface LocationModalProps {
   open: boolean;
@@ -8,7 +8,7 @@ interface LocationModalProps {
 
 const LocationModal = ({ open, setOpen }: LocationModalProps) => {
   return (
-    <Modal onClose={() => setOpen(false)} keepMounted open={open}>
+    <Modal onClose={() => setOpen(false)} open={open}>
       <ModalDialog size="sm">
         <ModalClose />
         <LocationSelection onDone={() => setOpen(false)} />

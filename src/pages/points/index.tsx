@@ -1,20 +1,9 @@
-import {
-  Button,
-  Grid,
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-} from "@mui/material";
 import { AccountPointMap } from "../../hooks/useApiClient/ApiClient.generated";
 import useNotification from "../../hooks/useNotification";
 import usePoints from "../../hooks/usePoints";
 import { useGetUserConfig } from "../../hooks/useUserConfig";
-import { theme } from "../../theme";
 import { useNavigate } from "react-router";
+import { Button, Grid, Sheet, Table, Typography } from "@mui/joy";
 
 export interface PointsProps {}
 
@@ -34,27 +23,23 @@ const Points: React.FC<PointsProps> = () => {
         justifyContent="center"
         alignItems="center"
       >
-        <Grid item xs={12}>
-          <TableContainer component={Paper}>
+        <Grid>
+          <Sheet>
             <Table>
-              <TableHead style={{ background: theme.palette.primary.main }}>
-                <TableRow>
-                  <TableCell>Account Name</TableCell>
-                  <TableCell align="center">Points</TableCell>
-                  <TableCell align="right"></TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
+              <thead>
+                <tr>
+                  <th style={{ textAlign: "center" }}>
+                    <Typography level="h4">Points</Typography>
+                  </th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
                 {points?.map((p: AccountPointMap) => (
-                  <TableRow key={p.name} sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
-                    <TableCell component="th" scope="row">
-                      {p.name}
-                    </TableCell>
-                    <TableCell align="center">{p.totalPoints.toString()}</TableCell>
-                    <TableCell align="right">
+                  <tr key={p.name}>
+                    <td align="center">{p.totalPoints.toString()}</td>
+                    <td align="center">
                       <Button
-                        variant="outlined"
-                        color="secondary"
                         onClick={() => {
                           if (userConfig) {
                             navigate(`/points/${p.name}`);
@@ -66,12 +51,12 @@ const Points: React.FC<PointsProps> = () => {
                       >
                         Select
                       </Button>
-                    </TableCell>
-                  </TableRow>
+                    </td>
+                  </tr>
                 ))}
-              </TableBody>
+              </tbody>
             </Table>
-          </TableContainer>
+          </Sheet>
         </Grid>
       </Grid>
     </>

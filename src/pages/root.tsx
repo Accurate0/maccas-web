@@ -13,6 +13,7 @@ import {
   THEME_ID as MATERIAL_THEME_ID,
 } from "@mui/material/styles";
 import { CssVarsProvider as JoyCssVarsProvider } from "@mui/joy/styles";
+import { Toaster } from "sonner";
 
 const materialTheme = materialExtendTheme(theme);
 const queryClient = new QueryClient();
@@ -34,6 +35,7 @@ const Root = () => {
         <QueryClientProvider client={queryClient}>
           <NavBar />
           {isMobile && <UserConfigProvider />}
+          <Toaster richColors />
           <Container>
             <Outlet />
           </Container>

@@ -1,4 +1,3 @@
-import { TextField, Button, Paper, Box } from "@mui/material";
 import { FormEvent, useState } from "react";
 import { useUnauthenticatedApiClient } from "../hooks/useApiClient/useApiClient";
 import { useAuthentication } from "../hooks/useAuthentication";
@@ -6,6 +5,7 @@ import { useNavigate } from "react-router";
 import useSetBackdrop from "../hooks/useSetBackdrop";
 import useNotification from "../hooks/useNotification";
 import { AxiosError } from "axios";
+import { Box, Button, FormControl, FormLabel, Input, Sheet, Stack, Typography } from "@mui/joy";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -24,10 +24,10 @@ const Login = () => {
     setEmailError(false);
     setPasswordError(false);
 
-    if (username == "") {
+    if (username === "") {
       setEmailError(true);
     }
-    if (password == "") {
+    if (password === "") {
       setPasswordError(true);
     }
 
@@ -47,38 +47,40 @@ const Login = () => {
 
   return (
     <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
-      <Paper sx={{ padding: 2 }}>
+      <Sheet sx={{ padding: 2 }}>
         <form autoComplete="off" onSubmit={handleSubmit}>
-          <h2>Login</h2>
-          <TextField
-            label="Username"
-            onChange={(e) => setUsername(e.target.value)}
-            required
-            variant="outlined"
-            color="secondary"
-            type="text"
-            sx={{ mb: 3 }}
-            fullWidth
-            value={username}
-            error={emailError}
-          />
-          <TextField
-            label="Password"
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            variant="outlined"
-            color="secondary"
-            type="password"
-            value={password}
-            error={passwordError}
-            fullWidth
-            sx={{ mb: 3 }}
-          />
-          <Button variant="outlined" color="secondary" type="submit">
-            Login
-          </Button>
+          <Stack spacing={1}>
+            <Typography level="h3">Login</Typography>
+            <FormControl>
+              <FormLabel>Username</FormLabel>
+              <Input
+                onChange={(e) => setUsername(e.target.value)}
+                variant="outlined"
+                type="text"
+                sx={{ mb: 3 }}
+                fullWidth
+                value={username}
+                error={emailError}
+              />
+            </FormControl>
+            <FormControl>
+              <FormLabel>Password</FormLabel>
+              <Input
+                onChange={(e) => setPassword(e.target.value)}
+                variant="outlined"
+                type="password"
+                value={password}
+                error={passwordError}
+                fullWidth
+                sx={{ mb: 3 }}
+              />
+            </FormControl>
+            <Button color="primary" type="submit">
+              Login
+            </Button>
+          </Stack>
         </form>
-      </Paper>
+      </Sheet>
     </Box>
   );
 };

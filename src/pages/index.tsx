@@ -13,6 +13,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowDown91, faStoreAlt } from "@fortawesome/free-solid-svg-icons";
 import useAuthentication from "../hooks/useAuthentication";
 import { useNavigate } from "react-router";
+import { truncate } from "../utils/truncate";
 
 export interface DealSelectorProps {}
 
@@ -67,7 +68,13 @@ const DealSelector: React.FC<DealSelectorProps> = () => {
                 <FontAwesomeIcon icon={faStoreAlt} size="1x" />
               </Grid>
               <Grid item>
-                <b>{config?.storeName ?? (status === "success" ? "None" : "Loading...")}</b>
+                <b>
+                  {config?.storeName
+                    ? truncate(config.storeName, 12)
+                    : status === "success"
+                    ? "None"
+                    : "Loading..."}
+                </b>
               </Grid>
             </Grid>
           </Button>
