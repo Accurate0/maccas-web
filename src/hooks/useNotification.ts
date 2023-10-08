@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { toast } from "sonner";
+import { toast } from "../utils/toast";
 
 export type VariantType = "default" | "error" | "success" | "warning" | "info";
 
@@ -16,7 +16,6 @@ const useNotification = () => {
       switch (conf?.variant) {
         case "info":
         case "default":
-        case "warning":
           toast.message(conf.msg);
           break;
         case "error":
@@ -24,6 +23,9 @@ const useNotification = () => {
           break;
         case "success":
           toast.success(conf.msg);
+          break;
+        case "warning":
+          toast.warn(conf.msg);
           break;
       }
     }
