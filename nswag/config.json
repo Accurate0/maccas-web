@@ -13,7 +13,7 @@
       "className": "ApiClient",
       "moduleName": "",
       "namespace": "",
-      "typeScriptVersion": 4.4,
+      "typeScriptVersion": 5.0,
       "template": "Axios",
       "promiseType": "Promise",
       "httpClass": "HttpClient",

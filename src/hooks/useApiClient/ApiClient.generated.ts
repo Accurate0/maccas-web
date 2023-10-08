@@ -7,7 +7,6 @@
 /* tslint:disable */
 /* eslint-disable */
 // ReSharper disable InconsistentNaming
-// @ts-nocheck
 
 import axios, { AxiosError } from 'axios';
 import type { AxiosInstance, AxiosRequestConfig, AxiosResponse, CancelToken } from 'axios';
@@ -136,7 +135,7 @@ export class ApiClient {
     }
 
     /**
-     * @param duration (optional)
+     * @param duration (optional) 
      * @return Lock this deal
      */
     lock_deal(deal_id: string, duration?: number | null | undefined, cancelToken?: CancelToken | undefined): Promise<ApiResponse<void>> {
@@ -354,6 +353,10 @@ export class ApiClient {
         } else if (status === 401) {
             const _responseText = response.data;
             return throwException("Account doesn\'t exist", status, _responseText, _headers);
+
+        } else if (status === 403) {
+            const _responseText = response.data;
+            return throwException("Authentication failed", status, _responseText, _headers);
 
         } else if (status === 500) {
             const _responseText = response.data;
@@ -1662,7 +1665,7 @@ function jsonParse(json: any, reviver?: any) {
     json = (function recurse(obj: any, prop?: any, parent?: any) {
         if (typeof obj !== 'object' || !obj)
             return obj;
-
+        
         if ("$ref" in obj) {
             let ref = obj.$ref;
             if (ref in byid)
@@ -1676,7 +1679,7 @@ function jsonParse(json: any, reviver?: any) {
                 obj = obj.$values;
             byid[id] = obj;
         }
-
+        
         if (Array.isArray(obj)) {
             obj = obj.map((v, i) => recurse(v, i, obj));
         } else {

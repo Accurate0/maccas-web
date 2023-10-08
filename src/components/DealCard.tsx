@@ -1,12 +1,4 @@
-import {
-  Grid,
-  Card,
-  CardContent,
-  Typography,
-  useMediaQuery,
-  Button,
-  CardActions,
-} from "@mui/material";
+import { Grid, Typography, useMediaQuery } from "@mui/material";
 import moment from "moment";
 import { GetDealsOffer } from "../hooks/useApiClient/ApiClient.generated";
 import useNotification from "../hooks/useNotification";
@@ -14,6 +6,7 @@ import { useGetUserConfig } from "../hooks/useUserConfig";
 import { theme } from "../theme";
 import LoadableCardMedia from "./LoadableCardMedia";
 import { useNavigate } from "react-router";
+import { Button, Card, CardActions, CardContent } from "@mui/joy";
 
 export interface DealCardProps {
   disableButtons?: boolean;
@@ -82,7 +75,6 @@ const DealCard: React.FC<DealCardProps> = ({
         <CardContent
           style={{
             height: tall ? "140px" : isMobile ? "80px" : "170px",
-            padding: "25px 25px 25px 25px",
           }}
         >
           <Grid container item direction="row" justifyContent="space-between">
@@ -129,9 +121,7 @@ const DealCard: React.FC<DealCardProps> = ({
     <Grid item xs={6} md={3} key={offer.dealUuid}>
       <Card style={{ opacity: !validOffer ? 0.3 : undefined }}>
         <LoadableCardMedia image={offer.imageUrl} alt="missing image" />
-        <CardContent
-          style={{ height: isMobile ? "200px" : "170px", padding: "25px 25px 25px 25px" }}
-        >
+        <CardContent style={{ height: isMobile ? "200px" : "170px" }}>
           <Grid
             container
             direction="column"
@@ -166,22 +156,12 @@ const DealCard: React.FC<DealCardProps> = ({
         <CardActions>
           <Grid container justifyContent="space-between">
             <Grid item>
-              <Button
-                color="secondary"
-                size={isMobile ? "small" : "large"}
-                onClick={onDealSelect}
-                disabled={disableButtons}
-              >
+              <Button color="primary" onClick={onDealSelect} disabled={disableButtons}>
                 Select
               </Button>
             </Grid>
             <Grid item>
-              <Button
-                color="secondary"
-                size={isMobile ? "small" : "large"}
-                onClick={() => onSelect()}
-                disabled={disableButtons}
-              >
+              <Button color="neutral" onClick={() => onSelect()} disabled={disableButtons}>
                 Details
               </Button>
             </Grid>

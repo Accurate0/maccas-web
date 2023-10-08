@@ -9,7 +9,7 @@ interface LocationModalProps {
 const LocationModal = ({ open, setOpen }: LocationModalProps) => {
   return (
     <Modal onClose={() => setOpen(false)} keepMounted open={open}>
-      <ModalDialog size="lg">
+      <ModalDialog size="sm">
         <ModalClose />
         <LocationSelection onDone={() => setOpen(false)} />
       </ModalDialog>

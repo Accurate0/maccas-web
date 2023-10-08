@@ -115,7 +115,7 @@ const LocationSelection = ({ onDone }: LocationSelectionProps) => {
         direction="column"
         alignItems="center"
         justifyContent="center"
-        style={{ minHeight: "100vh" }}
+        style={{ minHeight: "20vh" }}
       >
         <Grid item xs={3} paddingBottom={2} container justifyContent="center" alignItems="center">
           <Grid item>
