@@ -1,11 +1,18 @@
-import { Grid } from "@mui/material";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import useDeals from "../hooks/useDeals";
 import useLastRefresh from "../hooks/useLastRefresh";
 import DealDialog from "../components/DealDialog";
 import DealCard from "../components/DealCard";
 import DealSkeleton from "../components/DealSkeleton";
-import { GetDealsOffer } from "../hooks/useApiClient/ApiClient.generated";
+import { GetDealsOffer, UserRole } from "../hooks/useApiClient/ApiClient.generated";
+import { Grid } from "@mui/material";
+import LocationModal from "../components/LocationModal";
+import { Button } from "@mui/joy";
+import useUserConfig from "../hooks/useUserConfig";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowDown91, faStoreAlt } from "@fortawesome/free-solid-svg-icons";
+import useAuthentication from "../hooks/useAuthentication";
+import { useNavigate } from "react-router";
 
 export interface DealSelectorProps {}
 
@@ -15,10 +22,17 @@ const DealSelector: React.FC<DealSelectorProps> = () => {
   const [dialogFor, setDialogFor] = useState<GetDealsOffer>();
   const handleClickOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const navigate = useNavigate();
+  const config = useUserConfig();
+  const { role } = useAuthentication();
+  const showPoints = useMemo(() => role === UserRole.Admin || role === UserRole.Privileged, [role]);
+
   useLastRefresh();
+  const [locationModalOpen, setLocationModalOpen] = useState<boolean>(false);
 
   return (
     <>
+      <LocationModal open={locationModalOpen} setOpen={setLocationModalOpen} />
       <DealDialog
         open={open}
         onClose={handleClose}
@@ -30,6 +44,36 @@ const DealSelector: React.FC<DealSelectorProps> = () => {
         creationDateUtc={dialogFor?.creationDateUtc}
       />
       <Grid container spacing={2} paddingTop={8} paddingBottom={4}>
+        {showPoints && (
+          <Grid item xs>
+            <Button fullWidth sx={{ color: "white" }} onClick={() => navigate("/points")}>
+              <Grid container spacing={1} alignItems="center" justifyContent="center">
+                <Grid item>
+                  <FontAwesomeIcon icon={faArrowDown91} size="1x" />
+                </Grid>
+                <Grid item>
+                  <b>Points</b>
+                </Grid>
+              </Grid>
+            </Button>
+          </Grid>
+        )}
+
+        <Grid item xs>
+          <Button fullWidth onClick={() => setLocationModalOpen(true)}>
+            <Grid container spacing={1} alignItems="center" justifyContent="center">
+              <Grid item>
+                <FontAwesomeIcon icon={faStoreAlt} size="1x" />
+              </Grid>
+              <Grid item>
+                <b>
+                  {config.data?.storeName ?? (config.status === "success" ? "None" : "Loading...")}
+                </b>
+              </Grid>
+            </Grid>
+          </Button>
+        </Grid>
+
         {deals.status === "success" ? (
           deals.data?.map((offer) => (
             <DealCard

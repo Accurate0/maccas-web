@@ -21,7 +21,7 @@ const Backdrop = () => {
   const [state] = useRecoilState(BackdropSelector);
 
   return (
-    <MuiBackdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={state}>
+    <MuiBackdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 222 }} open={state}>
       <CircularProgress color="inherit" />
     </MuiBackdrop>
   );

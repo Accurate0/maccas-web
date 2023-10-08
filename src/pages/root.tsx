@@ -6,7 +6,15 @@ import { Container, useMediaQuery } from "@mui/material";
 import { theme } from "../theme";
 import UserConfigProvider from "../components/UserConfigProvider";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import "@fontsource/inter";
+import {
+  experimental_extendTheme as materialExtendTheme,
+  Experimental_CssVarsProvider as MaterialCssVarsProvider,
+  THEME_ID as MATERIAL_THEME_ID,
+} from "@mui/material/styles";
+import { CssVarsProvider as JoyCssVarsProvider } from "@mui/joy/styles";
 
+const materialTheme = materialExtendTheme(theme);
 const queryClient = new QueryClient();
 
 const Root = () => {
@@ -21,13 +29,17 @@ const Root = () => {
   }, [state, navigate]);
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <NavBar />
-      {isMobile && <UserConfigProvider />}
-      <Container>
-        <Outlet />
-      </Container>
-    </QueryClientProvider>
+    <MaterialCssVarsProvider theme={{ [MATERIAL_THEME_ID]: materialTheme }}>
+      <JoyCssVarsProvider>
+        <QueryClientProvider client={queryClient}>
+          <NavBar />
+          {isMobile && <UserConfigProvider />}
+          <Container>
+            <Outlet />
+          </Container>
+        </QueryClientProvider>
+      </JoyCssVarsProvider>
+    </MaterialCssVarsProvider>
   );
 };
 

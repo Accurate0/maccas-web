@@ -89,28 +89,6 @@ const NavBar = () => {
                 </Link>
               </Typography>
             </Grid>
-            {isMobile ? (
-              <Grid item>
-                <Button color="inherit" onClick={() => setOpen(true)}>
-                  <FontAwesomeIcon icon={faBars} size="1x" />
-                </Button>
-                <Drawer
-                  PaperProps={{
-                    sx: {
-                      backgroundColor: theme.palette.secondary.main,
-                    },
-                  }}
-                  onClose={() => setOpen(false)}
-                  ModalProps={{ onBackdropClick: () => setOpen(false) }}
-                  anchor="right"
-                  open={open}
-                >
-                  {rightButtons("column")}
-                </Drawer>
-              </Grid>
-            ) : (
-              <Grid item>{rightButtons("row")}</Grid>
-            )}
           </Grid>
         </Toolbar>
       </AppBar>
