@@ -9,7 +9,6 @@ import Backdrop from "./components/Backdrop";
 import Root from "./pages/root";
 import DealSelector from "./pages";
 import Login from "./pages/login";
-import LocationSelection from "./pages/location";
 import DealSelection from "./pages/code/DealSelection";
 import Spending from "./pages/spending";
 import Points from "./pages/points";
