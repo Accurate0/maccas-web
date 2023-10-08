@@ -30,8 +30,8 @@ const DealSelector: React.FC<DealSelectorProps> = () => {
         creationDateUtc={dialogFor?.creationDateUtc}
       />
       <Grid container spacing={2} paddingTop={8} paddingBottom={4}>
-        {deals ? (
-          deals?.map((offer) => (
+        {deals.status === "success" ? (
+          deals.data?.map((offer) => (
             <DealCard
               key={offer.dealUuid}
               offer={offer}

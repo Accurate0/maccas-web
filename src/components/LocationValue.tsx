@@ -5,7 +5,7 @@ import useUserConfig from "../hooks/useUserConfig";
 import { useNavigate } from "react-router-dom";
 
 const LocationValue = () => {
-  const { config, isCompleted } = useUserConfig();
+  const config = useUserConfig();
   const navigate = useNavigate();
 
   return (
@@ -16,7 +16,7 @@ const LocationValue = () => {
         </Grid>
         <Grid item>
           <Typography variant="caption">
-            <b>{config?.storeName ?? (isCompleted ? "None" : "Loading...")}</b>
+            <b>{config.data?.storeName ?? (config.status === "success" ? "None" : "Loading...")}</b>
           </Typography>
         </Grid>
       </Grid>

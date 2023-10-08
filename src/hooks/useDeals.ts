@@ -1,29 +1,26 @@
 import { AxiosError } from "axios";
-import { useEffect, useState } from "react";
-import { GetDealsOffer } from "./useApiClient/ApiClient.generated";
 import useApiClient from "./useApiClient/useApiClient";
 import useNotification from "./useNotification";
+import { useQuery } from "@tanstack/react-query";
 
 const useDeals = () => {
-  const [state, setState] = useState<GetDealsOffer[]>();
   const notification = useNotification();
   const apiClient = useApiClient();
 
-  useEffect(() => {
-    const get = async () => {
+  return useQuery({
+    queryKey: ["deals"],
+    queryFn: async () => {
       try {
         const response = await apiClient.get_deals();
-        setState(response.result);
+        return response.result;
       } catch (error) {
         notification({ msg: (error as AxiosError).message, variant: "error" });
+        throw error;
       }
-    };
-
-    get();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  return state;
+    },
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+  });
 };
 
 export default useDeals;

@@ -1,6 +1,6 @@
 import { TextField, Button, Paper, Box } from "@mui/material";
 import { FormEvent, useState } from "react";
-import useApiClient from "../hooks/useApiClient/useApiClient";
+import { useUnauthenticatedApiClient } from "../hooks/useApiClient/useApiClient";
 import { useAuthentication } from "../hooks/useAuthentication";
 import { useNavigate } from "react-router";
 import useSetBackdrop from "../hooks/useSetBackdrop";
@@ -13,7 +13,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
-  const apiClient = useApiClient();
+  const apiClient = useUnauthenticatedApiClient();
   const { setState } = useAuthentication();
   const setBackdrop = useSetBackdrop();
   const notification = useNotification();

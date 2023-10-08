@@ -5,6 +5,9 @@ import useAuthentication from "../hooks/useAuthentication";
 import { Container, useMediaQuery } from "@mui/material";
 import { theme } from "../theme";
 import UserConfigProvider from "../components/UserConfigProvider";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
 
 const Root = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
@@ -18,13 +21,13 @@ const Root = () => {
   }, [state, navigate]);
 
   return (
-    <>
+    <QueryClientProvider client={queryClient}>
       <NavBar />
       {isMobile && <UserConfigProvider />}
       <Container>
         <Outlet />
       </Container>
-    </>
+    </QueryClientProvider>
   );
 };
 

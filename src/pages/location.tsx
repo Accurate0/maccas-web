@@ -5,7 +5,7 @@ import {
   Grid,
   IconButton,
   List,
-  ListItem,
+  ListItemButton,
   ListItemText,
   TextField,
 } from "@mui/material";
@@ -85,7 +85,7 @@ const LocationSelection = () => {
 
   const handleClose = () => setDialogOpen(false);
   const handleListItemClick = (value: RestaurantInformation) => {
-    updateConfig({ storeId: value.storeNumber.toString(), storeName: value.name });
+    updateConfig.mutate({ storeId: value.storeNumber.toString(), storeName: value.name });
     handleClose();
   };
 
@@ -95,13 +95,12 @@ const LocationSelection = () => {
         <DialogTitle>Nearby Locations</DialogTitle>
         <List sx={{ pt: 0 }}>
           {restaurants.map((restaurant) => (
-            <ListItem
-              button
+            <ListItemButton
               onClick={() => handleListItemClick(restaurant)}
               key={restaurant.storeNumber.toString()}
             >
               <ListItemText primary={restaurant.name} secondary={restaurant.address.addressLine} />
-            </ListItem>
+            </ListItemButton>
           ))}
         </List>
       </Dialog>

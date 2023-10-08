@@ -46,7 +46,7 @@ const useAxios = () => {
         return response;
       },
       async (error: AxiosError) => {
-        if (error.response?.status == 403 || error.response?.status === 401) {
+        if (error.response?.status === 403 || error.response?.status === 401) {
           try {
             const response = await apiClient.get_token({
               token: state?.token ?? "",
