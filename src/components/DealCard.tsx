@@ -1,4 +1,4 @@
-import { Grid, Typography, useMediaQuery } from "@mui/material";
+import { Grid, useMediaQuery } from "@mui/material";
 import moment from "moment";
 import { GetDealsOffer } from "../hooks/useApiClient/ApiClient.generated";
 import useNotification from "../hooks/useNotification";
@@ -6,7 +6,7 @@ import { useGetUserConfig } from "../hooks/useUserConfig";
 import { theme } from "../theme";
 import LoadableCardMedia from "./LoadableCardMedia";
 import { useNavigate } from "react-router";
-import { Button, Card, CardActions, CardContent } from "@mui/joy";
+import { Button, Card, CardActions, CardContent, Typography } from "@mui/joy";
 import { truncate } from "../utils/truncate";
 
 export interface DealCardProps {
@@ -72,25 +72,25 @@ const DealCard: React.FC<DealCardProps> = ({
       >
         <CardContent
           style={{
-            height: tall ? "140px" : isMobile ? "80px" : "170px",
+            height: tall ? "140px" : "80px",
           }}
         >
           <Grid container item direction="row" justifyContent="space-between">
             <Grid item xs={8} container direction="column">
               <Grid item xs>
-                <Typography variant={isMobile ? "h6" : "h5"} component="div">
-                  {truncate(offer.shortName, isMobile ? 20 : 32)}
+                <Typography level="h4" component="div">
+                  {truncate(offer.shortName, 20)}
                 </Typography>
               </Grid>
               {!hideCount && (
-                <Grid item xs>
-                  <Typography variant="body2">{offer.count} available</Typography>
+                <Grid item>
+                  <Typography level="body-md">{offer.count} available</Typography>
                 </Grid>
               )}
               {!disableButtons && (
                 <Grid item xs={3}>
                   <Typography
-                    variant="body2"
+                    level="body-md"
                     style={{ width: 20 }}
                     onClick={(e) => {
                       if (!disableButtons) {
@@ -116,10 +116,10 @@ const DealCard: React.FC<DealCardProps> = ({
       </Card>
     </Grid>
   ) : (
-    <Grid item xs={6} md={3} key={offer.dealUuid}>
+    <Grid container item xs={6} md={3} key={offer.dealUuid}>
       <Card style={{ opacity: !validOffer ? 0.3 : undefined }}>
         <LoadableCardMedia image={offer.imageUrl} alt="missing image" />
-        <CardContent style={{ height: isMobile ? "200px" : "170px" }}>
+        <CardContent>
           <Grid
             container
             direction="column"
@@ -127,25 +127,25 @@ const DealCard: React.FC<DealCardProps> = ({
             alignItems="flex-start"
             spacing={2}
           >
-            <Grid item xs={8}>
-              <Typography variant={isMobile ? "h6" : "h5"} component="div">
-                {truncate(offer.shortName, isMobile ? 20 : 32)}
+            <Grid item>
+              <Typography level="h4" component="div">
+                {truncate(offer.shortName, 32)}
               </Typography>
             </Grid>
             <Grid item container justifyContent="space-between">
               <Grid item>
-                <Typography variant="body2">{offer.count} available</Typography>
+                <Typography level="body-md">{offer.count} available</Typography>
               </Grid>
             </Grid>
-            <Grid item xs={4}>
+            <Grid item>
               <Grid container direction="column" item spacing={1}>
-                <Grid item xs={12}>
-                  <Typography variant="caption">
+                <Grid item>
+                  <Typography level="body-xs">
                     Added: {new Date(offer.creationDateUtc).toLocaleDateString()}
                   </Typography>
                 </Grid>
-                <Grid item xs={12} alignItems="baseline">
-                  <Typography variant="caption">{validOffer ? "✅" : "❌"}</Typography>
+                <Grid item alignItems="baseline">
+                  <Typography level="body-lg">{validOffer ? "✅" : "❌"}</Typography>
                 </Grid>
               </Grid>
             </Grid>
