@@ -43,7 +43,7 @@ const DealSelector: React.FC<DealSelectorProps> = () => {
         uuid={dialogFor?.dealUuid}
         creationDateUtc={dialogFor?.creationDateUtc}
       />
-      <Grid container spacing={2} paddingTop={8} paddingBottom={4}>
+      <Grid container spacing={2} paddingTop={8}>
         {showPoints && (
           <Grid item xs>
             <Button fullWidth sx={{ color: "white" }} onClick={() => navigate("/points")}>
@@ -73,7 +73,9 @@ const DealSelector: React.FC<DealSelectorProps> = () => {
             </Grid>
           </Button>
         </Grid>
+      </Grid>
 
+      <Grid container spacing={2} paddingTop={2} paddingBottom={4}>
         {deals.status === "success" ? (
           deals.data?.map((offer) => (
             <DealCard
