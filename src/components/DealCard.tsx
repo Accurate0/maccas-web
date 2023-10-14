@@ -116,7 +116,7 @@ const DealCard: React.FC<DealCardProps> = ({
   return isMobile ? (
     <Grid item xs={12} md={3} key={offer.dealUuid}>
       <Accordion
-        expanded={openAccordion ?? false}
+        expanded={openAccordion}
         onChange={async (_, expanded) => {
           setOpenAccordion(expanded);
           if (expanded) {
