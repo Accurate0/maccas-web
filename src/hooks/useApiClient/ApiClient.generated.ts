@@ -355,6 +355,10 @@ export class ApiClient {
             const _responseText = response.data;
             return throwException("Account doesn\'t exist", status, _responseText, _headers);
 
+        } else if (status === 403) {
+            const _responseText = response.data;
+            return throwException("Authentication failed", status, _responseText, _headers);
+
         } else if (status === 500) {
             const _responseText = response.data;
             return throwException("Internal Server Error", status, _responseText, _headers);
@@ -795,6 +799,10 @@ export class ApiClient {
         } else if (status === 404) {
             const _responseText = response.data;
             return throwException("Deal not found", status, _responseText, _headers);
+
+        } else if (status === 409) {
+            const _responseText = response.data;
+            return throwException("This deal is temporarily unavailable", status, _responseText, _headers);
 
         } else if (status === 500) {
             const _responseText = response.data;

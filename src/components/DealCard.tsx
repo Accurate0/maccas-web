@@ -1,4 +1,4 @@
-import { Grid, useMediaQuery } from "@mui/material";
+import { Grid, useMediaQuery, Accordion, AccordionDetails, AccordionSummary } from "@mui/material";
 import moment from "moment";
 import { GetDealsOffer } from "../hooks/useApiClient/ApiClient.generated";
 import useNotification from "../hooks/useNotification";
@@ -6,9 +6,22 @@ import { useGetUserConfig } from "../hooks/useUserConfig";
 import { theme } from "../theme";
 import LoadableCardMedia from "./LoadableCardMedia";
 import { useNavigate } from "react-router";
-import { Button, Card, CardActions, CardContent, Typography } from "@mui/joy";
+import {
+  Alert,
+  Box,
+  Button,
+  Card,
+  CardActions,
+  CardContent,
+  IconButton,
+  LinearProgress,
+  Typography,
+} from "@mui/joy";
 import { truncate } from "../utils/truncate";
-
+import { useMemo, useState } from "react";
+import { useMutation } from "@tanstack/react-query";
+import useApiClient from "../hooks/useApiClient/useApiClient";
+import RefreshIcon from "@mui/icons-material/Refresh";
 export interface DealCardProps {
   disableButtons?: boolean;
   forceMobile?: boolean;
@@ -34,7 +47,6 @@ const DealCard: React.FC<DealCardProps> = ({
   disableButtons,
   ignoreValidity,
   hideCount,
-  tall,
 }) => {
   const navigate = useNavigate();
   const breakpoint = useMediaQuery(theme.breakpoints.down("md"));
@@ -42,6 +54,27 @@ const DealCard: React.FC<DealCardProps> = ({
   const validOffer = isOfferValid(offer);
   const notification = useNotification();
   const userConfig = useGetUserConfig();
+  const [openAccordion, setOpenAccordion] = useState<boolean>(false);
+  const apiClient = useApiClient();
+  const config = useGetUserConfig();
+  const addDealMutation = useMutation({
+    mutationKey: [`deal-${offer.dealUuid}`],
+    mutationFn: async () => {
+      if (!userConfig?.storeId) {
+        notification({ variant: "error", msg: "A store must be selected." });
+        return;
+      }
+
+      return (await apiClient.add_deal(offer.dealUuid, config!.storeId)).result;
+    },
+  });
+
+  const removeDealMutation = useMutation({
+    mutationKey: [`remove-deal-${offer.dealUuid}`],
+    mutationFn: async () => {
+      return await apiClient.remove_deal(offer.dealUuid, config!.storeId);
+    },
+  });
 
   const onDealSelect = () => {
     if (!disableButtons) {
@@ -61,18 +94,41 @@ const DealCard: React.FC<DealCardProps> = ({
     }
   };
 
+  const getAddDealResponse = useMemo(() => {
+    if (addDealMutation.status === "error") {
+      return addDealMutation.error.message;
+    }
+
+    if (addDealMutation.status === "pending") {
+      return <LinearProgress />;
+    }
+
+    if (addDealMutation.status === "success") {
+      return (
+        <Box sx={{ fontFamily: "Monospace", fontSize: "h4.fontSize" }}>
+          {addDealMutation.data?.randomCode}
+        </Box>
+      );
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [addDealMutation.status]);
+
   return isMobile ? (
     <Grid item xs={12} md={3} key={offer.dealUuid}>
-      <Card
-        style={{
-          opacity: ignoreValidity ? undefined : !validOffer ? 0.3 : undefined,
-          cursor: disableButtons ? undefined : "pointer",
+      <Accordion
+        expanded={openAccordion ?? false}
+        onChange={async (_, expanded) => {
+          setOpenAccordion(expanded);
+          if (expanded) {
+            await addDealMutation.mutateAsync();
+          } else {
+            await removeDealMutation.mutateAsync();
+          }
         }}
-        onClick={disableButtons ? undefined : onDealSelect}
       >
-        <CardContent
-          style={{
-            height: tall ? "140px" : "80px",
+        <AccordionSummary
+          sx={{
+            opacity: ignoreValidity ? undefined : !validOffer ? 0.3 : undefined,
           }}
         >
           <Grid container item direction="row" justifyContent="space-between">
@@ -112,8 +168,27 @@ const DealCard: React.FC<DealCardProps> = ({
               />
             </Grid>
           </Grid>
-        </CardContent>
-      </Card>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Alert
+            endDecorator={
+              <IconButton
+                variant="plain"
+                size="sm"
+                color="neutral"
+                disabled={addDealMutation.status === "pending"}
+                onClick={() =>
+                  notification({ variant: "error", msg: "This doesn't do anything yet" })
+                }
+              >
+                <RefreshIcon />
+              </IconButton>
+            }
+          >
+            {getAddDealResponse}
+          </Alert>
+        </AccordionDetails>
+      </Accordion>
     </Grid>
   ) : (
     <Grid container item xs={6} md={3} key={offer.dealUuid}>

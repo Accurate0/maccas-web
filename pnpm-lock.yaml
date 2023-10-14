@@ -27,7 +27,7 @@ dependencies:
     specifier: ^0.2.0
     version: 0.2.0(@fortawesome/fontawesome-svg-core@6.4.2)(react@18.2.0)
   '@mui/icons-material':
-    specifier: ^5.14.1
+    specifier: ^5.14.9
     version: 5.14.9(@mui/material@5.14.10)(@types/react@18.2.22)(react@18.2.0)
   '@mui/joy':
     specifier: 5.0.0-beta.9
