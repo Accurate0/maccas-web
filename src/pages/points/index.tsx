@@ -8,7 +8,7 @@ const Points: React.FC<PointsProps> = () => {
   const { data: points } = usePoints();
 
   return (
-    <Grid paddingTop={8} spacing={1} container>
+    <Grid paddingTop={2} spacing={2} container>
       {points?.map((p) => (
         <PointCard key={p.name} {...p} />
       ))}

@@ -14,6 +14,7 @@ import Points from "./pages/points";
 import Statistics from "./pages/statistics";
 import Admin from "./pages/admin";
 import AdminSpending from "./pages/admin/spending";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const router = createBrowserRouter([
   {
@@ -56,12 +57,16 @@ const router = createBrowserRouter([
   },
 ]);
 
+const queryClient = new QueryClient();
+
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <Provider>
       <RecoilRoot>
-        <Backdrop />
-        <RouterProvider router={router} />
+        <QueryClientProvider client={queryClient}>
+          <Backdrop />
+          <RouterProvider router={router} />
+        </QueryClientProvider>
       </RecoilRoot>
     </Provider>
   </React.StrictMode>
