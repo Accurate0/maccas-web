@@ -11,7 +11,6 @@ import Login from "./pages/login";
 import DealSelection from "./pages/code/DealSelection";
 import Spending from "./pages/spending";
 import Points from "./pages/points";
-import PointAccount from "./pages/points/PointAccount";
 import Statistics from "./pages/statistics";
 import Admin from "./pages/admin";
 import AdminSpending from "./pages/admin/spending";
@@ -40,10 +39,6 @@ const router = createBrowserRouter([
       {
         path: "/points",
         element: <Points />,
-      },
-      {
-        path: "/points/:accountId",
-        element: <PointAccount />,
       },
       {
         path: "/statistics",

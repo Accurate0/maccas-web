@@ -2,7 +2,7 @@ import { Outlet, useNavigate } from "react-router";
 import NavBar from "../components/NavBar";
 import { useEffect } from "react";
 import useAuthentication from "../hooks/useAuthentication";
-import { Container, useMediaQuery } from "@mui/material";
+import { Container } from "@mui/material";
 import { theme } from "../theme";
 import UserConfigProvider from "../components/UserConfigProvider";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -19,7 +19,6 @@ const materialTheme = materialExtendTheme(theme);
 const queryClient = new QueryClient();
 
 const Root = () => {
-  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const navigate = useNavigate();
   const { state } = useAuthentication();
 
@@ -34,7 +33,7 @@ const Root = () => {
       <JoyCssVarsProvider>
         <QueryClientProvider client={queryClient}>
           <NavBar />
-          {isMobile && <UserConfigProvider />}
+          <UserConfigProvider />
           <JoyToaster />
           <Container>
             <Outlet />

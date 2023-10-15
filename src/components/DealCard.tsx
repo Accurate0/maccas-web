@@ -6,22 +6,11 @@ import { useGetUserConfig } from "../hooks/useUserConfig";
 import { theme } from "../theme";
 import LoadableCardMedia from "./LoadableCardMedia";
 import { useNavigate } from "react-router";
-import {
-  Alert,
-  Box,
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  IconButton,
-  LinearProgress,
-  Typography,
-} from "@mui/joy";
+import { Button, Card, CardActions, CardContent, Typography } from "@mui/joy";
 import { truncate } from "../utils/truncate";
-import { useMemo, useState } from "react";
-import { useMutation } from "@tanstack/react-query";
-import useApiClient from "../hooks/useApiClient/useApiClient";
-import RefreshIcon from "@mui/icons-material/Refresh";
+import { useState } from "react";
+import DealCode from "./DealCode";
+
 export interface DealCardProps {
   disableButtons?: boolean;
   forceMobile?: boolean;
@@ -54,28 +43,9 @@ const DealCard: React.FC<DealCardProps> = ({
   const validOffer = isOfferValid(offer);
   const notification = useNotification();
   const userConfig = useGetUserConfig();
-  const [openAccordion, setOpenAccordion] = useState<boolean>(false);
-  const apiClient = useApiClient();
-  const config = useGetUserConfig();
-  const addDealMutation = useMutation({
-    mutationKey: [`deal-${offer.dealUuid}`],
-    mutationFn: async () => {
-      if (!userConfig?.storeId) {
-        notification({ variant: "error", msg: "A store must be selected." });
-        return;
-      }
+  const [dealsSelected, setDealsSelected] = useState<string[]>([]);
 
-      return (await apiClient.add_deal(offer.dealUuid, config!.storeId)).result;
-    },
-  });
-
-  const removeDealMutation = useMutation({
-    mutationKey: [`remove-deal-${offer.dealUuid}`],
-    mutationFn: async () => {
-      return await apiClient.remove_deal(offer.dealUuid, config!.storeId);
-    },
-  });
-
+  // New Ids, POST with new id, get back deal id + code
   const onDealSelect = () => {
     if (!disableButtons) {
       if (!validOffer) {
@@ -94,36 +64,13 @@ const DealCard: React.FC<DealCardProps> = ({
     }
   };
 
-  const getAddDealResponse = useMemo(() => {
-    if (addDealMutation.status === "error") {
-      return addDealMutation.error.message;
-    }
-
-    if (addDealMutation.status === "pending") {
-      return <LinearProgress />;
-    }
-
-    if (addDealMutation.status === "success") {
-      return (
-        <Box sx={{ fontFamily: "Monospace", fontSize: "h4.fontSize" }}>
-          {addDealMutation.data?.randomCode}
-        </Box>
-      );
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [addDealMutation.status]);
-
   return isMobile ? (
-    <Grid item xs={12} md={3} key={offer.dealUuid}>
+    <Grid item xs={12} key={offer.dealUuid}>
       <Accordion
-        expanded={openAccordion}
-        onChange={async (_, expanded) => {
-          setOpenAccordion(expanded);
-          if (expanded) {
-            await addDealMutation.mutateAsync();
-          } else {
-            await removeDealMutation.mutateAsync();
-          }
+        expanded={dealsSelected.length > 0}
+        onChange={async () => {
+          // use a random id so each is unique, but this isn't the deal id
+          setDealsSelected((old) => [...old, crypto.randomUUID()]);
         }}
       >
         <AccordionSummary
@@ -140,14 +87,14 @@ const DealCard: React.FC<DealCardProps> = ({
               </Grid>
               {!hideCount && (
                 <Grid item>
-                  <Typography level="body-md">{offer.count} available</Typography>
+                  <Typography level="body-sm">{offer.count} available</Typography>
                 </Grid>
               )}
               {!disableButtons && (
                 <Grid item xs={3}>
                   <Typography
-                    level="body-md"
-                    style={{ width: 20 }}
+                    level="body-xs"
+                    textColor="black"
                     onClick={(e) => {
                       if (!disableButtons) {
                         e.stopPropagation();
@@ -170,23 +117,17 @@ const DealCard: React.FC<DealCardProps> = ({
           </Grid>
         </AccordionSummary>
         <AccordionDetails>
-          <Alert
-            endDecorator={
-              <IconButton
-                variant="plain"
-                size="sm"
-                color="neutral"
-                disabled={addDealMutation.status === "pending"}
-                onClick={() =>
-                  notification({ variant: "error", msg: "This doesn't do anything yet" })
-                }
-              >
-                <RefreshIcon />
-              </IconButton>
-            }
-          >
-            {getAddDealResponse}
-          </Alert>
+          <Grid container spacing={1} direction="column">
+            {dealsSelected.map((id) => (
+              <DealCode
+                key={id}
+                // change to deal fingerprint?
+                // POST deals/<fingerprint> -> get random id
+                id={offer.dealUuid}
+                onRemove={() => setDealsSelected((old) => old.filter((x) => x !== id))}
+              />
+            ))}
+          </Grid>
         </AccordionDetails>
       </Accordion>
     </Grid>

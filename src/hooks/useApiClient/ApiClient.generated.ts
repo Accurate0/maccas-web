@@ -7,7 +7,6 @@
 /* tslint:disable */
 /* eslint-disable */
 // ReSharper disable InconsistentNaming
-// @ts-nocheck
 
 import axios, { AxiosError } from 'axios';
 import type { AxiosInstance, AxiosRequestConfig, AxiosResponse, CancelToken } from 'axios';
@@ -136,7 +135,7 @@ export class ApiClient {
     }
 
     /**
-     * @param duration (optional)
+     * @param duration (optional) 
      * @return Lock this deal
      */
     lock_deal(deal_id: string, duration?: number | null | undefined, cancelToken?: CancelToken | undefined): Promise<ApiResponse<void>> {
@@ -675,6 +674,68 @@ export class ApiClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
         }
         return Promise.resolve<ApiResponse<LastRefreshInformation>>(new ApiResponse(status, _headers, null as any));
+    }
+
+    /**
+     * @return List of similar deal ids
+     */
+    find_similar_by_id(deal_id: string, cancelToken?: CancelToken | undefined): Promise<ApiResponse<string[]>> {
+        let url_ = this.baseUrl + "/deals/similar/{deal_id}";
+        if (deal_id === undefined || deal_id === null)
+            throw new Error("The parameter 'deal_id' must be defined.");
+        url_ = url_.replace("{deal_id}", encodeURIComponent("" + deal_id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: AxiosRequestConfig = {
+            method: "GET",
+            url: url_,
+            headers: {
+                "Accept": "application/json"
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processFind_similar_by_id(_response);
+        });
+    }
+
+    protected processFind_similar_by_id(response: AxiosResponse): Promise<ApiResponse<string[]>> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (let k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            result200 = JSON.parse(resultData200);
+            return Promise.resolve<ApiResponse<string[]>>(new ApiResponse<string[]>(status, _headers, result200));
+
+        } else if (status === 404) {
+            const _responseText = response.data;
+            return throwException("Deal not found", status, _responseText, _headers);
+
+        } else if (status === 500) {
+            const _responseText = response.data;
+            return throwException("Internal Server Error", status, _responseText, _headers);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<ApiResponse<string[]>>(new ApiResponse(status, _headers, null as any));
     }
 
     /**
@@ -1670,7 +1731,7 @@ function jsonParse(json: any, reviver?: any) {
     json = (function recurse(obj: any, prop?: any, parent?: any) {
         if (typeof obj !== 'object' || !obj)
             return obj;
-
+        
         if ("$ref" in obj) {
             let ref = obj.$ref;
             if (ref in byid)
@@ -1684,7 +1745,7 @@ function jsonParse(json: any, reviver?: any) {
                 obj = obj.$values;
             byid[id] = obj;
         }
-
+        
         if (Array.isArray(obj)) {
             obj = obj.map((v, i) => recurse(v, i, obj));
         } else {
