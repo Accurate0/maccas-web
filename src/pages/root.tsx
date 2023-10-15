@@ -57,42 +57,46 @@ const Root = () => {
         <UserConfigProvider />
         <JoyToaster />
         <Container>
-          <LocationModal open={locationModalOpen} setOpen={setLocationModalOpen} />
-          <Grid paddingTop={8} spacing={2} container>
-            {href && name && (
-              <Grid item xs>
-                <Button fullWidth sx={{ color: "white" }} onClick={() => navigate(href)}>
-                  <Grid container spacing={1} alignItems="center" justifyContent="center">
-                    <Grid item>
-                      <FontAwesomeIcon icon={icon} size="1x" />
-                    </Grid>
-                    <Grid item>
-                      <b>{name}</b>
-                    </Grid>
+          {location.pathname !== "/login" && (
+            <>
+              <LocationModal open={locationModalOpen} setOpen={setLocationModalOpen} />
+              <Grid paddingTop={8} spacing={2} container>
+                {href && name && (
+                  <Grid item xs>
+                    <Button fullWidth sx={{ color: "white" }} onClick={() => navigate(href)}>
+                      <Grid container spacing={1} alignItems="center" justifyContent="center">
+                        <Grid item>
+                          <FontAwesomeIcon icon={icon} size="1x" />
+                        </Grid>
+                        <Grid item>
+                          <b>{name}</b>
+                        </Grid>
+                      </Grid>
+                    </Button>
                   </Grid>
-                </Button>
-              </Grid>
-            )}
+                )}
 
-            <Grid item xs>
-              <Button fullWidth onClick={() => setLocationModalOpen(true)}>
-                <Grid container spacing={1} alignItems="center" justifyContent="center">
-                  <Grid item>
-                    <FontAwesomeIcon icon={faStoreAlt} size="1x" />
-                  </Grid>
-                  <Grid item>
-                    <b>
-                      {config?.storeName
-                        ? truncate(config.storeName, 12)
-                        : status === "success"
-                        ? "None"
-                        : "Loading..."}
-                    </b>
-                  </Grid>
+                <Grid item xs>
+                  <Button fullWidth onClick={() => setLocationModalOpen(true)}>
+                    <Grid container spacing={1} alignItems="center" justifyContent="center">
+                      <Grid item>
+                        <FontAwesomeIcon icon={faStoreAlt} size="1x" />
+                      </Grid>
+                      <Grid item>
+                        <b>
+                          {config?.storeName
+                            ? truncate(config.storeName, 12)
+                            : status === "success"
+                            ? "None"
+                            : "Loading..."}
+                        </b>
+                      </Grid>
+                    </Grid>
+                  </Button>
                 </Grid>
-              </Button>
-            </Grid>
-          </Grid>
+              </Grid>
+            </>
+          )}
 
           <Outlet />
         </Container>
