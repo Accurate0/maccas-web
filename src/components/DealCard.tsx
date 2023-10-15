@@ -12,10 +12,6 @@ import { useState } from "react";
 import DealCode from "./DealCode";
 
 export interface DealCardProps {
-  disableButtons?: boolean;
-  forceMobile?: boolean;
-  ignoreValidity?: boolean;
-  hideCount?: boolean;
   offer: GetDealsOffer;
   onDetails: () => void;
   tall?: boolean;
@@ -29,17 +25,9 @@ const isOfferValid = (deal: GetDealsOffer) => {
   return moment.utc(now).isBetween(from, to);
 };
 
-const DealCard: React.FC<DealCardProps> = ({
-  offer,
-  onDetails: onSelect,
-  forceMobile,
-  disableButtons,
-  ignoreValidity,
-  hideCount,
-}) => {
+const DealCard: React.FC<DealCardProps> = ({ offer, onDetails: onSelect }) => {
   const navigate = useNavigate();
-  const breakpoint = useMediaQuery(theme.breakpoints.down("md"));
-  const isMobile = forceMobile ?? breakpoint;
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const validOffer = isOfferValid(offer);
   const notification = useNotification();
   const userConfig = useGetUserConfig();
@@ -47,20 +35,18 @@ const DealCard: React.FC<DealCardProps> = ({
 
   // New Ids, POST with new id, get back deal id + code
   const onDealSelect = () => {
-    if (!disableButtons) {
-      if (!validOffer) {
-        notification({
-          variant: "warning",
-          msg: "This offer is not valid at the moment, it may not work correctly.",
-        });
-      }
+    if (!validOffer) {
+      notification({
+        variant: "warning",
+        msg: "This offer is not valid at the moment, it may not work correctly.",
+      });
+    }
 
-      if (userConfig) {
-        navigate(`/code/${offer.dealUuid}`);
-      } else {
-        notification({ variant: "error", msg: "A store must be selected." });
-        navigate("/location");
-      }
+    if (userConfig) {
+      navigate(`/code/${offer.dealUuid}`);
+    } else {
+      notification({ variant: "error", msg: "A store must be selected." });
+      navigate("/location");
     }
   };
 
@@ -75,37 +61,31 @@ const DealCard: React.FC<DealCardProps> = ({
       >
         <AccordionSummary
           sx={{
-            opacity: ignoreValidity ? undefined : !validOffer ? 0.3 : undefined,
+            opacity: !validOffer ? 0.3 : undefined,
           }}
         >
-          <Grid container item direction="row" justifyContent="space-between">
+          <Grid container item direction="row" justifyContent="space-between" padding={1}>
             <Grid item xs={8} container direction="column">
               <Grid item xs>
                 <Typography level="h4" component="div">
                   {truncate(offer.shortName, 20)}
                 </Typography>
               </Grid>
-              {!hideCount && (
-                <Grid item>
-                  <Typography level="body-sm">{offer.count} available</Typography>
-                </Grid>
-              )}
-              {!disableButtons && (
-                <Grid item xs={3}>
-                  <Typography
-                    level="body-xs"
-                    textColor="black"
-                    onClick={(e) => {
-                      if (!disableButtons) {
-                        e.stopPropagation();
-                        onSelect();
-                      }
-                    }}
-                  >
-                    <b>Details</b>
-                  </Typography>
-                </Grid>
-              )}
+              <Grid item>
+                <Typography level="body-sm">{offer.count} available</Typography>
+              </Grid>
+              <Grid item xs={3}>
+                <Typography
+                  level="body-xs"
+                  textColor="black"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onSelect();
+                  }}
+                >
+                  <b>Details</b>
+                </Typography>
+              </Grid>
             </Grid>
             <Grid item style={{ flexBasis: "auto" }}>
               <LoadableCardMedia
@@ -170,12 +150,12 @@ const DealCard: React.FC<DealCardProps> = ({
         <CardActions>
           <Grid container justifyContent="space-between">
             <Grid item>
-              <Button color="primary" onClick={onDealSelect} disabled={disableButtons}>
+              <Button color="primary" onClick={onDealSelect}>
                 Select
               </Button>
             </Grid>
             <Grid item>
-              <Button color="neutral" onClick={() => onSelect()} disabled={disableButtons}>
+              <Button color="neutral" onClick={() => onSelect()}>
                 Details
               </Button>
             </Grid>

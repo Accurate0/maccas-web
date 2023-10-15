@@ -37,7 +37,7 @@ const Root = () => {
       return { href: "/points", name: "Points", icon: faArrowDown91 };
     }
 
-    if (location.pathname === "/points") {
+    if (location.pathname === "/points" || location.pathname !== "/") {
       return { href: "/", name: "Deals", icon: faBurger };
     }
 

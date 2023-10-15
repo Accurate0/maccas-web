@@ -9,11 +9,8 @@ import Root from "./pages/root";
 import DealSelector from "./pages";
 import Login from "./pages/login";
 import DealSelection from "./pages/code/DealSelection";
-import Spending from "./pages/spending";
 import Points from "./pages/points";
 import Statistics from "./pages/statistics";
-import Admin from "./pages/admin";
-import AdminSpending from "./pages/admin/spending";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const router = createBrowserRouter([
@@ -34,24 +31,12 @@ const router = createBrowserRouter([
         element: <DealSelection />,
       },
       {
-        path: "/spending",
-        element: <Spending />,
-      },
-      {
         path: "/points",
         element: <Points />,
       },
       {
         path: "/statistics",
         element: <Statistics />,
-      },
-      {
-        path: "/admin",
-        element: <Admin />,
-      },
-      {
-        path: "/admin/spending",
-        element: <AdminSpending />,
       },
     ],
   },

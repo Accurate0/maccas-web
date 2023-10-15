@@ -17,7 +17,7 @@ const Statistics = () => {
 
   return (
     <Grid
-      paddingTop={8}
+      paddingTop={2}
       paddingBottom={2}
       spacing={1}
       container
