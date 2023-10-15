@@ -1,6 +1,6 @@
 import { AxiosError } from "axios";
 import { atom, useRecoilState, useRecoilValue } from "recoil";
-import { ApiException, UserOptions } from "./useApiClient/ApiClient.generated";
+import { UserOptions } from "./useApiClient/ApiClient.generated";
 import useApiClient from "./useApiClient/useApiClient";
 import useNotification from "./useNotification";
 import { useLocation } from "react-router";
@@ -17,25 +17,15 @@ export const useGetUserConfig = () => {
 
 const useUserConfig = () => {
   const location = useLocation();
-  const notification = useNotification();
   const apiClient = useApiClient();
   const [, setConfig] = useRecoilState(UserConfig);
 
   return useQuery({
     queryKey: ["user-config"],
     queryFn: async () => {
-      try {
-        const response = await apiClient.get_user_config();
-        setConfig(response.result);
-        return response.result;
-      } catch (error) {
-        const err = error as ApiException;
-        if (err.status !== 404) {
-          notification({ msg: err.message, variant: "error" });
-        }
-
-        throw err;
-      }
+      const response = await apiClient.get_user_config();
+      setConfig(response.result);
+      return response.result;
     },
     enabled: location.pathname !== "/login",
     refetchOnMount: false,
