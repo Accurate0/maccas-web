@@ -9,8 +9,8 @@ const useLastRefresh = () => {
 
   return useQuery({
     queryKey: ["last-refresh"],
-    queryFn: async () => {
-      const response = await apiClient.get_last_refresh();
+    queryFn: async ({ signal }) => {
+      const response = await apiClient.get_last_refresh(signal);
       const lastRefreshed = moment.utc(response.result.lastRefresh);
       notification({
         msg: `Last refreshed at ${lastRefreshed.local().format("LLL")}`,

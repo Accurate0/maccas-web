@@ -1,24 +1,47 @@
 import { useMemo } from "react";
-import useAxios from "../useAxios";
 import { ApiClient } from "./ApiClient.generated";
-import axios from "axios";
+import useAuthentication from "../useAuthentication";
+import { useNavigate } from "react-router";
+import { useQueryClient } from "@tanstack/react-query";
 
 const useApiClient = () => {
-  const axios = useAxios();
-  return useMemo(() => new ApiClient(import.meta.env.VITE_API_BASE, axios), [axios]);
+  const { state, setState } = useAuthentication();
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const apiClient = useUnauthenticatedApiClient();
+
+  return useMemo(
+    () =>
+      new ApiClient(import.meta.env.VITE_API_BASE, {
+        fetch: async (url, init) => {
+          if (state && init) {
+            init.headers = {
+              ...(init.headers ?? {}),
+              Authorization: `Bearer ${state.token}`,
+            };
+          }
+
+          const response = await fetch(url, init);
+          if (response.status === 403 || response.status === 401) {
+            await queryClient.cancelQueries();
+            try {
+              const response = await apiClient.get_token({
+                token: state?.token ?? "",
+                refreshToken: state?.refreshToken ?? "",
+              });
+              setState(response.result);
+            } catch {
+              navigate("/login");
+            }
+          }
+          return response;
+        },
+      }),
+    [apiClient, navigate, queryClient, setState, state]
+  );
 };
 
 export const useUnauthenticatedApiClient = () =>
-  useMemo(
-    () =>
-      new ApiClient(
-        import.meta.env.VITE_API_BASE,
-        axios.create({
-          baseURL: import.meta.env.VITE_API_BASE,
-          transformResponse: (data) => data,
-        })
-      ),
-    []
-  );
+  useMemo(() => new ApiClient(import.meta.env.VITE_API_BASE), []);
 
 export default useApiClient;

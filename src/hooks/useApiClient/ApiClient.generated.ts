@@ -7,75 +7,55 @@
 /* tslint:disable */
 /* eslint-disable */
 // ReSharper disable InconsistentNaming
-//@ts-nocheck
-
-import axios, { AxiosError } from 'axios';
-import type { AxiosInstance, AxiosRequestConfig, AxiosResponse, CancelToken } from 'axios';
+// @ts-nocheck
 
 export class ApiClient {
-    private instance: AxiosInstance;
+    private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
 
-    constructor(baseUrl?: string, instance?: AxiosInstance) {
-
-        this.instance = instance ? instance : axios.create();
-
+    constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
+        this.http = http ? http : window as any;
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://api.maccas.one/v1";
-
     }
 
     /**
      * @return Unlocked deal
      */
-    registration_token( cancelToken?: CancelToken | undefined): Promise<ApiResponse<string>> {
+    registration_token(signal?: AbortSignal | undefined): Promise<ApiResponse<string>> {
         let url_ = this.baseUrl + "/admin/auth/register";
         url_ = url_.replace(/[?&]$/, "");
 
-        let options_: AxiosRequestConfig = {
+        let options_: RequestInit = {
             method: "POST",
-            url: url_,
+            signal,
             headers: {
                 "Accept": "text/plain"
-            },
-            cancelToken
+            }
         };
 
-        return this.instance.request(options_).catch((_error: any) => {
-            if (isAxiosError(_error) && _error.response) {
-                return _error.response;
-            } else {
-                throw _error;
-            }
-        }).then((_response: AxiosResponse) => {
+        return this.http.fetch(url_, options_).then((_response: Response) => {
             return this.processRegistration_token(_response);
         });
     }
 
-    protected processRegistration_token(response: AxiosResponse): Promise<ApiResponse<string>> {
+    protected processRegistration_token(response: Response): Promise<ApiResponse<string>> {
         const status = response.status;
-        let _headers: any = {};
-        if (response.headers && typeof response.headers === "object") {
-            for (let k in response.headers) {
-                if (response.headers.hasOwnProperty(k)) {
-                    _headers[k] = response.headers[k];
-                }
-            }
-        }
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
-            const _responseText = response.data;
+            return response.text().then((_responseText) => {
             let result200: any = null;
-            let resultData200  = _responseText;
-            result200 = resultData200;
-            return Promise.resolve<ApiResponse<string>>(new ApiResponse<string>(status, _headers, result200));
-
+            result200 = _responseText === "" ? null : _responseText as string;
+            return new ApiResponse(status, _headers, result200);
+            });
         } else if (status === 500) {
-            const _responseText = response.data;
+            return response.text().then((_responseText) => {
             return throwException("Internal Server Error", status, _responseText, _headers);
-
+            });
         } else if (status !== 200 && status !== 204) {
-            const _responseText = response.data;
+            return response.text().then((_responseText) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
         }
         return Promise.resolve<ApiResponse<string>>(new ApiResponse(status, _headers, null as any));
     }
@@ -83,54 +63,40 @@ export class ApiClient {
     /**
      * @return List of currently locked deals
      */
-    get_locked_deals( cancelToken?: CancelToken | undefined): Promise<ApiResponse<string[]>> {
+    get_locked_deals(signal?: AbortSignal | undefined): Promise<ApiResponse<string[]>> {
         let url_ = this.baseUrl + "/admin/locked-deals";
         url_ = url_.replace(/[?&]$/, "");
 
-        let options_: AxiosRequestConfig = {
+        let options_: RequestInit = {
             method: "GET",
-            url: url_,
+            signal,
             headers: {
                 "Accept": "application/json"
-            },
-            cancelToken
+            }
         };
 
-        return this.instance.request(options_).catch((_error: any) => {
-            if (isAxiosError(_error) && _error.response) {
-                return _error.response;
-            } else {
-                throw _error;
-            }
-        }).then((_response: AxiosResponse) => {
+        return this.http.fetch(url_, options_).then((_response: Response) => {
             return this.processGet_locked_deals(_response);
         });
     }
 
-    protected processGet_locked_deals(response: AxiosResponse): Promise<ApiResponse<string[]>> {
+    protected processGet_locked_deals(response: Response): Promise<ApiResponse<string[]>> {
         const status = response.status;
-        let _headers: any = {};
-        if (response.headers && typeof response.headers === "object") {
-            for (let k in response.headers) {
-                if (response.headers.hasOwnProperty(k)) {
-                    _headers[k] = response.headers[k];
-                }
-            }
-        }
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
-            const _responseText = response.data;
+            return response.text().then((_responseText) => {
             let result200: any = null;
-            let resultData200  = _responseText;
-            result200 = JSON.parse(resultData200);
-            return Promise.resolve<ApiResponse<string[]>>(new ApiResponse<string[]>(status, _headers, result200));
-
+            result200 = _responseText === "" ? null : jsonParse(_responseText, this.jsonParseReviver) as string[];
+            return new ApiResponse(status, _headers, result200);
+            });
         } else if (status === 500) {
-            const _responseText = response.data;
+            return response.text().then((_responseText) => {
             return throwException("Internal Server Error", status, _responseText, _headers);
-
+            });
         } else if (status !== 200 && status !== 204) {
-            const _responseText = response.data;
+            return response.text().then((_responseText) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
         }
         return Promise.resolve<ApiResponse<string[]>>(new ApiResponse(status, _headers, null as any));
     }
@@ -139,7 +105,7 @@ export class ApiClient {
      * @param duration (optional)
      * @return Lock this deal
      */
-    lock_deal(deal_id: string, duration?: number | null | undefined, cancelToken?: CancelToken | undefined): Promise<ApiResponse<void>> {
+    lock_deal(deal_id: string, duration?: number | null | undefined, signal?: AbortSignal | undefined): Promise<ApiResponse<void>> {
         let url_ = this.baseUrl + "/admin/locked-deals/{deal_id}?";
         if (deal_id === undefined || deal_id === null)
             throw new Error("The parameter 'deal_id' must be defined.");
@@ -148,46 +114,33 @@ export class ApiClient {
             url_ += "duration=" + encodeURIComponent("" + duration) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
-        let options_: AxiosRequestConfig = {
+        let options_: RequestInit = {
             method: "POST",
-            url: url_,
+            signal,
             headers: {
-            },
-            cancelToken
+            }
         };
 
-        return this.instance.request(options_).catch((_error: any) => {
-            if (isAxiosError(_error) && _error.response) {
-                return _error.response;
-            } else {
-                throw _error;
-            }
-        }).then((_response: AxiosResponse) => {
+        return this.http.fetch(url_, options_).then((_response: Response) => {
             return this.processLock_deal(_response);
         });
     }
 
-    protected processLock_deal(response: AxiosResponse): Promise<ApiResponse<void>> {
+    protected processLock_deal(response: Response): Promise<ApiResponse<void>> {
         const status = response.status;
-        let _headers: any = {};
-        if (response.headers && typeof response.headers === "object") {
-            for (let k in response.headers) {
-                if (response.headers.hasOwnProperty(k)) {
-                    _headers[k] = response.headers[k];
-                }
-            }
-        }
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 204) {
-            const _responseText = response.data;
-            return Promise.resolve<ApiResponse<void>>(new ApiResponse<void>(status, _headers, null as any));
-
+            return response.text().then((_responseText) => {
+            return new ApiResponse(status, _headers, null as any);
+            });
         } else if (status === 500) {
-            const _responseText = response.data;
+            return response.text().then((_responseText) => {
             return throwException("Internal Server Error", status, _responseText, _headers);
-
+            });
         } else if (status !== 200 && status !== 204) {
-            const _responseText = response.data;
+            return response.text().then((_responseText) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
         }
         return Promise.resolve<ApiResponse<void>>(new ApiResponse(status, _headers, null as any));
     }
@@ -195,53 +148,40 @@ export class ApiClient {
     /**
      * @return Unlocked deal
      */
-    unlock_deal(deal_id: string, cancelToken?: CancelToken | undefined): Promise<ApiResponse<void>> {
+    unlock_deal(deal_id: string, signal?: AbortSignal | undefined): Promise<ApiResponse<void>> {
         let url_ = this.baseUrl + "/admin/locked-deals/{deal_id}";
         if (deal_id === undefined || deal_id === null)
             throw new Error("The parameter 'deal_id' must be defined.");
         url_ = url_.replace("{deal_id}", encodeURIComponent("" + deal_id));
         url_ = url_.replace(/[?&]$/, "");
 
-        let options_: AxiosRequestConfig = {
+        let options_: RequestInit = {
             method: "DELETE",
-            url: url_,
+            signal,
             headers: {
-            },
-            cancelToken
+            }
         };
 
-        return this.instance.request(options_).catch((_error: any) => {
-            if (isAxiosError(_error) && _error.response) {
-                return _error.response;
-            } else {
-                throw _error;
-            }
-        }).then((_response: AxiosResponse) => {
+        return this.http.fetch(url_, options_).then((_response: Response) => {
             return this.processUnlock_deal(_response);
         });
     }
 
-    protected processUnlock_deal(response: AxiosResponse): Promise<ApiResponse<void>> {
+    protected processUnlock_deal(response: Response): Promise<ApiResponse<void>> {
         const status = response.status;
-        let _headers: any = {};
-        if (response.headers && typeof response.headers === "object") {
-            for (let k in response.headers) {
-                if (response.headers.hasOwnProperty(k)) {
-                    _headers[k] = response.headers[k];
-                }
-            }
-        }
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 204) {
-            const _responseText = response.data;
-            return Promise.resolve<ApiResponse<void>>(new ApiResponse<void>(status, _headers, null as any));
-
+            return response.text().then((_responseText) => {
+            return new ApiResponse(status, _headers, null as any);
+            });
         } else if (status === 500) {
-            const _responseText = response.data;
+            return response.text().then((_responseText) => {
             return throwException("Internal Server Error", status, _responseText, _headers);
-
+            });
         } else if (status !== 200 && status !== 204) {
-            const _responseText = response.data;
+            return response.text().then((_responseText) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
         }
         return Promise.resolve<ApiResponse<void>>(new ApiResponse(status, _headers, null as any));
     }
@@ -249,55 +189,41 @@ export class ApiClient {
     /**
      * @return List of currently locked deals
      */
-    get_all_user_spending( cancelToken?: CancelToken | undefined): Promise<ApiResponse<{ [key: string]: AdminUserSpending; }>> {
+    get_all_user_spending(signal?: AbortSignal | undefined): Promise<ApiResponse<{ [key: string]: AdminUserSpending; }>> {
         let url_ = this.baseUrl + "/admin/user/spending";
         url_ = url_.replace(/[?&]$/, "");
 
-        let options_: AxiosRequestConfig = {
+        let options_: RequestInit = {
             method: "GET",
-            url: url_,
+            signal,
             headers: {
                 "Accept": "application/json"
-            },
-            cancelToken
+            }
         };
 
-        return this.instance.request(options_).catch((_error: any) => {
-            if (isAxiosError(_error) && _error.response) {
-                return _error.response;
-            } else {
-                throw _error;
-            }
-        }).then((_response: AxiosResponse) => {
+        return this.http.fetch(url_, options_).then((_response: Response) => {
             return this.processGet_all_user_spending(_response);
         });
     }
 
-    protected processGet_all_user_spending(response: AxiosResponse): Promise<ApiResponse<{ [key: string]: AdminUserSpending; }>> {
+    protected processGet_all_user_spending(response: Response): Promise<ApiResponse<{ [key: string]: AdminUserSpending; }>> {
         const status = response.status;
-        let _headers: any = {};
-        if (response.headers && typeof response.headers === "object") {
-            for (let k in response.headers) {
-                if (response.headers.hasOwnProperty(k)) {
-                    _headers[k] = response.headers[k];
-                }
-            }
-        }
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         let _mappings: { source: any, target: any }[] = [];
         if (status === 200) {
-            const _responseText = response.data;
+            return response.text().then((_responseText) => {
             let result200: any = null;
-            let resultData200  = _responseText;
-            result200 = JSON.parse(resultData200);
-            return Promise.resolve<ApiResponse<{ [key: string]: AdminUserSpending; }>>(new ApiResponse<{ [key: string]: AdminUserSpending; }>(status, _headers, result200));
-
+            result200 = _responseText === "" ? null : jsonParse(_responseText, this.jsonParseReviver) as { [key: string]: AdminUserSpending; };
+            return new ApiResponse(status, _headers, result200);
+            });
         } else if (status === 500) {
-            const _responseText = response.data;
+            return response.text().then((_responseText) => {
             return throwException("Internal Server Error", status, _responseText, _headers);
-
+            });
         } else if (status !== 200 && status !== 204) {
-            const _responseText = response.data;
+            return response.text().then((_responseText) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
         }
         return Promise.resolve<ApiResponse<{ [key: string]: AdminUserSpending; }>>(new ApiResponse(status, _headers, null as any));
     }
@@ -305,67 +231,53 @@ export class ApiClient {
     /**
      * @return Login and fetch auth and refresh tokens
      */
-    login(body: LoginRequest, cancelToken?: CancelToken | undefined): Promise<ApiResponse<TokenResponse>> {
+    login(body: LoginRequest, signal?: AbortSignal | undefined): Promise<ApiResponse<TokenResponse>> {
         let url_ = this.baseUrl + "/auth/login";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(body);
 
-        let options_: AxiosRequestConfig = {
-            data: content_,
+        let options_: RequestInit = {
+            body: content_,
             method: "POST",
-            url: url_,
+            signal,
             headers: {
                 "Content-Type": "application/json",
                 "Accept": "application/json"
-            },
-            cancelToken
+            }
         };
 
-        return this.instance.request(options_).catch((_error: any) => {
-            if (isAxiosError(_error) && _error.response) {
-                return _error.response;
-            } else {
-                throw _error;
-            }
-        }).then((_response: AxiosResponse) => {
+        return this.http.fetch(url_, options_).then((_response: Response) => {
             return this.processLogin(_response);
         });
     }
 
-    protected processLogin(response: AxiosResponse): Promise<ApiResponse<TokenResponse>> {
+    protected processLogin(response: Response): Promise<ApiResponse<TokenResponse>> {
         const status = response.status;
-        let _headers: any = {};
-        if (response.headers && typeof response.headers === "object") {
-            for (let k in response.headers) {
-                if (response.headers.hasOwnProperty(k)) {
-                    _headers[k] = response.headers[k];
-                }
-            }
-        }
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         let _mappings: { source: any, target: any }[] = [];
         if (status === 200) {
-            const _responseText = response.data;
+            return response.text().then((_responseText) => {
             let result200: any = null;
-            let resultData200  = _responseText;
-            result200 = JSON.parse(resultData200);
-            return Promise.resolve<ApiResponse<TokenResponse>>(new ApiResponse<TokenResponse>(status, _headers, result200));
-
+            result200 = _responseText === "" ? null : jsonParse(_responseText, this.jsonParseReviver) as TokenResponse;
+            return new ApiResponse(status, _headers, result200);
+            });
         } else if (status === 401) {
-            const _responseText = response.data;
+            return response.text().then((_responseText) => {
             return throwException("Account doesn\'t exist", status, _responseText, _headers);
-
+            });
         } else if (status === 403) {
-            const _responseText = response.data;
+            return response.text().then((_responseText) => {
             return throwException("Authentication failed", status, _responseText, _headers);
-
+            });
         } else if (status === 500) {
-            const _responseText = response.data;
+            return response.text().then((_responseText) => {
             return throwException("Internal Server Error", status, _responseText, _headers);
-
+            });
         } else if (status !== 200 && status !== 204) {
-            const _responseText = response.data;
+            return response.text().then((_responseText) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
         }
         return Promise.resolve<ApiResponse<TokenResponse>>(new ApiResponse(status, _headers, null as any));
     }
@@ -373,7 +285,7 @@ export class ApiClient {
     /**
      * @return Register a new account using a shared token
      */
-    register(token: string, body: RegistrationRequest, cancelToken?: CancelToken | undefined): Promise<ApiResponse<TokenResponse>> {
+    register(token: string, body: RegistrationRequest, signal?: AbortSignal | undefined): Promise<ApiResponse<TokenResponse>> {
         let url_ = this.baseUrl + "/auth/register?";
         if (token === undefined || token === null)
             throw new Error("The parameter 'token' must be defined and cannot be null.");
@@ -383,57 +295,43 @@ export class ApiClient {
 
         const content_ = JSON.stringify(body);
 
-        let options_: AxiosRequestConfig = {
-            data: content_,
+        let options_: RequestInit = {
+            body: content_,
             method: "POST",
-            url: url_,
+            signal,
             headers: {
                 "Content-Type": "application/json",
                 "Accept": "application/json"
-            },
-            cancelToken
+            }
         };
 
-        return this.instance.request(options_).catch((_error: any) => {
-            if (isAxiosError(_error) && _error.response) {
-                return _error.response;
-            } else {
-                throw _error;
-            }
-        }).then((_response: AxiosResponse) => {
+        return this.http.fetch(url_, options_).then((_response: Response) => {
             return this.processRegister(_response);
         });
     }
 
-    protected processRegister(response: AxiosResponse): Promise<ApiResponse<TokenResponse>> {
+    protected processRegister(response: Response): Promise<ApiResponse<TokenResponse>> {
         const status = response.status;
-        let _headers: any = {};
-        if (response.headers && typeof response.headers === "object") {
-            for (let k in response.headers) {
-                if (response.headers.hasOwnProperty(k)) {
-                    _headers[k] = response.headers[k];
-                }
-            }
-        }
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         let _mappings: { source: any, target: any }[] = [];
         if (status === 200) {
-            const _responseText = response.data;
+            return response.text().then((_responseText) => {
             let result200: any = null;
-            let resultData200  = _responseText;
-            result200 = JSON.parse(resultData200);
-            return Promise.resolve<ApiResponse<TokenResponse>>(new ApiResponse<TokenResponse>(status, _headers, result200));
-
+            result200 = _responseText === "" ? null : jsonParse(_responseText, this.jsonParseReviver) as TokenResponse;
+            return new ApiResponse(status, _headers, result200);
+            });
         } else if (status === 401) {
-            const _responseText = response.data;
+            return response.text().then((_responseText) => {
             return throwException("Account doesn\'t exist", status, _responseText, _headers);
-
+            });
         } else if (status === 500) {
-            const _responseText = response.data;
+            return response.text().then((_responseText) => {
             return throwException("Internal Server Error", status, _responseText, _headers);
-
+            });
         } else if (status !== 200 && status !== 204) {
-            const _responseText = response.data;
+            return response.text().then((_responseText) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
         }
         return Promise.resolve<ApiResponse<TokenResponse>>(new ApiResponse(status, _headers, null as any));
     }
@@ -441,59 +339,45 @@ export class ApiClient {
     /**
      * @return Trade previous access and refresh token for new ones
      */
-    get_token(body: TokenRequest, cancelToken?: CancelToken | undefined): Promise<ApiResponse<TokenResponse>> {
+    get_token(body: TokenRequest, signal?: AbortSignal | undefined): Promise<ApiResponse<TokenResponse>> {
         let url_ = this.baseUrl + "/auth/token";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(body);
 
-        let options_: AxiosRequestConfig = {
-            data: content_,
+        let options_: RequestInit = {
+            body: content_,
             method: "POST",
-            url: url_,
+            signal,
             headers: {
                 "Content-Type": "application/json",
                 "Accept": "application/json"
-            },
-            cancelToken
+            }
         };
 
-        return this.instance.request(options_).catch((_error: any) => {
-            if (isAxiosError(_error) && _error.response) {
-                return _error.response;
-            } else {
-                throw _error;
-            }
-        }).then((_response: AxiosResponse) => {
+        return this.http.fetch(url_, options_).then((_response: Response) => {
             return this.processGet_token(_response);
         });
     }
 
-    protected processGet_token(response: AxiosResponse): Promise<ApiResponse<TokenResponse>> {
+    protected processGet_token(response: Response): Promise<ApiResponse<TokenResponse>> {
         const status = response.status;
-        let _headers: any = {};
-        if (response.headers && typeof response.headers === "object") {
-            for (let k in response.headers) {
-                if (response.headers.hasOwnProperty(k)) {
-                    _headers[k] = response.headers[k];
-                }
-            }
-        }
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         let _mappings: { source: any, target: any }[] = [];
         if (status === 200) {
-            const _responseText = response.data;
+            return response.text().then((_responseText) => {
             let result200: any = null;
-            let resultData200  = _responseText;
-            result200 = JSON.parse(resultData200);
-            return Promise.resolve<ApiResponse<TokenResponse>>(new ApiResponse<TokenResponse>(status, _headers, result200));
-
+            result200 = _responseText === "" ? null : jsonParse(_responseText, this.jsonParseReviver) as TokenResponse;
+            return new ApiResponse(status, _headers, result200);
+            });
         } else if (status === 500) {
-            const _responseText = response.data;
+            return response.text().then((_responseText) => {
             return throwException("Internal Server Error", status, _responseText, _headers);
-
+            });
         } else if (status !== 200 && status !== 204) {
-            const _responseText = response.data;
+            return response.text().then((_responseText) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
         }
         return Promise.resolve<ApiResponse<TokenResponse>>(new ApiResponse(status, _headers, null as any));
     }
@@ -501,7 +385,7 @@ export class ApiClient {
     /**
      * @return Random code for specified deal
      */
-    get_code(deal_id: string, store: string, cancelToken?: CancelToken | undefined): Promise<ApiResponse<OfferResponse>> {
+    get_code(deal_id: string, store: string, signal?: AbortSignal | undefined): Promise<ApiResponse<OfferResponse>> {
         let url_ = this.baseUrl + "/code/{deal_id}?";
         if (deal_id === undefined || deal_id === null)
             throw new Error("The parameter 'deal_id' must be defined.");
@@ -512,55 +396,41 @@ export class ApiClient {
             url_ += "store=" + encodeURIComponent("" + store) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
-        let options_: AxiosRequestConfig = {
+        let options_: RequestInit = {
             method: "GET",
-            url: url_,
+            signal,
             headers: {
                 "Accept": "application/json"
-            },
-            cancelToken
+            }
         };
 
-        return this.instance.request(options_).catch((_error: any) => {
-            if (isAxiosError(_error) && _error.response) {
-                return _error.response;
-            } else {
-                throw _error;
-            }
-        }).then((_response: AxiosResponse) => {
+        return this.http.fetch(url_, options_).then((_response: Response) => {
             return this.processGet_code(_response);
         });
     }
 
-    protected processGet_code(response: AxiosResponse): Promise<ApiResponse<OfferResponse>> {
+    protected processGet_code(response: Response): Promise<ApiResponse<OfferResponse>> {
         const status = response.status;
-        let _headers: any = {};
-        if (response.headers && typeof response.headers === "object") {
-            for (let k in response.headers) {
-                if (response.headers.hasOwnProperty(k)) {
-                    _headers[k] = response.headers[k];
-                }
-            }
-        }
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         let _mappings: { source: any, target: any }[] = [];
         if (status === 200) {
-            const _responseText = response.data;
+            return response.text().then((_responseText) => {
             let result200: any = null;
-            let resultData200  = _responseText;
-            result200 = JSON.parse(resultData200);
-            return Promise.resolve<ApiResponse<OfferResponse>>(new ApiResponse<OfferResponse>(status, _headers, result200));
-
+            result200 = _responseText === "" ? null : jsonParse(_responseText, this.jsonParseReviver) as OfferResponse;
+            return new ApiResponse(status, _headers, result200);
+            });
         } else if (status === 404) {
-            const _responseText = response.data;
+            return response.text().then((_responseText) => {
             return throwException("Deal not found", status, _responseText, _headers);
-
+            });
         } else if (status === 500) {
-            const _responseText = response.data;
+            return response.text().then((_responseText) => {
             return throwException("Internal Server Error", status, _responseText, _headers);
-
+            });
         } else if (status !== 200 && status !== 204) {
-            const _responseText = response.data;
+            return response.text().then((_responseText) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
         }
         return Promise.resolve<ApiResponse<OfferResponse>>(new ApiResponse(status, _headers, null as any));
     }
@@ -568,55 +438,41 @@ export class ApiClient {
     /**
      * @return List of available deals
      */
-    get_deals( cancelToken?: CancelToken | undefined): Promise<ApiResponse<GetDealsOffer[]>> {
+    get_deals(signal?: AbortSignal | undefined): Promise<ApiResponse<GetDealsOffer[]>> {
         let url_ = this.baseUrl + "/deals";
         url_ = url_.replace(/[?&]$/, "");
 
-        let options_: AxiosRequestConfig = {
+        let options_: RequestInit = {
             method: "GET",
-            url: url_,
+            signal,
             headers: {
                 "Accept": "application/json"
-            },
-            cancelToken
+            }
         };
 
-        return this.instance.request(options_).catch((_error: any) => {
-            if (isAxiosError(_error) && _error.response) {
-                return _error.response;
-            } else {
-                throw _error;
-            }
-        }).then((_response: AxiosResponse) => {
+        return this.http.fetch(url_, options_).then((_response: Response) => {
             return this.processGet_deals(_response);
         });
     }
 
-    protected processGet_deals(response: AxiosResponse): Promise<ApiResponse<GetDealsOffer[]>> {
+    protected processGet_deals(response: Response): Promise<ApiResponse<GetDealsOffer[]>> {
         const status = response.status;
-        let _headers: any = {};
-        if (response.headers && typeof response.headers === "object") {
-            for (let k in response.headers) {
-                if (response.headers.hasOwnProperty(k)) {
-                    _headers[k] = response.headers[k];
-                }
-            }
-        }
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         let _mappings: { source: any, target: any }[] = [];
         if (status === 200) {
-            const _responseText = response.data;
+            return response.text().then((_responseText) => {
             let result200: any = null;
-            let resultData200  = _responseText;
-            result200 = JSON.parse(resultData200);
-            return Promise.resolve<ApiResponse<GetDealsOffer[]>>(new ApiResponse<GetDealsOffer[]>(status, _headers, result200));
-
+            result200 = _responseText === "" ? null : jsonParse(_responseText, this.jsonParseReviver) as GetDealsOffer[];
+            return new ApiResponse(status, _headers, result200);
+            });
         } else if (status === 500) {
-            const _responseText = response.data;
+            return response.text().then((_responseText) => {
             return throwException("Internal Server Error", status, _responseText, _headers);
-
+            });
         } else if (status !== 200 && status !== 204) {
-            const _responseText = response.data;
+            return response.text().then((_responseText) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
         }
         return Promise.resolve<ApiResponse<GetDealsOffer[]>>(new ApiResponse(status, _headers, null as any));
     }
@@ -624,180 +480,90 @@ export class ApiClient {
     /**
      * @return Last Refresh of Cache
      */
-    get_last_refresh( cancelToken?: CancelToken | undefined): Promise<ApiResponse<LastRefreshInformation>> {
+    get_last_refresh(signal?: AbortSignal | undefined): Promise<ApiResponse<LastRefreshInformation>> {
         let url_ = this.baseUrl + "/deals/last-refresh";
         url_ = url_.replace(/[?&]$/, "");
 
-        let options_: AxiosRequestConfig = {
+        let options_: RequestInit = {
             method: "GET",
-            url: url_,
+            signal,
             headers: {
                 "Accept": "application/json"
-            },
-            cancelToken
+            }
         };
 
-        return this.instance.request(options_).catch((_error: any) => {
-            if (isAxiosError(_error) && _error.response) {
-                return _error.response;
-            } else {
-                throw _error;
-            }
-        }).then((_response: AxiosResponse) => {
+        return this.http.fetch(url_, options_).then((_response: Response) => {
             return this.processGet_last_refresh(_response);
         });
     }
 
-    protected processGet_last_refresh(response: AxiosResponse): Promise<ApiResponse<LastRefreshInformation>> {
+    protected processGet_last_refresh(response: Response): Promise<ApiResponse<LastRefreshInformation>> {
         const status = response.status;
-        let _headers: any = {};
-        if (response.headers && typeof response.headers === "object") {
-            for (let k in response.headers) {
-                if (response.headers.hasOwnProperty(k)) {
-                    _headers[k] = response.headers[k];
-                }
-            }
-        }
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         let _mappings: { source: any, target: any }[] = [];
         if (status === 200) {
-            const _responseText = response.data;
+            return response.text().then((_responseText) => {
             let result200: any = null;
-            let resultData200  = _responseText;
-            result200 = JSON.parse(resultData200);
-            return Promise.resolve<ApiResponse<LastRefreshInformation>>(new ApiResponse<LastRefreshInformation>(status, _headers, result200));
-
+            result200 = _responseText === "" ? null : jsonParse(_responseText, this.jsonParseReviver) as LastRefreshInformation;
+            return new ApiResponse(status, _headers, result200);
+            });
         } else if (status === 500) {
-            const _responseText = response.data;
+            return response.text().then((_responseText) => {
             return throwException("Internal Server Error", status, _responseText, _headers);
-
+            });
         } else if (status !== 200 && status !== 204) {
-            const _responseText = response.data;
+            return response.text().then((_responseText) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
         }
         return Promise.resolve<ApiResponse<LastRefreshInformation>>(new ApiResponse(status, _headers, null as any));
     }
 
     /**
-     * @return List of similar deal ids
-     */
-    find_similar_by_id(deal_id: string, cancelToken?: CancelToken | undefined): Promise<ApiResponse<string[]>> {
-        let url_ = this.baseUrl + "/deals/similar/{deal_id}";
-        if (deal_id === undefined || deal_id === null)
-            throw new Error("The parameter 'deal_id' must be defined.");
-        url_ = url_.replace("{deal_id}", encodeURIComponent("" + deal_id));
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_: AxiosRequestConfig = {
-            method: "GET",
-            url: url_,
-            headers: {
-                "Accept": "application/json"
-            },
-            cancelToken
-        };
-
-        return this.instance.request(options_).catch((_error: any) => {
-            if (isAxiosError(_error) && _error.response) {
-                return _error.response;
-            } else {
-                throw _error;
-            }
-        }).then((_response: AxiosResponse) => {
-            return this.processFind_similar_by_id(_response);
-        });
-    }
-
-    protected processFind_similar_by_id(response: AxiosResponse): Promise<ApiResponse<string[]>> {
-        const status = response.status;
-        let _headers: any = {};
-        if (response.headers && typeof response.headers === "object") {
-            for (let k in response.headers) {
-                if (response.headers.hasOwnProperty(k)) {
-                    _headers[k] = response.headers[k];
-                }
-            }
-        }
-        if (status === 200) {
-            const _responseText = response.data;
-            let result200: any = null;
-            let resultData200  = _responseText;
-            result200 = JSON.parse(resultData200);
-            return Promise.resolve<ApiResponse<string[]>>(new ApiResponse<string[]>(status, _headers, result200));
-
-        } else if (status === 404) {
-            const _responseText = response.data;
-            return throwException("Deal not found", status, _responseText, _headers);
-
-        } else if (status === 500) {
-            const _responseText = response.data;
-            return throwException("Internal Server Error", status, _responseText, _headers);
-
-        } else if (status !== 200 && status !== 204) {
-            const _responseText = response.data;
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-        }
-        return Promise.resolve<ApiResponse<string[]>>(new ApiResponse(status, _headers, null as any));
-    }
-
-    /**
      * @return Information for specified deal
      */
-    get_deal(deal_id: string, cancelToken?: CancelToken | undefined): Promise<ApiResponse<GetDealsOffer>> {
+    get_deal(deal_id: string, signal?: AbortSignal | undefined): Promise<ApiResponse<GetDealsOffer>> {
         let url_ = this.baseUrl + "/deals/{deal_id}";
         if (deal_id === undefined || deal_id === null)
             throw new Error("The parameter 'deal_id' must be defined.");
         url_ = url_.replace("{deal_id}", encodeURIComponent("" + deal_id));
         url_ = url_.replace(/[?&]$/, "");
 
-        let options_: AxiosRequestConfig = {
+        let options_: RequestInit = {
             method: "GET",
-            url: url_,
+            signal,
             headers: {
                 "Accept": "application/json"
-            },
-            cancelToken
+            }
         };
 
-        return this.instance.request(options_).catch((_error: any) => {
-            if (isAxiosError(_error) && _error.response) {
-                return _error.response;
-            } else {
-                throw _error;
-            }
-        }).then((_response: AxiosResponse) => {
+        return this.http.fetch(url_, options_).then((_response: Response) => {
             return this.processGet_deal(_response);
         });
     }
 
-    protected processGet_deal(response: AxiosResponse): Promise<ApiResponse<GetDealsOffer>> {
+    protected processGet_deal(response: Response): Promise<ApiResponse<GetDealsOffer>> {
         const status = response.status;
-        let _headers: any = {};
-        if (response.headers && typeof response.headers === "object") {
-            for (let k in response.headers) {
-                if (response.headers.hasOwnProperty(k)) {
-                    _headers[k] = response.headers[k];
-                }
-            }
-        }
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         let _mappings: { source: any, target: any }[] = [];
         if (status === 200) {
-            const _responseText = response.data;
+            return response.text().then((_responseText) => {
             let result200: any = null;
-            let resultData200  = _responseText;
-            result200 = JSON.parse(resultData200);
-            return Promise.resolve<ApiResponse<GetDealsOffer>>(new ApiResponse<GetDealsOffer>(status, _headers, result200));
-
+            result200 = _responseText === "" ? null : jsonParse(_responseText, this.jsonParseReviver) as GetDealsOffer;
+            return new ApiResponse(status, _headers, result200);
+            });
         } else if (status === 404) {
-            const _responseText = response.data;
+            return response.text().then((_responseText) => {
             return throwException("Deal not found", status, _responseText, _headers);
-
+            });
         } else if (status === 500) {
-            const _responseText = response.data;
+            return response.text().then((_responseText) => {
             return throwException("Internal Server Error", status, _responseText, _headers);
-
+            });
         } else if (status !== 200 && status !== 204) {
-            const _responseText = response.data;
+            return response.text().then((_responseText) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
         }
         return Promise.resolve<ApiResponse<GetDealsOffer>>(new ApiResponse(status, _headers, null as any));
     }
@@ -805,7 +571,7 @@ export class ApiClient {
     /**
      * @return Added a deal
      */
-    add_deal(deal_id: string, store: string, cancelToken?: CancelToken | undefined): Promise<ApiResponse<OfferResponse>> {
+    add_deal(deal_id: string, store: string, signal?: AbortSignal | undefined): Promise<ApiResponse<OfferResponse>> {
         let url_ = this.baseUrl + "/deals/{deal_id}?";
         if (deal_id === undefined || deal_id === null)
             throw new Error("The parameter 'deal_id' must be defined.");
@@ -816,63 +582,49 @@ export class ApiClient {
             url_ += "store=" + encodeURIComponent("" + store) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
-        let options_: AxiosRequestConfig = {
+        let options_: RequestInit = {
             method: "POST",
-            url: url_,
+            signal,
             headers: {
                 "Accept": "application/json"
-            },
-            cancelToken
+            }
         };
 
-        return this.instance.request(options_).catch((_error: any) => {
-            if (isAxiosError(_error) && _error.response) {
-                return _error.response;
-            } else {
-                throw _error;
-            }
-        }).then((_response: AxiosResponse) => {
+        return this.http.fetch(url_, options_).then((_response: Response) => {
             return this.processAdd_deal(_response);
         });
     }
 
-    protected processAdd_deal(response: AxiosResponse): Promise<ApiResponse<OfferResponse>> {
+    protected processAdd_deal(response: Response): Promise<ApiResponse<OfferResponse>> {
         const status = response.status;
-        let _headers: any = {};
-        if (response.headers && typeof response.headers === "object") {
-            for (let k in response.headers) {
-                if (response.headers.hasOwnProperty(k)) {
-                    _headers[k] = response.headers[k];
-                }
-            }
-        }
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         let _mappings: { source: any, target: any }[] = [];
         if (status === 200) {
-            const _responseText = response.data;
+            return response.text().then((_responseText) => {
             let result200: any = null;
-            let resultData200  = _responseText;
-            result200 = JSON.parse(resultData200);
-            return Promise.resolve<ApiResponse<OfferResponse>>(new ApiResponse<OfferResponse>(status, _headers, result200));
-
+            result200 = _responseText === "" ? null : jsonParse(_responseText, this.jsonParseReviver) as OfferResponse;
+            return new ApiResponse(status, _headers, result200);
+            });
         } else if (status === 400) {
-            const _responseText = response.data;
+            return response.text().then((_responseText) => {
             return throwException("Error on McDonald\'s side", status, _responseText, _headers);
-
+            });
         } else if (status === 404) {
-            const _responseText = response.data;
+            return response.text().then((_responseText) => {
             return throwException("Deal not found", status, _responseText, _headers);
-
+            });
         } else if (status === 409) {
-            const _responseText = response.data;
+            return response.text().then((_responseText) => {
             return throwException("This deal is temporarily unavailable", status, _responseText, _headers);
-
+            });
         } else if (status === 500) {
-            const _responseText = response.data;
+            return response.text().then((_responseText) => {
             return throwException("Internal Server Error", status, _responseText, _headers);
-
+            });
         } else if (status !== 200 && status !== 204) {
-            const _responseText = response.data;
+            return response.text().then((_responseText) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
         }
         return Promise.resolve<ApiResponse<OfferResponse>>(new ApiResponse(status, _headers, null as any));
     }
@@ -880,7 +632,7 @@ export class ApiClient {
     /**
      * @return Removed a deal
      */
-    remove_deal(deal_id: string, store: string, cancelToken?: CancelToken | undefined): Promise<ApiResponse<void>> {
+    remove_deal(deal_id: string, store: string, signal?: AbortSignal | undefined): Promise<ApiResponse<void>> {
         let url_ = this.baseUrl + "/deals/{deal_id}?";
         if (deal_id === undefined || deal_id === null)
             throw new Error("The parameter 'deal_id' must be defined.");
@@ -891,54 +643,41 @@ export class ApiClient {
             url_ += "store=" + encodeURIComponent("" + store) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
-        let options_: AxiosRequestConfig = {
+        let options_: RequestInit = {
             method: "DELETE",
-            url: url_,
+            signal,
             headers: {
-            },
-            cancelToken
+            }
         };
 
-        return this.instance.request(options_).catch((_error: any) => {
-            if (isAxiosError(_error) && _error.response) {
-                return _error.response;
-            } else {
-                throw _error;
-            }
-        }).then((_response: AxiosResponse) => {
+        return this.http.fetch(url_, options_).then((_response: Response) => {
             return this.processRemove_deal(_response);
         });
     }
 
-    protected processRemove_deal(response: AxiosResponse): Promise<ApiResponse<void>> {
+    protected processRemove_deal(response: Response): Promise<ApiResponse<void>> {
         const status = response.status;
-        let _headers: any = {};
-        if (response.headers && typeof response.headers === "object") {
-            for (let k in response.headers) {
-                if (response.headers.hasOwnProperty(k)) {
-                    _headers[k] = response.headers[k];
-                }
-            }
-        }
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 204) {
-            const _responseText = response.data;
-            return Promise.resolve<ApiResponse<void>>(new ApiResponse<void>(status, _headers, null as any));
-
+            return response.text().then((_responseText) => {
+            return new ApiResponse(status, _headers, null as any);
+            });
         } else if (status === 400) {
-            const _responseText = response.data;
+            return response.text().then((_responseText) => {
             return throwException("Error on McDonald\'s side", status, _responseText, _headers);
-
+            });
         } else if (status === 404) {
-            const _responseText = response.data;
+            return response.text().then((_responseText) => {
             return throwException("Deal not found", status, _responseText, _headers);
-
+            });
         } else if (status === 500) {
-            const _responseText = response.data;
+            return response.text().then((_responseText) => {
             return throwException("Internal Server Error", status, _responseText, _headers);
-
+            });
         } else if (status !== 200 && status !== 204) {
-            const _responseText = response.data;
+            return response.text().then((_responseText) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
         }
         return Promise.resolve<ApiResponse<void>>(new ApiResponse(status, _headers, null as any));
     }
@@ -946,54 +685,40 @@ export class ApiClient {
     /**
      * @return JSON OpenApi spec
      */
-    get_openapi( cancelToken?: CancelToken | undefined): Promise<ApiResponse<string>> {
+    get_openapi(signal?: AbortSignal | undefined): Promise<ApiResponse<string>> {
         let url_ = this.baseUrl + "/docs/openapi";
         url_ = url_.replace(/[?&]$/, "");
 
-        let options_: AxiosRequestConfig = {
+        let options_: RequestInit = {
             method: "GET",
-            url: url_,
+            signal,
             headers: {
                 "Accept": "text/plain"
-            },
-            cancelToken
+            }
         };
 
-        return this.instance.request(options_).catch((_error: any) => {
-            if (isAxiosError(_error) && _error.response) {
-                return _error.response;
-            } else {
-                throw _error;
-            }
-        }).then((_response: AxiosResponse) => {
+        return this.http.fetch(url_, options_).then((_response: Response) => {
             return this.processGet_openapi(_response);
         });
     }
 
-    protected processGet_openapi(response: AxiosResponse): Promise<ApiResponse<string>> {
+    protected processGet_openapi(response: Response): Promise<ApiResponse<string>> {
         const status = response.status;
-        let _headers: any = {};
-        if (response.headers && typeof response.headers === "object") {
-            for (let k in response.headers) {
-                if (response.headers.hasOwnProperty(k)) {
-                    _headers[k] = response.headers[k];
-                }
-            }
-        }
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
-            const _responseText = response.data;
+            return response.text().then((_responseText) => {
             let result200: any = null;
-            let resultData200  = _responseText;
-            result200 = resultData200;
-            return Promise.resolve<ApiResponse<string>>(new ApiResponse<string>(status, _headers, result200));
-
+            result200 = _responseText === "" ? null : _responseText as string;
+            return new ApiResponse(status, _headers, result200);
+            });
         } else if (status === 500) {
-            const _responseText = response.data;
+            return response.text().then((_responseText) => {
             return throwException("Internal Server Error", status, _responseText, _headers);
-
+            });
         } else if (status !== 200 && status !== 204) {
-            const _responseText = response.data;
+            return response.text().then((_responseText) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
         }
         return Promise.resolve<ApiResponse<string>>(new ApiResponse(status, _headers, null as any));
     }
@@ -1001,50 +726,37 @@ export class ApiClient {
     /**
      * @return Server is healthy
      */
-    get_status( cancelToken?: CancelToken | undefined): Promise<ApiResponse<void>> {
+    get_status(signal?: AbortSignal | undefined): Promise<ApiResponse<void>> {
         let url_ = this.baseUrl + "/health/status";
         url_ = url_.replace(/[?&]$/, "");
 
-        let options_: AxiosRequestConfig = {
+        let options_: RequestInit = {
             method: "GET",
-            url: url_,
+            signal,
             headers: {
-            },
-            cancelToken
+            }
         };
 
-        return this.instance.request(options_).catch((_error: any) => {
-            if (isAxiosError(_error) && _error.response) {
-                return _error.response;
-            } else {
-                throw _error;
-            }
-        }).then((_response: AxiosResponse) => {
+        return this.http.fetch(url_, options_).then((_response: Response) => {
             return this.processGet_status(_response);
         });
     }
 
-    protected processGet_status(response: AxiosResponse): Promise<ApiResponse<void>> {
+    protected processGet_status(response: Response): Promise<ApiResponse<void>> {
         const status = response.status;
-        let _headers: any = {};
-        if (response.headers && typeof response.headers === "object") {
-            for (let k in response.headers) {
-                if (response.headers.hasOwnProperty(k)) {
-                    _headers[k] = response.headers[k];
-                }
-            }
-        }
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 204) {
-            const _responseText = response.data;
-            return Promise.resolve<ApiResponse<void>>(new ApiResponse<void>(status, _headers, null as any));
-
+            return response.text().then((_responseText) => {
+            return new ApiResponse(status, _headers, null as any);
+            });
         } else if (status === 500) {
-            const _responseText = response.data;
+            return response.text().then((_responseText) => {
             return throwException("Internal Server Error", status, _responseText, _headers);
-
+            });
         } else if (status !== 200 && status !== 204) {
-            const _responseText = response.data;
+            return response.text().then((_responseText) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
         }
         return Promise.resolve<ApiResponse<void>>(new ApiResponse(status, _headers, null as any));
     }
@@ -1052,7 +764,7 @@ export class ApiClient {
     /**
      * @return List of locations near specified coordinates
      */
-    get_locations(distance: number, latitude: number, longitude: number, cancelToken?: CancelToken | undefined): Promise<ApiResponse<RestaurantInformation[]>> {
+    get_locations(distance: number, latitude: number, longitude: number, signal?: AbortSignal | undefined): Promise<ApiResponse<RestaurantInformation[]>> {
         let url_ = this.baseUrl + "/locations?";
         if (distance === undefined || distance === null)
             throw new Error("The parameter 'distance' must be defined and cannot be null.");
@@ -1068,55 +780,41 @@ export class ApiClient {
             url_ += "longitude=" + encodeURIComponent("" + longitude) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
-        let options_: AxiosRequestConfig = {
+        let options_: RequestInit = {
             method: "GET",
-            url: url_,
+            signal,
             headers: {
                 "Accept": "application/json"
-            },
-            cancelToken
+            }
         };
 
-        return this.instance.request(options_).catch((_error: any) => {
-            if (isAxiosError(_error) && _error.response) {
-                return _error.response;
-            } else {
-                throw _error;
-            }
-        }).then((_response: AxiosResponse) => {
+        return this.http.fetch(url_, options_).then((_response: Response) => {
             return this.processGet_locations(_response);
         });
     }
 
-    protected processGet_locations(response: AxiosResponse): Promise<ApiResponse<RestaurantInformation[]>> {
+    protected processGet_locations(response: Response): Promise<ApiResponse<RestaurantInformation[]>> {
         const status = response.status;
-        let _headers: any = {};
-        if (response.headers && typeof response.headers === "object") {
-            for (let k in response.headers) {
-                if (response.headers.hasOwnProperty(k)) {
-                    _headers[k] = response.headers[k];
-                }
-            }
-        }
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         let _mappings: { source: any, target: any }[] = [];
         if (status === 200) {
-            const _responseText = response.data;
+            return response.text().then((_responseText) => {
             let result200: any = null;
-            let resultData200  = _responseText;
-            result200 = JSON.parse(resultData200);
-            return Promise.resolve<ApiResponse<RestaurantInformation[]>>(new ApiResponse<RestaurantInformation[]>(status, _headers, result200));
-
+            result200 = _responseText === "" ? null : jsonParse(_responseText, this.jsonParseReviver) as RestaurantInformation[];
+            return new ApiResponse(status, _headers, result200);
+            });
         } else if (status === 400) {
-            const _responseText = response.data;
+            return response.text().then((_responseText) => {
             return throwException("Invalid/missing parameters", status, _responseText, _headers);
-
+            });
         } else if (status === 500) {
-            const _responseText = response.data;
+            return response.text().then((_responseText) => {
             return throwException("Internal Server Error", status, _responseText, _headers);
-
+            });
         } else if (status !== 200 && status !== 204) {
-            const _responseText = response.data;
+            return response.text().then((_responseText) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
         }
         return Promise.resolve<ApiResponse<RestaurantInformation[]>>(new ApiResponse(status, _headers, null as any));
     }
@@ -1124,7 +822,7 @@ export class ApiClient {
     /**
      * @return Closest location near specified text
      */
-    search_locations(text: string, cancelToken?: CancelToken | undefined): Promise<ApiResponse<RestaurantInformation[]>> {
+    search_locations(text: string, signal?: AbortSignal | undefined): Promise<ApiResponse<RestaurantInformation[]>> {
         let url_ = this.baseUrl + "/locations/search?";
         if (text === undefined || text === null)
             throw new Error("The parameter 'text' must be defined and cannot be null.");
@@ -1132,55 +830,41 @@ export class ApiClient {
             url_ += "text=" + encodeURIComponent("" + text) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
-        let options_: AxiosRequestConfig = {
+        let options_: RequestInit = {
             method: "GET",
-            url: url_,
+            signal,
             headers: {
                 "Accept": "application/json"
-            },
-            cancelToken
+            }
         };
 
-        return this.instance.request(options_).catch((_error: any) => {
-            if (isAxiosError(_error) && _error.response) {
-                return _error.response;
-            } else {
-                throw _error;
-            }
-        }).then((_response: AxiosResponse) => {
+        return this.http.fetch(url_, options_).then((_response: Response) => {
             return this.processSearch_locations(_response);
         });
     }
 
-    protected processSearch_locations(response: AxiosResponse): Promise<ApiResponse<RestaurantInformation[]>> {
+    protected processSearch_locations(response: Response): Promise<ApiResponse<RestaurantInformation[]>> {
         const status = response.status;
-        let _headers: any = {};
-        if (response.headers && typeof response.headers === "object") {
-            for (let k in response.headers) {
-                if (response.headers.hasOwnProperty(k)) {
-                    _headers[k] = response.headers[k];
-                }
-            }
-        }
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         let _mappings: { source: any, target: any }[] = [];
         if (status === 200) {
-            const _responseText = response.data;
+            return response.text().then((_responseText) => {
             let result200: any = null;
-            let resultData200  = _responseText;
-            result200 = JSON.parse(resultData200);
-            return Promise.resolve<ApiResponse<RestaurantInformation[]>>(new ApiResponse<RestaurantInformation[]>(status, _headers, result200));
-
+            result200 = _responseText === "" ? null : jsonParse(_responseText, this.jsonParseReviver) as RestaurantInformation[];
+            return new ApiResponse(status, _headers, result200);
+            });
         } else if (status === 404) {
-            const _responseText = response.data;
+            return response.text().then((_responseText) => {
             return throwException("No locations found", status, _responseText, _headers);
-
+            });
         } else if (status === 500) {
-            const _responseText = response.data;
+            return response.text().then((_responseText) => {
             return throwException("Internal Server Error", status, _responseText, _headers);
-
+            });
         } else if (status !== 200 && status !== 204) {
-            const _responseText = response.data;
+            return response.text().then((_responseText) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
         }
         return Promise.resolve<ApiResponse<RestaurantInformation[]>>(new ApiResponse(status, _headers, null as any));
     }
@@ -1188,55 +872,41 @@ export class ApiClient {
     /**
      * @return List of all account points
      */
-    get_points( cancelToken?: CancelToken | undefined): Promise<ApiResponse<AccountPointMap[]>> {
+    get_points(signal?: AbortSignal | undefined): Promise<ApiResponse<AccountPointMap[]>> {
         let url_ = this.baseUrl + "/points";
         url_ = url_.replace(/[?&]$/, "");
 
-        let options_: AxiosRequestConfig = {
+        let options_: RequestInit = {
             method: "GET",
-            url: url_,
+            signal,
             headers: {
                 "Accept": "application/json"
-            },
-            cancelToken
+            }
         };
 
-        return this.instance.request(options_).catch((_error: any) => {
-            if (isAxiosError(_error) && _error.response) {
-                return _error.response;
-            } else {
-                throw _error;
-            }
-        }).then((_response: AxiosResponse) => {
+        return this.http.fetch(url_, options_).then((_response: Response) => {
             return this.processGet_points(_response);
         });
     }
 
-    protected processGet_points(response: AxiosResponse): Promise<ApiResponse<AccountPointMap[]>> {
+    protected processGet_points(response: Response): Promise<ApiResponse<AccountPointMap[]>> {
         const status = response.status;
-        let _headers: any = {};
-        if (response.headers && typeof response.headers === "object") {
-            for (let k in response.headers) {
-                if (response.headers.hasOwnProperty(k)) {
-                    _headers[k] = response.headers[k];
-                }
-            }
-        }
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         let _mappings: { source: any, target: any }[] = [];
         if (status === 200) {
-            const _responseText = response.data;
+            return response.text().then((_responseText) => {
             let result200: any = null;
-            let resultData200  = _responseText;
-            result200 = JSON.parse(resultData200);
-            return Promise.resolve<ApiResponse<AccountPointMap[]>>(new ApiResponse<AccountPointMap[]>(status, _headers, result200));
-
+            result200 = _responseText === "" ? null : jsonParse(_responseText, this.jsonParseReviver) as AccountPointMap[];
+            return new ApiResponse(status, _headers, result200);
+            });
         } else if (status === 500) {
-            const _responseText = response.data;
+            return response.text().then((_responseText) => {
             return throwException("Internal Server Error", status, _responseText, _headers);
-
+            });
         } else if (status !== 200 && status !== 204) {
-            const _responseText = response.data;
+            return response.text().then((_responseText) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
         }
         return Promise.resolve<ApiResponse<AccountPointMap[]>>(new ApiResponse(status, _headers, null as any));
     }
@@ -1244,7 +914,7 @@ export class ApiClient {
     /**
      * @return Random code for account
      */
-    get_points_by_id(account_id: string, store: string, cancelToken?: CancelToken | undefined): Promise<ApiResponse<OfferPointsResponse>> {
+    get_points_by_id(account_id: string, store: string, signal?: AbortSignal | undefined): Promise<ApiResponse<OfferPointsResponse>> {
         let url_ = this.baseUrl + "/points/{account_id}?";
         if (account_id === undefined || account_id === null)
             throw new Error("The parameter 'account_id' must be defined.");
@@ -1255,55 +925,41 @@ export class ApiClient {
             url_ += "store=" + encodeURIComponent("" + store) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
-        let options_: AxiosRequestConfig = {
+        let options_: RequestInit = {
             method: "GET",
-            url: url_,
+            signal,
             headers: {
                 "Accept": "application/json"
-            },
-            cancelToken
+            }
         };
 
-        return this.instance.request(options_).catch((_error: any) => {
-            if (isAxiosError(_error) && _error.response) {
-                return _error.response;
-            } else {
-                throw _error;
-            }
-        }).then((_response: AxiosResponse) => {
+        return this.http.fetch(url_, options_).then((_response: Response) => {
             return this.processGet_points_by_id(_response);
         });
     }
 
-    protected processGet_points_by_id(response: AxiosResponse): Promise<ApiResponse<OfferPointsResponse>> {
+    protected processGet_points_by_id(response: Response): Promise<ApiResponse<OfferPointsResponse>> {
         const status = response.status;
-        let _headers: any = {};
-        if (response.headers && typeof response.headers === "object") {
-            for (let k in response.headers) {
-                if (response.headers.hasOwnProperty(k)) {
-                    _headers[k] = response.headers[k];
-                }
-            }
-        }
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         let _mappings: { source: any, target: any }[] = [];
         if (status === 200) {
-            const _responseText = response.data;
+            return response.text().then((_responseText) => {
             let result200: any = null;
-            let resultData200  = _responseText;
-            result200 = JSON.parse(resultData200);
-            return Promise.resolve<ApiResponse<OfferPointsResponse>>(new ApiResponse<OfferPointsResponse>(status, _headers, result200));
-
+            result200 = _responseText === "" ? null : jsonParse(_responseText, this.jsonParseReviver) as OfferPointsResponse;
+            return new ApiResponse(status, _headers, result200);
+            });
         } else if (status === 404) {
-            const _responseText = response.data;
+            return response.text().then((_responseText) => {
             return throwException("Account not found", status, _responseText, _headers);
-
+            });
         } else if (status === 500) {
-            const _responseText = response.data;
+            return response.text().then((_responseText) => {
             return throwException("Internal Server Error", status, _responseText, _headers);
-
+            });
         } else if (status !== 200 && status !== 204) {
-            const _responseText = response.data;
+            return response.text().then((_responseText) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
         }
         return Promise.resolve<ApiResponse<OfferPointsResponse>>(new ApiResponse(status, _headers, null as any));
     }
@@ -1311,54 +967,40 @@ export class ApiClient {
     /**
      * @return Account statistics
      */
-    get_accounts( cancelToken?: CancelToken | undefined): Promise<ApiResponse<{ [key: string]: number; }>> {
+    get_accounts(signal?: AbortSignal | undefined): Promise<ApiResponse<{ [key: string]: number; }>> {
         let url_ = this.baseUrl + "/statistics/account";
         url_ = url_.replace(/[?&]$/, "");
 
-        let options_: AxiosRequestConfig = {
+        let options_: RequestInit = {
             method: "GET",
-            url: url_,
+            signal,
             headers: {
                 "Accept": "application/json"
-            },
-            cancelToken
+            }
         };
 
-        return this.instance.request(options_).catch((_error: any) => {
-            if (isAxiosError(_error) && _error.response) {
-                return _error.response;
-            } else {
-                throw _error;
-            }
-        }).then((_response: AxiosResponse) => {
+        return this.http.fetch(url_, options_).then((_response: Response) => {
             return this.processGet_accounts(_response);
         });
     }
 
-    protected processGet_accounts(response: AxiosResponse): Promise<ApiResponse<{ [key: string]: number; }>> {
+    protected processGet_accounts(response: Response): Promise<ApiResponse<{ [key: string]: number; }>> {
         const status = response.status;
-        let _headers: any = {};
-        if (response.headers && typeof response.headers === "object") {
-            for (let k in response.headers) {
-                if (response.headers.hasOwnProperty(k)) {
-                    _headers[k] = response.headers[k];
-                }
-            }
-        }
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
-            const _responseText = response.data;
+            return response.text().then((_responseText) => {
             let result200: any = null;
-            let resultData200  = _responseText;
-            result200 = JSON.parse(resultData200);
-            return Promise.resolve<ApiResponse<{ [key: string]: number; }>>(new ApiResponse<{ [key: string]: number; }>(status, _headers, result200));
-
+            result200 = _responseText === "" ? null : jsonParse(_responseText, this.jsonParseReviver) as { [key: string]: number; };
+            return new ApiResponse(status, _headers, result200);
+            });
         } else if (status === 500) {
-            const _responseText = response.data;
+            return response.text().then((_responseText) => {
             return throwException("Internal Server Error", status, _responseText, _headers);
-
+            });
         } else if (status !== 200 && status !== 204) {
-            const _responseText = response.data;
+            return response.text().then((_responseText) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
         }
         return Promise.resolve<ApiResponse<{ [key: string]: number; }>>(new ApiResponse(status, _headers, null as any));
     }
@@ -1366,54 +1008,40 @@ export class ApiClient {
     /**
      * @return Total account count
      */
-    get_total_accounts( cancelToken?: CancelToken | undefined): Promise<ApiResponse<number>> {
+    get_total_accounts(signal?: AbortSignal | undefined): Promise<ApiResponse<number>> {
         let url_ = this.baseUrl + "/statistics/total-accounts";
         url_ = url_.replace(/[?&]$/, "");
 
-        let options_: AxiosRequestConfig = {
+        let options_: RequestInit = {
             method: "GET",
-            url: url_,
+            signal,
             headers: {
                 "Accept": "text/plain"
-            },
-            cancelToken
+            }
         };
 
-        return this.instance.request(options_).catch((_error: any) => {
-            if (isAxiosError(_error) && _error.response) {
-                return _error.response;
-            } else {
-                throw _error;
-            }
-        }).then((_response: AxiosResponse) => {
+        return this.http.fetch(url_, options_).then((_response: Response) => {
             return this.processGet_total_accounts(_response);
         });
     }
 
-    protected processGet_total_accounts(response: AxiosResponse): Promise<ApiResponse<number>> {
+    protected processGet_total_accounts(response: Response): Promise<ApiResponse<number>> {
         const status = response.status;
-        let _headers: any = {};
-        if (response.headers && typeof response.headers === "object") {
-            for (let k in response.headers) {
-                if (response.headers.hasOwnProperty(k)) {
-                    _headers[k] = response.headers[k];
-                }
-            }
-        }
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
-            const _responseText = response.data;
+            return response.text().then((_responseText) => {
             let result200: any = null;
-            let resultData200  = _responseText;
-            result200 = resultData200;
-            return Promise.resolve<ApiResponse<number>>(new ApiResponse<number>(status, _headers, result200));
-
+            result200 = _responseText === "" ? null : _responseText as number;
+            return new ApiResponse(status, _headers, result200);
+            });
         } else if (status === 500) {
-            const _responseText = response.data;
+            return response.text().then((_responseText) => {
             return throwException("Internal Server Error", status, _responseText, _headers);
-
+            });
         } else if (status !== 200 && status !== 204) {
-            const _responseText = response.data;
+            return response.text().then((_responseText) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
         }
         return Promise.resolve<ApiResponse<number>>(new ApiResponse(status, _headers, null as any));
     }
@@ -1421,59 +1049,45 @@ export class ApiClient {
     /**
      * @return Config for current user
      */
-    get_user_config( cancelToken?: CancelToken | undefined): Promise<ApiResponse<UserOptions>> {
+    get_user_config(signal?: AbortSignal | undefined): Promise<ApiResponse<UserOptions>> {
         let url_ = this.baseUrl + "/user/config";
         url_ = url_.replace(/[?&]$/, "");
 
-        let options_: AxiosRequestConfig = {
+        let options_: RequestInit = {
             method: "GET",
-            url: url_,
+            signal,
             headers: {
                 "Accept": "application/json"
-            },
-            cancelToken
+            }
         };
 
-        return this.instance.request(options_).catch((_error: any) => {
-            if (isAxiosError(_error) && _error.response) {
-                return _error.response;
-            } else {
-                throw _error;
-            }
-        }).then((_response: AxiosResponse) => {
+        return this.http.fetch(url_, options_).then((_response: Response) => {
             return this.processGet_user_config(_response);
         });
     }
 
-    protected processGet_user_config(response: AxiosResponse): Promise<ApiResponse<UserOptions>> {
+    protected processGet_user_config(response: Response): Promise<ApiResponse<UserOptions>> {
         const status = response.status;
-        let _headers: any = {};
-        if (response.headers && typeof response.headers === "object") {
-            for (let k in response.headers) {
-                if (response.headers.hasOwnProperty(k)) {
-                    _headers[k] = response.headers[k];
-                }
-            }
-        }
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         let _mappings: { source: any, target: any }[] = [];
         if (status === 200) {
-            const _responseText = response.data;
+            return response.text().then((_responseText) => {
             let result200: any = null;
-            let resultData200  = _responseText;
-            result200 = JSON.parse(resultData200);
-            return Promise.resolve<ApiResponse<UserOptions>>(new ApiResponse<UserOptions>(status, _headers, result200));
-
+            result200 = _responseText === "" ? null : jsonParse(_responseText, this.jsonParseReviver) as UserOptions;
+            return new ApiResponse(status, _headers, result200);
+            });
         } else if (status === 404) {
-            const _responseText = response.data;
+            return response.text().then((_responseText) => {
             return throwException("No config for this user", status, _responseText, _headers);
-
+            });
         } else if (status === 500) {
-            const _responseText = response.data;
+            return response.text().then((_responseText) => {
             return throwException("Internal Server Error", status, _responseText, _headers);
-
+            });
         } else if (status !== 200 && status !== 204) {
-            const _responseText = response.data;
+            return response.text().then((_responseText) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
         }
         return Promise.resolve<ApiResponse<UserOptions>>(new ApiResponse(status, _headers, null as any));
     }
@@ -1481,58 +1095,45 @@ export class ApiClient {
     /**
      * @return Updated/created config
      */
-    update_user_config(body: UserOptions, cancelToken?: CancelToken | undefined): Promise<ApiResponse<void>> {
+    update_user_config(body: UserOptions, signal?: AbortSignal | undefined): Promise<ApiResponse<void>> {
         let url_ = this.baseUrl + "/user/config";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(body);
 
-        let options_: AxiosRequestConfig = {
-            data: content_,
+        let options_: RequestInit = {
+            body: content_,
             method: "POST",
-            url: url_,
+            signal,
             headers: {
                 "Content-Type": "application/json",
-            },
-            cancelToken
+            }
         };
 
-        return this.instance.request(options_).catch((_error: any) => {
-            if (isAxiosError(_error) && _error.response) {
-                return _error.response;
-            } else {
-                throw _error;
-            }
-        }).then((_response: AxiosResponse) => {
+        return this.http.fetch(url_, options_).then((_response: Response) => {
             return this.processUpdate_user_config(_response);
         });
     }
 
-    protected processUpdate_user_config(response: AxiosResponse): Promise<ApiResponse<void>> {
+    protected processUpdate_user_config(response: Response): Promise<ApiResponse<void>> {
         const status = response.status;
-        let _headers: any = {};
-        if (response.headers && typeof response.headers === "object") {
-            for (let k in response.headers) {
-                if (response.headers.hasOwnProperty(k)) {
-                    _headers[k] = response.headers[k];
-                }
-            }
-        }
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 204) {
-            const _responseText = response.data;
-            return Promise.resolve<ApiResponse<void>>(new ApiResponse<void>(status, _headers, null as any));
-
+            return response.text().then((_responseText) => {
+            return new ApiResponse(status, _headers, null as any);
+            });
         } else if (status === 400) {
-            const _responseText = response.data;
+            return response.text().then((_responseText) => {
             return throwException("Invalid configuration format", status, _responseText, _headers);
-
+            });
         } else if (status === 500) {
-            const _responseText = response.data;
+            return response.text().then((_responseText) => {
             return throwException("Internal Server Error", status, _responseText, _headers);
-
+            });
         } else if (status !== 200 && status !== 204) {
-            const _responseText = response.data;
+            return response.text().then((_responseText) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
         }
         return Promise.resolve<ApiResponse<void>>(new ApiResponse(status, _headers, null as any));
     }
@@ -1540,55 +1141,41 @@ export class ApiClient {
     /**
      * @return Spending information for this user
      */
-    get_user_spending( cancelToken?: CancelToken | undefined): Promise<ApiResponse<UserSpending>> {
+    get_user_spending(signal?: AbortSignal | undefined): Promise<ApiResponse<UserSpending>> {
         let url_ = this.baseUrl + "/user/spending";
         url_ = url_.replace(/[?&]$/, "");
 
-        let options_: AxiosRequestConfig = {
+        let options_: RequestInit = {
             method: "GET",
-            url: url_,
+            signal,
             headers: {
                 "Accept": "application/json"
-            },
-            cancelToken
+            }
         };
 
-        return this.instance.request(options_).catch((_error: any) => {
-            if (isAxiosError(_error) && _error.response) {
-                return _error.response;
-            } else {
-                throw _error;
-            }
-        }).then((_response: AxiosResponse) => {
+        return this.http.fetch(url_, options_).then((_response: Response) => {
             return this.processGet_user_spending(_response);
         });
     }
 
-    protected processGet_user_spending(response: AxiosResponse): Promise<ApiResponse<UserSpending>> {
+    protected processGet_user_spending(response: Response): Promise<ApiResponse<UserSpending>> {
         const status = response.status;
-        let _headers: any = {};
-        if (response.headers && typeof response.headers === "object") {
-            for (let k in response.headers) {
-                if (response.headers.hasOwnProperty(k)) {
-                    _headers[k] = response.headers[k];
-                }
-            }
-        }
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         let _mappings: { source: any, target: any }[] = [];
         if (status === 200) {
-            const _responseText = response.data;
+            return response.text().then((_responseText) => {
             let result200: any = null;
-            let resultData200  = _responseText;
-            result200 = JSON.parse(resultData200);
-            return Promise.resolve<ApiResponse<UserSpending>>(new ApiResponse<UserSpending>(status, _headers, result200));
-
+            result200 = _responseText === "" ? null : jsonParse(_responseText, this.jsonParseReviver) as UserSpending;
+            return new ApiResponse(status, _headers, result200);
+            });
         } else if (status === 500) {
-            const _responseText = response.data;
+            return response.text().then((_responseText) => {
             return throwException("Internal Server Error", status, _responseText, _headers);
-
+            });
         } else if (status !== 200 && status !== 204) {
-            const _responseText = response.data;
+            return response.text().then((_responseText) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
         }
         return Promise.resolve<ApiResponse<UserSpending>>(new ApiResponse(status, _headers, null as any));
     }
@@ -1824,8 +1411,4 @@ export class ApiException extends Error {
 
 function throwException(message: string, status: number, response: string, headers: { [key: string]: any; }, result?: any): any {
     throw new ApiException(message, status, response, headers, result);
-}
-
-function isAxiosError(obj: any | undefined): obj is AxiosError {
-    return obj && obj.isAxiosError === true;
 }

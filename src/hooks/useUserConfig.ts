@@ -22,8 +22,8 @@ const useUserConfig = () => {
 
   return useQuery({
     queryKey: ["user-config"],
-    queryFn: async () => {
-      const response = await apiClient.get_user_config();
+    queryFn: async ({ signal }) => {
+      const response = await apiClient.get_user_config(signal);
       setConfig(response.result);
       return response.result;
     },

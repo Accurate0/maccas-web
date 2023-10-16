@@ -6,8 +6,8 @@ const useDeals = () => {
 
   return useQuery({
     queryKey: ["deals"],
-    queryFn: async () => {
-      const response = await apiClient.get_deals();
+    queryFn: async ({ signal }) => {
+      const response = await apiClient.get_deals(signal);
       return response.result;
     },
     refetchOnMount: false,
