@@ -1,6 +1,5 @@
-import { AxiosError } from "axios";
 import { useEffect, useState } from "react";
-import { AdminUserSpendingMap } from "./useApiClient/ApiClient.generated";
+import { AdminUserSpendingMap, ApiException } from "./useApiClient/ApiClient.generated";
 import useApiClient from "./useApiClient/useApiClient";
 import useNotification from "./useNotification";
 import useSetBackdrop from "./useSetBackdrop";
@@ -18,7 +17,7 @@ const useAllUserSpending = () => {
         const response = await apiClient.get_all_user_spending();
         setSpendingDetails(response.result);
       } catch (error) {
-        const err = error as AxiosError;
+        const err = error as ApiException;
         notification({ msg: err.message, variant: "error" });
       } finally {
         setBackdrop(false);

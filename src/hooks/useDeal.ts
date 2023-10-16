@@ -1,6 +1,5 @@
-import { AxiosError } from "axios";
 import { useEffect, useState } from "react";
-import { GetDealsOffer } from "./useApiClient/ApiClient.generated";
+import { ApiException, GetDealsOffer } from "./useApiClient/ApiClient.generated";
 import useApiClient from "./useApiClient/useApiClient";
 import useNotification from "./useNotification";
 import useSetBackdrop from "./useSetBackdrop";
@@ -19,7 +18,7 @@ const useDeal = (offerId: string) => {
         const response = await apiClient.get_deal(offerId);
         setState(response.result);
       } catch (error) {
-        notification({ msg: (error as AxiosError).message, variant: "error" });
+        notification({ msg: (error as ApiException).message, variant: "error" });
         setError(true);
       } finally {
         setBackdrop(false);

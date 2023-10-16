@@ -4,8 +4,8 @@ import { useAuthentication } from "../hooks/useAuthentication";
 import { useNavigate } from "react-router";
 import useSetBackdrop from "../hooks/useSetBackdrop";
 import useNotification from "../hooks/useNotification";
-import { AxiosError } from "axios";
 import { Box, Button, FormControl, FormLabel, Input, Sheet, Stack, Typography } from "@mui/joy";
+import { ApiException } from "../hooks/useApiClient/ApiClient.generated";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -38,7 +38,7 @@ const Login = () => {
         setState(response.result);
         navigate("/");
       } catch (error) {
-        notification({ msg: (error as AxiosError).message, variant: "error" });
+        notification({ msg: (error as ApiException).message, variant: "error" });
       } finally {
         setBackdrop(false);
       }

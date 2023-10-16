@@ -1,4 +1,4 @@
-import { AxiosError } from "axios";
+import { ApiException } from "./useApiClient/ApiClient.generated";
 import useApiClient from "./useApiClient/useApiClient";
 import useNotification from "./useNotification";
 import useSetBackdrop from "./useSetBackdrop";
@@ -17,7 +17,7 @@ const usePoints = () => {
         const response = await apiClient.get_points();
         return response.result;
       } catch (exception) {
-        const error = exception as AxiosError;
+        const error = exception as ApiException;
         notification({ msg: error.message, variant: "error" });
         throw exception;
       } finally {

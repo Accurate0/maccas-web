@@ -1,8 +1,6 @@
-import { AxiosError } from "axios";
 import { atom, useRecoilState, useRecoilValue } from "recoil";
 import { UserOptions } from "./useApiClient/ApiClient.generated";
 import useApiClient from "./useApiClient/useApiClient";
-import useNotification from "./useNotification";
 import { useLocation } from "react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
@@ -36,19 +34,12 @@ const useUserConfig = () => {
 export const useUpdateUserConfig = () => {
   const queryClient = useQueryClient();
   const [, setConfig] = useRecoilState(UserConfig);
-  const notification = useNotification();
   const apiClient = useApiClient();
 
   return useMutation({
     mutationFn: async (c: UserOptions) => {
       setConfig(c);
-      try {
-        await apiClient.update_user_config(c);
-      } catch (error) {
-        const err = error as AxiosError;
-        notification({ msg: err.message, variant: "error" });
-        throw err;
-      }
+      await apiClient.update_user_config(c);
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["user-config"] }),
   });

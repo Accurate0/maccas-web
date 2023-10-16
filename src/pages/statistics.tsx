@@ -28,7 +28,7 @@ const Statistics = () => {
         <Chip
           sx={{ backgroundColor: "#fff" }}
           variant="outlined"
-          label={`Total Accounts: ${totalAccounts?.toString()}`}
+          label={`Total Accounts: ${totalAccounts.data?.toString() ?? "Loading..."}`}
         />
       </Grid>
       <Grid item xs={12}>
@@ -41,7 +41,7 @@ const Statistics = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {Object.entries(accounts ?? {}).map(([accountName, count]) => (
+              {Object.entries(accounts.data ?? {}).map(([accountName, count]) => (
                 <TableRow
                   key={accountName}
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}

@@ -1,6 +1,5 @@
-import { AxiosError } from "axios";
 import { useEffect, useState } from "react";
-import { GetDealsOffer, OfferResponse } from "./useApiClient/ApiClient.generated";
+import { ApiException, GetDealsOffer, OfferResponse } from "./useApiClient/ApiClient.generated";
 import useApiClient from "./useApiClient/useApiClient";
 import useNotification from "./useNotification";
 import useSetBackdrop from "./useSetBackdrop";
@@ -24,12 +23,12 @@ const useOfferCode = (offer: GetDealsOffer | undefined) => {
           setResponse(response?.result as OfferResponse);
         }
       } catch (error) {
-        const err = error as AxiosError;
-        if (err.response?.status === 409) {
+        const err = error as ApiException;
+        if (err.status === 409) {
           notification({ msg: "This deal is currently unavailable. Try again.", variant: "error" });
           navigate("/");
         } else {
-          notification({ msg: (error as AxiosError).message, variant: "error" });
+          notification({ msg: (error as ApiException).message, variant: "error" });
         }
       } finally {
         setBackdrop(false);
@@ -49,7 +48,7 @@ const useOfferCode = (offer: GetDealsOffer | undefined) => {
         await apiClient.remove_deal(offer.dealUuid, userConfig!.storeId);
       }
     } catch (error) {
-      notification({ msg: (error as AxiosError).message, variant: "error" });
+      notification({ msg: (error as ApiException).message, variant: "error" });
     } finally {
       setBackdrop(false);
     }
@@ -64,7 +63,7 @@ const useOfferCode = (offer: GetDealsOffer | undefined) => {
         return response.result;
       }
     } catch (error) {
-      notification({ msg: (error as AxiosError).message, variant: "error" });
+      notification({ msg: (error as ApiException).message, variant: "error" });
     } finally {
       setBackdrop(false);
     }
