@@ -8,7 +8,6 @@ import Backdrop from "./components/Backdrop";
 import Root from "./pages/root";
 import DealSelector from "./pages";
 import Login from "./pages/login";
-import DealSelection from "./pages/code/DealSelection";
 import Points from "./pages/points";
 import Statistics from "./pages/statistics";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -26,10 +25,6 @@ const router = createBrowserRouter([
       {
         path: "/login",
         element: <Login />,
-      },
-      {
-        path: "/code/:dealId",
-        element: <DealSelection />,
       },
       {
         path: "/points",
