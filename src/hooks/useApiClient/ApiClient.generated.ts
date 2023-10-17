@@ -7,6 +7,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // ReSharper disable InconsistentNaming
+// @ts-nocheck
 
 export class ApiClient {
     private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
@@ -101,7 +102,7 @@ export class ApiClient {
     }
 
     /**
-     * @param duration (optional) 
+     * @param duration (optional)
      * @return Lock this deal
      */
     lock_deal(deal_id: string, duration?: number | null | undefined, signal?: AbortSignal | undefined): Promise<ApiResponse<void>> {
@@ -1320,7 +1321,7 @@ function jsonParse(json: any, reviver?: any) {
     json = (function recurse(obj: any, prop?: any, parent?: any) {
         if (typeof obj !== 'object' || !obj)
             return obj;
-        
+
         if ("$ref" in obj) {
             let ref = obj.$ref;
             if (ref in byid)
@@ -1334,7 +1335,7 @@ function jsonParse(json: any, reviver?: any) {
                 obj = obj.$values;
             byid[id] = obj;
         }
-        
+
         if (Array.isArray(obj)) {
             obj = obj.map((v, i) => recurse(v, i, obj));
         } else {
