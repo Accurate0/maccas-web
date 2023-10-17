@@ -56,7 +56,11 @@ const DealCard: React.FC<DealCardProps> = ({ offer, onDetails: onSelect }) => {
         expanded={dealsSelected.length > 0}
         onChange={async () => {
           // use a random id so each is unique, but this isn't the deal id
-          setDealsSelected((old) => [...old, crypto.randomUUID()]);
+          if (dealsSelected.length >= offer.count) {
+            notification({ msg: "No more deals remain...", variant: "warning" });
+          } else {
+            setDealsSelected((old) => [...old, crypto.randomUUID()]);
+          }
         }}
       >
         <AccordionSummary
@@ -103,7 +107,7 @@ const DealCard: React.FC<DealCardProps> = ({ offer, onDetails: onSelect }) => {
                 key={id}
                 // change to deal fingerprint?
                 // POST deals/<fingerprint> -> get random id
-                id={offer.dealUuid}
+                id={offer.offerPropositionId}
                 onRemove={() => setDealsSelected((old) => old.filter((x) => x !== id))}
               />
             ))}

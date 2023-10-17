@@ -7,7 +7,6 @@
 /* tslint:disable */
 /* eslint-disable */
 // ReSharper disable InconsistentNaming
-// @ts-nocheck
 
 export class ApiClient {
     private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
@@ -102,7 +101,7 @@ export class ApiClient {
     }
 
     /**
-     * @param duration (optional)
+     * @param duration (optional) 
      * @return Lock this deal
      */
     lock_deal(deal_id: string, duration?: number | null | undefined, signal?: AbortSignal | undefined): Promise<ApiResponse<void>> {
@@ -569,13 +568,66 @@ export class ApiClient {
     }
 
     /**
-     * @return Added a deal
+     * @return Removed a deal
      */
-    add_deal(deal_id: string, store: string, signal?: AbortSignal | undefined): Promise<ApiResponse<OfferResponse>> {
+    remove_deal(deal_id: string, store: string, signal?: AbortSignal | undefined): Promise<ApiResponse<void>> {
         let url_ = this.baseUrl + "/deals/{deal_id}?";
         if (deal_id === undefined || deal_id === null)
             throw new Error("The parameter 'deal_id' must be defined.");
         url_ = url_.replace("{deal_id}", encodeURIComponent("" + deal_id));
+        if (store === undefined || store === null)
+            throw new Error("The parameter 'store' must be defined and cannot be null.");
+        else
+            url_ += "store=" + encodeURIComponent("" + store) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "DELETE",
+            signal,
+            headers: {
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processRemove_deal(_response);
+        });
+    }
+
+    protected processRemove_deal(response: Response): Promise<ApiResponse<void>> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 204) {
+            return response.text().then((_responseText) => {
+            return new ApiResponse(status, _headers, null as any);
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            return throwException("Error on McDonald\'s side", status, _responseText, _headers);
+            });
+        } else if (status === 404) {
+            return response.text().then((_responseText) => {
+            return throwException("Deal not found", status, _responseText, _headers);
+            });
+        } else if (status === 500) {
+            return response.text().then((_responseText) => {
+            return throwException("Internal Server Error", status, _responseText, _headers);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<ApiResponse<void>>(new ApiResponse(status, _headers, null as any));
+    }
+
+    /**
+     * @return Added a deal
+     */
+    add_deal(proposition_id: string, store: string, signal?: AbortSignal | undefined): Promise<ApiResponse<OfferResponse>> {
+        let url_ = this.baseUrl + "/deals/{proposition_id}?";
+        if (proposition_id === undefined || proposition_id === null)
+            throw new Error("The parameter 'proposition_id' must be defined.");
+        url_ = url_.replace("{proposition_id}", encodeURIComponent("" + proposition_id));
         if (store === undefined || store === null)
             throw new Error("The parameter 'store' must be defined and cannot be null.");
         else
@@ -627,59 +679,6 @@ export class ApiClient {
             });
         }
         return Promise.resolve<ApiResponse<OfferResponse>>(new ApiResponse(status, _headers, null as any));
-    }
-
-    /**
-     * @return Removed a deal
-     */
-    remove_deal(deal_id: string, store: string, signal?: AbortSignal | undefined): Promise<ApiResponse<void>> {
-        let url_ = this.baseUrl + "/deals/{deal_id}?";
-        if (deal_id === undefined || deal_id === null)
-            throw new Error("The parameter 'deal_id' must be defined.");
-        url_ = url_.replace("{deal_id}", encodeURIComponent("" + deal_id));
-        if (store === undefined || store === null)
-            throw new Error("The parameter 'store' must be defined and cannot be null.");
-        else
-            url_ += "store=" + encodeURIComponent("" + store) + "&";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_: RequestInit = {
-            method: "DELETE",
-            signal,
-            headers: {
-            }
-        };
-
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processRemove_deal(_response);
-        });
-    }
-
-    protected processRemove_deal(response: Response): Promise<ApiResponse<void>> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 204) {
-            return response.text().then((_responseText) => {
-            return new ApiResponse(status, _headers, null as any);
-            });
-        } else if (status === 400) {
-            return response.text().then((_responseText) => {
-            return throwException("Error on McDonald\'s side", status, _responseText, _headers);
-            });
-        } else if (status === 404) {
-            return response.text().then((_responseText) => {
-            return throwException("Deal not found", status, _responseText, _headers);
-            });
-        } else if (status === 500) {
-            return response.text().then((_responseText) => {
-            return throwException("Internal Server Error", status, _responseText, _headers);
-            });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<ApiResponse<void>>(new ApiResponse(status, _headers, null as any));
     }
 
     /**
@@ -1213,6 +1212,7 @@ export interface GetDealsOffer {
     description: string;
     imageUrl: string;
     name: string;
+    offerPropositionId: string;
     price?: number | undefined;
     shortName: string;
     validFromUtc: string;
@@ -1242,6 +1242,7 @@ export interface OfferPointsResponse {
 }
 
 export interface OfferResponse {
+    dealUuid?: string | undefined;
     message: string;
     randomCode: string;
 
@@ -1319,7 +1320,7 @@ function jsonParse(json: any, reviver?: any) {
     json = (function recurse(obj: any, prop?: any, parent?: any) {
         if (typeof obj !== 'object' || !obj)
             return obj;
-
+        
         if ("$ref" in obj) {
             let ref = obj.$ref;
             if (ref in byid)
@@ -1333,7 +1334,7 @@ function jsonParse(json: any, reviver?: any) {
                 obj = obj.$values;
             byid[id] = obj;
         }
-
+        
         if (Array.isArray(obj)) {
             obj = obj.map((v, i) => recurse(v, i, obj));
         } else {

@@ -32,7 +32,9 @@ const DealCode = ({ id, onRemove }: DealCodeProps) => {
   const removeDealMutation = useMutation({
     mutationKey: [`remove-deal-${id}`],
     mutationFn: async () => {
-      return await apiClient.remove_deal(id, userConfig!.storeId);
+      if (addDealMutation.data?.dealUuid) {
+        return await apiClient.remove_deal(addDealMutation.data.dealUuid, userConfig!.storeId);
+      }
     },
   });
 
