@@ -35,18 +35,18 @@ const Register = () => {
       setPasswordError(true);
     }
 
-    if (password.length < 6) {
+    if (password !== "" && password.length < 6) {
       setPasswordError(true);
       notification({ msg: "Password must be at least 6 characters", variant: "error" });
       return;
     }
 
-    if (!token) {
-      notification({ msg: "Invalid registration", variant: "error" });
-      return;
-    }
-
     if (username && password) {
+      if (!token) {
+        notification({ msg: "Invalid registration", variant: "error" });
+        return;
+      }
+
       try {
         setBackdrop(true);
         const response = await apiClient.register(token, { username, password });
