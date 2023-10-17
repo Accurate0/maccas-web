@@ -7,6 +7,7 @@ import { Typography } from "@mui/joy";
 import { truncate } from "../utils/truncate";
 import { useState } from "react";
 import DealCode from "./DealCode";
+import { useGetUserConfig } from "../hooks/useUserConfig";
 
 export interface DealCardProps {
   offer: GetDealsOffer;
@@ -24,6 +25,7 @@ const isOfferValid = (deal: GetDealsOffer) => {
 
 const DealCard: React.FC<DealCardProps> = ({ offer, onDetails: onSelect }) => {
   const validOffer = isOfferValid(offer);
+  const config = useGetUserConfig();
   const notification = useNotification();
   const [dealsSelected, setDealsSelected] = useState<string[]>([]);
 
@@ -32,6 +34,10 @@ const DealCard: React.FC<DealCardProps> = ({ offer, onDetails: onSelect }) => {
       <Accordion
         expanded={dealsSelected.length > 0}
         onChange={async () => {
+          if (!config?.storeId) {
+            notification({ msg: "Must select a store", variant: "error" });
+            return;
+          }
           // use a random id so each is unique, but this isn't the deal id
           if (dealsSelected.length >= offer.count) {
             notification({ msg: "No more deals remain...", variant: "warning" });

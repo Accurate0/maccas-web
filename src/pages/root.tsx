@@ -28,7 +28,7 @@ const Root = () => {
   const location = useLocation();
   const { state } = useAuthentication();
   const config = useGetUserConfig();
-  const { status } = useUserConfig();
+  const { fetchStatus } = useUserConfig();
   const [locationModalOpen, setLocationModalOpen] = useState<boolean>(false);
   const { role } = useAuthentication();
   const showPoints = useMemo(() => role === UserRole.Admin || role === UserRole.Privileged, [role]);
@@ -88,9 +88,9 @@ const Root = () => {
                         <b>
                           {config?.storeName
                             ? truncate(config.storeName, 12)
-                            : status === "success"
-                            ? "None"
-                            : "Loading..."}
+                            : fetchStatus === "fetching"
+                            ? "Loading..."
+                            : "None"}
                         </b>
                       </Grid>
                     </Grid>

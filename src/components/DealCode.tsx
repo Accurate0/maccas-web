@@ -3,7 +3,6 @@ import useApiClient from "../hooks/useApiClient/useApiClient";
 import { useGetUserConfig } from "../hooks/useUserConfig";
 import { useMutation } from "@tanstack/react-query";
 import { useEffect, useMemo } from "react";
-import useNotification from "../hooks/useNotification";
 import { Grid } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 
@@ -15,16 +14,10 @@ interface DealCodeProps {
 const DealCode = ({ id, onRemove }: DealCodeProps) => {
   const apiClient = useApiClient();
   const userConfig = useGetUserConfig();
-  const notification = useNotification();
 
   const addDealMutation = useMutation({
     mutationKey: [`deal-${id}`],
     mutationFn: async () => {
-      if (!userConfig?.storeId) {
-        notification({ variant: "error", msg: "A store must be selected." });
-        return;
-      }
-
       return (await apiClient.add_deal(id, userConfig!.storeId)).result;
     },
   });
