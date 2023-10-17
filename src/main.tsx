@@ -12,6 +12,7 @@ import Points from "./pages/points";
 import Statistics from "./pages/statistics";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ApiException } from "./hooks/useApiClient/ApiClient.generated";
+import Register from "./pages/register";
 
 const router = createBrowserRouter([
   {
@@ -25,6 +26,10 @@ const router = createBrowserRouter([
       {
         path: "/login",
         element: <Login />,
+      },
+      {
+        path: "/register",
+        element: <Register />,
       },
       {
         path: "/points",

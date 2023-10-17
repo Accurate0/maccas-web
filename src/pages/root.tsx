@@ -44,6 +44,8 @@ const Root = () => {
     return {};
   }, [location.pathname, showPoints]);
 
+  const showTopItems = location.pathname !== "/login" && location.pathname !== "/register";
+
   useEffect(() => {
     if (!state) {
       navigate("/login");
@@ -57,7 +59,7 @@ const Root = () => {
         <UserConfigProvider />
         <JoyToaster />
         <Container>
-          {location.pathname !== "/login" && (
+          {showTopItems && (
             <>
               <LocationModal open={locationModalOpen} setOpen={setLocationModalOpen} />
               <Grid paddingTop={8} spacing={2} container>

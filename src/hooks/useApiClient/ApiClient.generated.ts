@@ -7,7 +7,6 @@
 /* tslint:disable */
 /* eslint-disable */
 // ReSharper disable InconsistentNaming
-// @ts-nocheck
 
 export class ApiClient {
     private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
@@ -102,7 +101,7 @@ export class ApiClient {
     }
 
     /**
-     * @param duration (optional)
+     * @param duration (optional) 
      * @return Lock this deal
      */
     lock_deal(deal_id: string, duration?: number | null | undefined, signal?: AbortSignal | undefined): Promise<ApiResponse<void>> {
@@ -320,9 +319,9 @@ export class ApiClient {
             result200 = _responseText === "" ? null : jsonParse(_responseText, this.jsonParseReviver) as TokenResponse;
             return new ApiResponse(status, _headers, result200);
             });
-        } else if (status === 401) {
+        } else if (status === 409) {
             return response.text().then((_responseText) => {
-            return throwException("Account doesn\'t exist", status, _responseText, _headers);
+            return throwException("Account with this username already exists", status, _responseText, _headers);
             });
         } else if (status === 500) {
             return response.text().then((_responseText) => {
@@ -1321,7 +1320,7 @@ function jsonParse(json: any, reviver?: any) {
     json = (function recurse(obj: any, prop?: any, parent?: any) {
         if (typeof obj !== 'object' || !obj)
             return obj;
-
+        
         if ("$ref" in obj) {
             let ref = obj.$ref;
             if (ref in byid)
@@ -1335,7 +1334,7 @@ function jsonParse(json: any, reviver?: any) {
                 obj = obj.$values;
             byid[id] = obj;
         }
-
+        
         if (Array.isArray(obj)) {
             obj = obj.map((v, i) => recurse(v, i, obj));
         } else {
