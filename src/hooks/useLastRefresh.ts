@@ -16,6 +16,8 @@ const useLastRefresh = () => {
         msg: `Last refreshed at ${lastRefreshed.local().format("LLL")}`,
         variant: "info",
       });
+
+      return lastRefreshed;
     },
     refetchOnWindowFocus: false,
     refetchOnMount: false,
