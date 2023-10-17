@@ -41,10 +41,15 @@ const Register = () => {
       return;
     }
 
+    if (!token) {
+      notification({ msg: "Invalid registration", variant: "error" });
+      return;
+    }
+
     if (username && password) {
       try {
         setBackdrop(true);
-        const response = await apiClient.register(token!, { username, password });
+        const response = await apiClient.register(token, { username, password });
         setState(response.result);
         navigate("/");
       } catch (error) {
