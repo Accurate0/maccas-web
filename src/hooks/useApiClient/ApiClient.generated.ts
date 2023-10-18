@@ -1210,7 +1210,6 @@ export interface AdminUserSpendingMap {
 export interface GetDealsOffer {
     count: number;
     creationDateUtc: string;
-    dealUuid: string;
     description: string;
     imageUrl: string;
     name: string;
