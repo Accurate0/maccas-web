@@ -21,7 +21,7 @@ export class ApiClient {
     }
 
     /**
-     * @return Unlocked deal
+     * @return Token that can be used for registration
      */
     registration_token(signal?: AbortSignal | undefined): Promise<ApiResponse<string>> {
         let url_ = this.baseUrl + "/admin/auth/register";
