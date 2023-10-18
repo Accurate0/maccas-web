@@ -17,7 +17,7 @@ export class ApiClient {
 
     constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
         this.http = http ? http : window as any;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://api.maccas.one/v1";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://api.dev.maccas.one/v1";
     }
 
     /**
