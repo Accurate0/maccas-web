@@ -25,11 +25,12 @@ const useApiClient = () => {
           if (response.status === 403 || response.status === 401) {
             await queryClient.cancelQueries();
             try {
-              const response = await apiClient.get_token({
+              const { result } = await apiClient.get_token({
                 token: state?.token ?? "",
                 refreshToken: state?.refreshToken ?? "",
               });
-              setState(response.result);
+              setState(result);
+              await queryClient.refetchQueries();
             } catch {
               navigate("/login");
             }
