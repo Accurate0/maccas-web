@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import useAuthentication from "../hooks/useAuthentication";
 import { Container, Grid } from "@mui/material";
 import { theme } from "../theme";
-import UserConfigProvider from "../components/UserConfigProvider";
+import Prefetch from "../components/Prefetch";
 import "@fontsource/inter";
 import {
   experimental_extendTheme as materialExtendTheme,
@@ -56,7 +56,7 @@ const Root = () => {
     <MaterialCssVarsProvider theme={{ [MATERIAL_THEME_ID]: materialTheme }}>
       <JoyCssVarsProvider>
         <NavBar />
-        <UserConfigProvider />
+        <Prefetch />
         <JoyToaster />
         <Container>
           {showTopItems && (

@@ -34,13 +34,17 @@ const DealCard: React.FC<DealCardProps> = ({ offer, onDetails: onSelect }) => {
       <Accordion
         expanded={dealsSelected.length > 0}
         onChange={async () => {
+          if (!validOffer) {
+            notification({ msg: "This probably won't work", variant: "warning" });
+          }
+
           if (!config?.storeId) {
             notification({ msg: "Must select a store", variant: "error" });
             return;
           }
           // use a random id so each is unique, but this isn't the deal id
           if (dealsSelected.length >= offer.count) {
-            notification({ msg: "No more deals remain...", variant: "warning" });
+            notification({ msg: "No more deals remain...", variant: "error" });
           } else {
             setDealsSelected((old) => [...old, crypto.randomUUID()]);
           }

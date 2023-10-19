@@ -16,7 +16,6 @@ import Register from "./pages/register";
 
 const router = createBrowserRouter([
   {
-    path: "/",
     element: <Root />,
     children: [
       {
