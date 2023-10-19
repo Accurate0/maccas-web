@@ -8,10 +8,12 @@ const Points: React.FC<PointsProps> = () => {
   const { data: points } = usePoints();
 
   return (
-    <Grid paddingTop={2} spacing={2} container>
-      {points?.map((p) => (
-        <PointCard key={p.name} {...p} />
-      ))}
+    <Grid paddingTop={2} paddingBottom={4} spacing={2} container>
+      {points
+        ?.filter((p) => p.totalPoints >= 2500)
+        .map((p) => (
+          <PointCard key={p.name} {...p} />
+        ))}
     </Grid>
   );
 };
