@@ -1,6 +1,10 @@
 import { Grid, Card, CardContent, Box } from "@mui/material";
 import moment from "moment";
-import { GetDealsOffer, OfferResponse } from "../hooks/useApiClient/ApiClient.generated";
+import {
+  ApiException,
+  GetDealsOffer,
+  OfferResponse,
+} from "../hooks/useApiClient/ApiClient.generated";
 import useNotification from "../hooks/useNotification";
 import LoadableCardMedia from "./LoadableCardMedia";
 import { Typography } from "@mui/joy";
@@ -32,7 +36,7 @@ const DealCard: React.FC<DealCardProps> = ({ offer, onDetails: onSelect }) => {
   const notification = useNotification();
   const apiClient = useApiClient();
   const [dealsSelected, setDealsSelected] = useState<
-    { loading: boolean; response?: OfferResponse; id: string }[]
+    { loading: boolean; response?: OfferResponse; id: string; error?: string }[]
   >([]);
   const onRemove = useCallback(
     (id: string) => setDealsSelected((old) => old.filter((state) => state.id !== id)),
@@ -43,6 +47,7 @@ const DealCard: React.FC<DealCardProps> = ({ offer, onDetails: onSelect }) => {
     mutationKey: [`deal-${offer.shortName}`],
     mutationFn: async () =>
       (await apiClient.add_deal(offer.offerPropositionId, config!.storeId)).result,
+    throwOnError: true,
   });
 
   return (
@@ -82,15 +87,26 @@ const DealCard: React.FC<DealCardProps> = ({ offer, onDetails: onSelect }) => {
                     },
                   ]);
 
-                  const response = await addDealMutation.mutateAsync();
-                  setDealsSelected((old) => [
-                    ...old.filter((x) => x.id !== id),
-                    {
-                      id,
-                      loading: false,
-                      response,
-                    },
-                  ]);
+                  try {
+                    const response = await addDealMutation.mutateAsync();
+                    setDealsSelected((old) => [
+                      ...old.filter((x) => x.id !== id),
+                      {
+                        id,
+                        loading: false,
+                        response,
+                      },
+                    ]);
+                  } catch (error) {
+                    setDealsSelected((old) => [
+                      ...old.filter((x) => x.id !== id),
+                      {
+                        id,
+                        loading: false,
+                        error: (error as ApiException).message,
+                      },
+                    ]);
+                  }
                 }
               }}
             >
