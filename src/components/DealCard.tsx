@@ -47,7 +47,7 @@ const DealCard: React.FC<DealCardProps> = ({ offer, onDetails: onSelect }) => {
 
   return (
     <Grid item xs={12} key={offer.dealUuid}>
-      <motion.div layout>
+      <motion.div layout layoutDependency={dealsSelected}>
         <Card
           sx={{
             opacity: !validOffer ? 0.3 : undefined,
