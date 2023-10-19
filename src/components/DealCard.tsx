@@ -47,12 +47,11 @@ const DealCard: React.FC<DealCardProps> = ({ offer, onDetails: onSelect }) => {
     mutationKey: [`deal-${offer.shortName}`],
     mutationFn: async () =>
       (await apiClient.add_deal(offer.offerPropositionId, config!.storeId)).result,
-    throwOnError: true,
   });
 
   return (
     <Grid item xs={12} key={offer.dealUuid}>
-      <motion.div layout layoutDependency={dealsSelected}>
+      <motion.div layout layoutDependency={dealsSelected} transition={{ type: "keyframes" }}>
         <Card
           sx={{
             opacity: !validOffer ? 0.3 : undefined,
@@ -87,26 +86,26 @@ const DealCard: React.FC<DealCardProps> = ({ offer, onDetails: onSelect }) => {
                     },
                   ]);
 
-                  try {
-                    const response = await addDealMutation.mutateAsync();
-                    setDealsSelected((old) => [
-                      ...old.filter((x) => x.id !== id),
-                      {
-                        id,
-                        loading: false,
-                        response,
-                      },
-                    ]);
-                  } catch (error) {
-                    setDealsSelected((old) => [
-                      ...old.filter((x) => x.id !== id),
-                      {
-                        id,
-                        loading: false,
-                        error: (error as ApiException).message,
-                      },
-                    ]);
-                  }
+                  await addDealMutation.mutateAsync(undefined, {
+                    onSuccess: (response) =>
+                      setDealsSelected((old) => [
+                        ...old.filter((x) => x.id !== id),
+                        {
+                          id,
+                          loading: false,
+                          response,
+                        },
+                      ]),
+                    onError: (error) =>
+                      setDealsSelected((old) => [
+                        ...old.filter((x) => x.id !== id),
+                        {
+                          id,
+                          loading: false,
+                          error: (error as ApiException).message,
+                        },
+                      ]),
+                  });
                 }
               }}
             >
@@ -154,6 +153,7 @@ const DealCard: React.FC<DealCardProps> = ({ offer, onDetails: onSelect }) => {
                     loading={state.loading}
                     code={state.response?.randomCode}
                     dealId={state.response?.dealUuid}
+                    error={state.error}
                   />
                 </Grid>
               ))}
