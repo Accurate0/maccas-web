@@ -47,7 +47,6 @@ const DealCard: React.FC<DealCardProps> = ({ offer, onDetails: onSelect }) => {
     mutationKey: [`deal-${offer.shortName}`],
     mutationFn: async () =>
       (await apiClient.add_deal(offer.offerPropositionId, config!.storeId)).result,
-    throwOnError: true,
   });
 
   return (
@@ -143,21 +142,22 @@ const DealCard: React.FC<DealCardProps> = ({ offer, onDetails: onSelect }) => {
           </CardContent>
           <Box paddingLeft={2} paddingRight={2}>
             <Grid container direction="column">
-              {dealsSelected.map((state) => (
-                <Grid item paddingBottom={2}>
-                  <DealCode
-                    key={state.id}
-                    // change to deal fingerprint?
-                    // POST deals/<fingerprint> -> get random id
-                    id={offer.offerPropositionId}
-                    onRemove={() => onRemove(state.id)}
-                    loading={state.loading}
-                    code={state.response?.randomCode}
-                    dealId={state.response?.dealUuid}
-                    error={state.error}
-                  />
-                </Grid>
-              ))}
+              {dealsSelected
+                .sort((a, b) => a.id.localeCompare(b.id))
+                .map((state) => (
+                  <Grid key={state.id} item paddingBottom={2}>
+                    <DealCode
+                      // change to deal fingerprint?
+                      // POST deals/<fingerprint> -> get random id
+                      id={offer.offerPropositionId}
+                      onRemove={() => onRemove(state.id)}
+                      loading={state.loading}
+                      code={state.response?.randomCode}
+                      dealId={state.response?.dealUuid}
+                      error={state.error}
+                    />
+                  </Grid>
+                ))}
             </Grid>
           </Box>
         </Card>
