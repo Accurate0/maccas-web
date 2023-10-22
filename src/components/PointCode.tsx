@@ -1,10 +1,11 @@
-import { Alert, Box, LinearProgress } from "@mui/joy";
+import { Alert, Box, IconButton, LinearProgress } from "@mui/joy";
 import useApiClient from "../hooks/useApiClient/useApiClient";
 import { useGetUserConfig } from "../hooks/useUserConfig";
 import { useMutation } from "@tanstack/react-query";
 import { useEffect, useMemo } from "react";
 import useNotification from "../hooks/useNotification";
 import { Grid } from "@mui/material";
+import Refresh from "@mui/icons-material/Refresh";
 
 interface PointCodeProps {
   id: string;
@@ -55,7 +56,24 @@ const PointCode = ({ id, open }: PointCodeProps) => {
 
   return (
     <Grid item xs>
-      <Alert sx={{ height: 24 }}>{pointsResponse}</Alert>
+      <Alert
+        sx={{ height: 24 }}
+        endDecorator={
+          <IconButton
+            variant="plain"
+            size="sm"
+            color="neutral"
+            disabled={pointsCodeMutation.status === "pending"}
+            onClick={async () => {
+              await pointsCodeMutation.mutateAsync();
+            }}
+          >
+            <Refresh />
+          </IconButton>
+        }
+      >
+        {pointsResponse}
+      </Alert>
     </Grid>
   );
 };
