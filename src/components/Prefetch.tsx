@@ -9,7 +9,11 @@ const Prefetch = () => {
   const location = useLocation();
 
   useEffect(() => {
-    if (location.pathname !== "/login" && location.pathname !== "/register") {
+    if (
+      location.pathname !== "/login" &&
+      location.pathname !== "/register" &&
+      queryClient.getQueryState(["points"])?.status !== "success"
+    ) {
       queryClient.prefetchQuery({
         queryKey: ["points"],
         queryFn: async ({ signal }) => (await apiClient.get_points(signal)).result,
