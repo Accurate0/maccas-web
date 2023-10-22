@@ -6,6 +6,7 @@ import DealCard from "../components/DealCard";
 import DealSkeleton from "../components/DealSkeleton";
 import { GetDealsOffer } from "../hooks/useApiClient/ApiClient.generated";
 import { Grid } from "@mui/material";
+import { LayoutGroup } from "framer-motion";
 
 export interface DealSelectorProps {}
 
@@ -34,14 +35,16 @@ const DealSelector: React.FC<DealSelectorProps> = () => {
       <Grid container spacing={2} paddingTop={2} paddingBottom={4}>
         {deals.status === "success" ? (
           deals.data?.map((offer) => (
-            <DealCard
-              key={offer.dealUuid}
-              offer={offer}
-              onDetails={() => {
-                setDialogFor(offer);
-                handleClickOpen();
-              }}
-            />
+            <LayoutGroup>
+              <DealCard
+                key={offer.dealUuid}
+                offer={offer}
+                onDetails={() => {
+                  setDialogFor(offer);
+                  handleClickOpen();
+                }}
+              />
+            </LayoutGroup>
           ))
         ) : (
           <>
