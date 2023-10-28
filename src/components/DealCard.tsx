@@ -124,7 +124,7 @@ const DealCard: React.FC<DealCardProps> = ({ offer }) => {
               <Grid item style={{ flexBasis: "auto" }}>
                 <LoadableCardMedia
                   image={offer.imageUrl}
-                  alt="missing image"
+                  alt="no image found"
                   style={{ height: 90, width: 90, display: "flex" }}
                 />
               </Grid>

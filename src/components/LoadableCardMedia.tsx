@@ -1,27 +1,13 @@
-import { CardMedia, CardMediaProps, Skeleton, useMediaQuery } from "@mui/material";
-import { useState } from "react";
-import { theme } from "../theme";
+import { CardMedia, CardMediaProps } from "@mui/material";
 
 export interface LoadableCardMediaProps extends Omit<CardMediaProps<"img">, "onLoad"> {}
 
 const LoadableCardMedia: React.FC<LoadableCardMediaProps> = ({ ...props }) => {
-  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
-  const [loaded, setLoaded] = useState(false);
-  const size = isMobile ? 180 : 276;
+  const size = 90;
 
   return (
     <>
-      <CardMedia
-        component="img"
-        style={{ height: loaded ? undefined : 0 }}
-        height={size}
-        width={size}
-        onLoad={() => {
-          setLoaded(true);
-        }}
-        {...props}
-      />
-      {!loaded && <Skeleton variant="rectangular" height={size} />}
+      <CardMedia component="img" height={size} width={size} {...props} />
     </>
   );
 };
