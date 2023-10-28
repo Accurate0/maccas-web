@@ -62,7 +62,7 @@ const Root = () => {
           {showTopItems && (
             <>
               <LocationModal open={locationModalOpen} setOpen={setLocationModalOpen} />
-              <Grid paddingTop={8} spacing={2} container>
+              <Grid paddingTop={2} spacing={2} container>
                 {href && name && (
                   <Grid item xs>
                     <Button fullWidth sx={{ color: "white" }} onClick={() => navigate(href)}>

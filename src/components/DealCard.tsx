@@ -18,8 +18,6 @@ import useApiClient from "../hooks/useApiClient/useApiClient";
 
 export interface DealCardProps {
   offer: GetDealsOffer;
-  onDetails: () => void;
-  tall?: boolean;
 }
 
 const isOfferValid = (deal: GetDealsOffer) => {
@@ -30,7 +28,7 @@ const isOfferValid = (deal: GetDealsOffer) => {
   return moment.utc(now).isBetween(from, to);
 };
 
-const DealCard: React.FC<DealCardProps> = ({ offer, onDetails: onSelect }) => {
+const DealCard: React.FC<DealCardProps> = ({ offer }) => {
   const validOffer = isOfferValid(offer);
   const config = useGetUserConfig();
   const notification = useNotification();
@@ -115,24 +113,12 @@ const DealCard: React.FC<DealCardProps> = ({ offer, onDetails: onSelect }) => {
             >
               <Grid item xs={8} container direction="column">
                 <Grid item xs>
-                  <Typography level="h4" component="div">
+                  <Typography level="title-lg" component="div">
                     {truncate(offer.shortName, 20)}
                   </Typography>
                 </Grid>
                 <Grid item>
                   <Typography level="body-sm">{offer.count} available</Typography>
-                </Grid>
-                <Grid item xs={3}>
-                  <Typography
-                    level="body-xs"
-                    textColor="black"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onSelect();
-                    }}
-                  >
-                    <b>Details</b>
-                  </Typography>
                 </Grid>
               </Grid>
               <Grid item style={{ flexBasis: "auto" }}>
