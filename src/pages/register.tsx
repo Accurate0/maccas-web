@@ -7,6 +7,7 @@ import useNotification from "../hooks/useNotification";
 import { Box, Button, FormControl, FormLabel, Input, Sheet, Stack, Typography } from "@mui/joy";
 import { ApiException } from "../hooks/useApiClient/ApiClient.generated";
 import { useSearchParams } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -20,6 +21,7 @@ const Register = () => {
   const notification = useNotification();
   const [searchParams] = useSearchParams();
   const token = searchParams.get("token");
+  const queryClient = useQueryClient();
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
@@ -51,6 +53,7 @@ const Register = () => {
         setBackdrop(true);
         const response = await apiClient.register(token, { username, password });
         setState(response.result);
+        queryClient.invalidateQueries({ queryKey: ["user-config"] });
         navigate("/");
       } catch (error) {
         notification({ msg: (error as ApiException).message, variant: "error" });
