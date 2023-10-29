@@ -39,6 +39,7 @@ const Admin = () => {
               <Box
                 component="img"
                 sx={{
+                  borderRadius: "8px",
                   height: "100%",
                   width: "100%",
                 }}
