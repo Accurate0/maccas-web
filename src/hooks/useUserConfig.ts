@@ -25,7 +25,7 @@ const useUserConfig = () => {
       setConfig(response.result);
       return response.result;
     },
-    enabled: location.pathname !== "/login",
+    enabled: location.pathname !== "/login" && location.pathname !== "/register",
     refetchOnMount: false,
     refetchOnWindowFocus: false,
   });
