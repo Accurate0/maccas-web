@@ -3,7 +3,7 @@ import { Box, AppBar, Toolbar } from "@mui/material";
 
 const NavBar = () => {
   return (
-    <Box sx={{ flexGrow: 1 }}>
+    <Box sx={{ flexGrow: 0 }}>
       <AppBar position="static" color="secondary" elevation={0}>
         <Toolbar variant="dense">
           <Typography level="h3" sx={{ color: "white" }}>

@@ -58,50 +58,60 @@ const Root = () => {
         <NavBar />
         <Prefetch />
         <JoyToaster />
-        <Container>
-          {showTopItems && (
-            <>
-              <LocationModal open={locationModalOpen} setOpen={setLocationModalOpen} />
-              <Grid paddingTop={2} spacing={2} container>
-                {href && name && (
+        <div
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          <Container>
+            {showTopItems && (
+              <>
+                <LocationModal open={locationModalOpen} setOpen={setLocationModalOpen} />
+                <Grid paddingTop={2} spacing={2} container>
+                  {href && name && (
+                    <Grid item xs>
+                      <Button fullWidth sx={{ color: "white" }} onClick={() => navigate(href)}>
+                        <Grid container spacing={1} alignItems="center" justifyContent="center">
+                          <Grid item>
+                            <FontAwesomeIcon icon={icon} size="1x" />
+                          </Grid>
+                          <Grid item>
+                            <b>{name}</b>
+                          </Grid>
+                        </Grid>
+                      </Button>
+                    </Grid>
+                  )}
+
                   <Grid item xs>
-                    <Button fullWidth sx={{ color: "white" }} onClick={() => navigate(href)}>
+                    <Button fullWidth onClick={() => setLocationModalOpen(true)}>
                       <Grid container spacing={1} alignItems="center" justifyContent="center">
                         <Grid item>
-                          <FontAwesomeIcon icon={icon} size="1x" />
+                          <FontAwesomeIcon icon={faStoreAlt} size="1x" />
                         </Grid>
                         <Grid item>
-                          <b>{name}</b>
+                          <b>
+                            {config?.storeName
+                              ? truncate(config.storeName, 12)
+                              : fetchStatus === "fetching"
+                              ? "Loading..."
+                              : "None"}
+                          </b>
                         </Grid>
                       </Grid>
                     </Button>
                   </Grid>
-                )}
-
-                <Grid item xs>
-                  <Button fullWidth onClick={() => setLocationModalOpen(true)}>
-                    <Grid container spacing={1} alignItems="center" justifyContent="center">
-                      <Grid item>
-                        <FontAwesomeIcon icon={faStoreAlt} size="1x" />
-                      </Grid>
-                      <Grid item>
-                        <b>
-                          {config?.storeName
-                            ? truncate(config.storeName, 12)
-                            : fetchStatus === "fetching"
-                            ? "Loading..."
-                            : "None"}
-                        </b>
-                      </Grid>
-                    </Grid>
-                  </Button>
                 </Grid>
-              </Grid>
-            </>
-          )}
+              </>
+            )}
 
-          <Outlet />
-        </Container>
+            <Outlet />
+          </Container>
+        </div>
       </JoyCssVarsProvider>
     </MaterialCssVarsProvider>
   );

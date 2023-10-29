@@ -64,7 +64,7 @@ const Register = () => {
   };
 
   return (
-    <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
+    <Box display="flex" justifyContent="center" alignItems="center">
       <Sheet sx={{ padding: "40px" }}>
         <form autoComplete="off" onSubmit={handleSubmit}>
           <Stack spacing={1}>
