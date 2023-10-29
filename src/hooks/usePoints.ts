@@ -6,6 +6,7 @@ import { UserRole } from "./useApiClient/ApiClient.generated";
 const usePoints = () => {
   const apiClient = useApiClient();
   const { role } = useAuthentication();
+  // FIXME: find a better way
   const enabled = role === UserRole.Admin || role === UserRole.Privileged;
 
   return useQuery({

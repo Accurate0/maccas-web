@@ -9,6 +9,7 @@ const Prefetch = () => {
   const queryClient = useQueryClient();
   const apiClient = useApiClient();
   const location = useLocation();
+  // FIXME: find a better way
   const { role } = useAuthentication();
   const enabled = role === UserRole.Admin || role === UserRole.Privileged;
 
