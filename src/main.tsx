@@ -13,10 +13,13 @@ import Statistics from "./pages/statistics";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ApiException } from "./hooks/useApiClient/ApiClient.generated";
 import Register from "./pages/register";
+import Error from "./pages/error";
+import Admin from "./pages/admin";
 
 const router = createBrowserRouter([
   {
     element: <Root />,
+    errorElement: <Error />,
     children: [
       {
         path: "/",
@@ -38,6 +41,7 @@ const router = createBrowserRouter([
         path: "/statistics",
         element: <Statistics />,
       },
+      { path: "/admin", element: <Admin /> },
     ],
   },
 ]);

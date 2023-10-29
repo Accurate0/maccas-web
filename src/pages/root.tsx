@@ -13,7 +13,12 @@ import {
 } from "@mui/material/styles";
 import { CssVarsProvider as JoyCssVarsProvider } from "@mui/joy/styles";
 import { JoyToaster } from "../components/JoyToaster";
-import { faArrowDown91, faBurger, faStoreAlt } from "@fortawesome/free-solid-svg-icons";
+import {
+  faArrowDown91,
+  faBurger,
+  faSpaghettiMonsterFlying,
+  faStoreAlt,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import LocationModal from "../components/LocationModal";
 import useUserConfig, { useGetUserConfig } from "../hooks/useUserConfig";
@@ -32,6 +37,7 @@ const Root = () => {
   const [locationModalOpen, setLocationModalOpen] = useState<boolean>(false);
   const { role } = useAuthentication();
   const showPoints = useMemo(() => role === UserRole.Admin || role === UserRole.Privileged, [role]);
+  const isAdmin = role === UserRole.Admin;
   const { href, name, icon } = useMemo(() => {
     if (location.pathname === "/" && showPoints) {
       return { href: "/points", name: "Points", icon: faArrowDown91 };
@@ -44,7 +50,10 @@ const Root = () => {
     return {};
   }, [location.pathname, showPoints]);
 
-  const showTopItems = location.pathname !== "/login" && location.pathname !== "/register";
+  const showTopItems =
+    location.pathname !== "/login" &&
+    location.pathname !== "/register" &&
+    location.pathname !== "/admin";
 
   useEffect(() => {
     if (!state && location.pathname !== "/register") {
@@ -106,6 +115,23 @@ const Root = () => {
                     </Button>
                   </Grid>
                 </Grid>
+
+                {isAdmin && (
+                  <Grid paddingTop={2} spacing={2} container>
+                    <Grid item xs>
+                      <Button fullWidth onClick={() => navigate("/admin")}>
+                        <Grid container spacing={1} alignItems="center" justifyContent="center">
+                          <Grid item>
+                            <FontAwesomeIcon icon={faSpaghettiMonsterFlying} size="1x" />
+                          </Grid>
+                          <Grid item>
+                            <b>Admin</b>
+                          </Grid>
+                        </Grid>
+                      </Button>
+                    </Grid>
+                  </Grid>
+                )}
               </>
             )}
 

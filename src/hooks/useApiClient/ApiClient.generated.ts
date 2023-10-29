@@ -21,11 +21,16 @@ export class ApiClient {
     }
 
     /**
+     * @param role Role to use for this user
      * @param single_use (optional)
      * @return Token that can be used for registration
      */
-    registration_token(single_use?: boolean | null | undefined, signal?: AbortSignal | undefined): Promise<ApiResponse<RegistrationTokenResponse>> {
+    registration_token(role: UserRole, single_use?: boolean | null | undefined, signal?: AbortSignal | undefined): Promise<ApiResponse<RegistrationTokenResponse>> {
         let url_ = this.baseUrl + "/admin/auth/register?";
+        if (role === undefined || role === null)
+            throw new Error("The parameter 'role' must be defined and cannot be null.");
+        else
+            url_ += "role=" + encodeURIComponent("" + role) + "&";
         if (single_use !== undefined && single_use !== null)
             url_ += "single_use=" + encodeURIComponent("" + single_use) + "&";
         url_ = url_.replace(/[?&]$/, "");
