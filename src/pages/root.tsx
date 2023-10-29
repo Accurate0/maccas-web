@@ -47,10 +47,10 @@ const Root = () => {
   const showTopItems = location.pathname !== "/login" && location.pathname !== "/register";
 
   useEffect(() => {
-    if (!state) {
+    if (!state && location.pathname !== "/register") {
       navigate("/login");
     }
-  }, [state, navigate]);
+  }, [state, navigate, location.pathname]);
 
   return (
     <MaterialCssVarsProvider theme={{ [MATERIAL_THEME_ID]: materialTheme }}>
