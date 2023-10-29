@@ -51,7 +51,7 @@ const Register = () => {
 
       try {
         setBackdrop(true);
-        const response = await apiClient.register(token, { username, password });
+        const response = await apiClient.register({ username, password, token });
         setState(response.result);
         queryClient.invalidateQueries({ queryKey: ["user-config"] });
         navigate("/");

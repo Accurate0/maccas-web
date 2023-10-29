@@ -17,21 +17,24 @@ export class ApiClient {
 
     constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
         this.http = http ? http : window as any;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://api.dev.maccas.one/v1";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://api.maccas.one/v1";
     }
 
     /**
+     * @param single_use (optional)
      * @return Token that can be used for registration
      */
-    registration_token(signal?: AbortSignal | undefined): Promise<ApiResponse<string>> {
-        let url_ = this.baseUrl + "/admin/auth/register";
+    registration_token(single_use?: boolean | null | undefined, signal?: AbortSignal | undefined): Promise<ApiResponse<RegistrationTokenResponse>> {
+        let url_ = this.baseUrl + "/admin/auth/register?";
+        if (single_use !== undefined && single_use !== null)
+            url_ += "single_use=" + encodeURIComponent("" + single_use) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_: RequestInit = {
             method: "POST",
             signal,
             headers: {
-                "Accept": "text/plain"
+                "Accept": "application/json"
             }
         };
 
@@ -40,13 +43,14 @@ export class ApiClient {
         });
     }
 
-    protected processRegistration_token(response: Response): Promise<ApiResponse<string>> {
+    protected processRegistration_token(response: Response): Promise<ApiResponse<RegistrationTokenResponse>> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        let _mappings: { source: any, target: any }[] = [];
         if (status === 200) {
             return response.text().then((_responseText) => {
             let result200: any = null;
-            result200 = _responseText === "" ? null : _responseText as string;
+            result200 = _responseText === "" ? null : jsonParse(_responseText, this.jsonParseReviver) as RegistrationTokenResponse;
             return new ApiResponse(status, _headers, result200);
             });
         } else if (status === 500) {
@@ -58,7 +62,7 @@ export class ApiClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<ApiResponse<string>>(new ApiResponse(status, _headers, null as any));
+        return Promise.resolve<ApiResponse<RegistrationTokenResponse>>(new ApiResponse(status, _headers, null as any));
     }
 
     /**
@@ -236,14 +240,16 @@ export class ApiClient {
         let url_ = this.baseUrl + "/auth/login";
         url_ = url_.replace(/[?&]$/, "");
 
-        const content_ = JSON.stringify(body);
+        const content_ = Object.keys(body as any).map((key) => {
+            return encodeURIComponent(key) + '=' + encodeURIComponent((body as any)[key]);
+        }).join('&')
 
         let options_: RequestInit = {
             body: content_,
             method: "POST",
             signal,
             headers: {
-                "Content-Type": "application/json",
+                "Content-Type": "application/x-www-form-urlencoded",
                 "Accept": "application/json"
             }
         };
@@ -286,22 +292,20 @@ export class ApiClient {
     /**
      * @return Register a new account using a shared token
      */
-    register(token: string, body: RegistrationRequest, signal?: AbortSignal | undefined): Promise<ApiResponse<TokenResponse>> {
-        let url_ = this.baseUrl + "/auth/register?";
-        if (token === undefined || token === null)
-            throw new Error("The parameter 'token' must be defined and cannot be null.");
-        else
-            url_ += "token=" + encodeURIComponent("" + token) + "&";
+    register(body: RegistrationRequest, signal?: AbortSignal | undefined): Promise<ApiResponse<TokenResponse>> {
+        let url_ = this.baseUrl + "/auth/register";
         url_ = url_.replace(/[?&]$/, "");
 
-        const content_ = JSON.stringify(body);
+        const content_ = Object.keys(body as any).map((key) => {
+            return encodeURIComponent(key) + '=' + encodeURIComponent((body as any)[key]);
+        }).join('&')
 
         let options_: RequestInit = {
             body: content_,
             method: "POST",
             signal,
             headers: {
-                "Content-Type": "application/json",
+                "Content-Type": "application/x-www-form-urlencoded",
                 "Accept": "application/json"
             }
         };
@@ -320,6 +324,10 @@ export class ApiClient {
             let result200: any = null;
             result200 = _responseText === "" ? null : jsonParse(_responseText, this.jsonParseReviver) as TokenResponse;
             return new ApiResponse(status, _headers, result200);
+            });
+        } else if (status === 404) {
+            return response.text().then((_responseText) => {
+            return throwException("Token has expired", status, _responseText, _headers);
             });
         } else if (status === 409) {
             return response.text().then((_responseText) => {
@@ -1210,6 +1218,7 @@ export interface AdminUserSpendingMap {
 export interface GetDealsOffer {
     count: number;
     creationDateUtc: string;
+    dealUuid: string;
     description: string;
     imageUrl: string;
     name: string;
@@ -1259,7 +1268,15 @@ export interface PointsResponse {
 
 export interface RegistrationRequest {
     password: string;
+    token: string;
     username: string;
+
+    [key: string]: any;
+}
+
+export interface RegistrationTokenResponse {
+    qrCodeLink: string;
+    token: string;
 
     [key: string]: any;
 }

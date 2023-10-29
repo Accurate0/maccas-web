@@ -15,10 +15,10 @@ const Prefetch = () => {
 
   useEffect(() => {
     if (
-      (location.pathname !== "/login" &&
-        location.pathname !== "/register" &&
-        queryClient.getQueryState(["points"])?.status !== "success",
-      enabled)
+      location.pathname !== "/login" &&
+      location.pathname !== "/register" &&
+      queryClient.getQueryState(["points"])?.status !== "success" &&
+      enabled
     ) {
       queryClient.prefetchQuery({
         queryKey: ["points"],
