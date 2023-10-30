@@ -34,7 +34,10 @@ const Login = () => {
     if (username && password) {
       try {
         setBackdrop(true);
-        const response = await apiClient.login({ username, password });
+        const response = await apiClient.login({
+          username: username.trim().toLowerCase(),
+          password,
+        });
         setState(response.result);
         navigate("/");
       } catch (error) {
