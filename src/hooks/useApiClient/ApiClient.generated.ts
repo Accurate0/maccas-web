@@ -1281,6 +1281,7 @@ export interface RegistrationRequest {
 
 export interface RegistrationTokenResponse {
     qrCodeLink: string;
+    registrationLink: string;
     token: string;
 
     [key: string]: any;

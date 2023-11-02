@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import { toast } from "../utils/toast";
+import { ExternalToast } from "sonner";
 
 export type VariantType = "default" | "error" | "success" | "warning" | "info";
 
 interface NotificationConf {
   msg?: string;
   variant?: VariantType;
+  config?: ExternalToast;
 }
 
 const useNotification = () => {
@@ -14,18 +16,19 @@ const useNotification = () => {
   useEffect(() => {
     if (conf?.msg) {
       switch (conf?.variant) {
+        default:
         case "info":
         case "default":
-          toast.message(conf.msg);
+          toast.message(conf.msg, { ...conf.config });
           break;
         case "error":
-          toast.error(conf.msg);
+          toast.error(conf.msg, { ...conf.config });
           break;
         case "success":
-          toast.success(conf.msg);
+          toast.success(conf.msg, { ...conf.config });
           break;
         case "warning":
-          toast.warn(conf.msg);
+          toast.warn(conf.msg, { ...conf.config });
           break;
       }
     }

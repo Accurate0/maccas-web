@@ -23,6 +23,17 @@ const Admin = () => {
                 setBackdrop(true);
                 const { result } = await apiClient.registration_token(UserRole.None, true);
                 setQrCodeLink(result.qrCodeLink);
+                console.log(result);
+                notification({
+                  msg: "Link generated",
+                  config: {
+                    action: {
+                      label: "Click me to copy",
+                      onClick: async () =>
+                        await navigator.clipboard.writeText(result.registrationLink),
+                    },
+                  },
+                });
               } catch (e) {
                 if (ApiException.isApiException(e)) {
                   notification({ msg: e.message, variant: "error" });
