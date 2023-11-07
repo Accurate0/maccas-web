@@ -80,8 +80,8 @@ devDependencies:
     specifier: ^18.2.13
     version: 18.2.13
   '@types/umami-browser':
-    specifier: ^2.3.1
-    version: 2.3.1
+    specifier: ^2.3.2
+    version: 2.3.2
   '@typescript-eslint/eslint-plugin':
     specifier: ^6.8.0
     version: 6.8.0(@typescript-eslint/parser@6.8.0)(eslint@8.51.0)(typescript@5.2.2)
@@ -1220,8 +1220,8 @@ packages:
     resolution: {integrity: sha512-OxepLK9EuNEIPxWNME+C6WwbRAOOI2o2BaQEGzz5Lu2e4Z5eDnEo+/aVEDMIXywoJitJ7xWd641wrGLZdtwRyw==}
     dev: true
 
-  /@types/umami-browser@2.3.1:
-    resolution: {integrity: sha512-8dj6m9EGd/E+Os8q6BFsV2ytE+MGU3KTh8yT3GRR5K7ZUoYTpzud3duNoGQyv+SERbmTuxZPxJBZkUH2e7XNnQ==}
+  /@types/umami-browser@2.3.2:
+    resolution: {integrity: sha512-Y/6dm2EDSw57x3nxFz0X4WoK0ykeWKEGJnrKVGSXE6r6LlibPcKbVr5jPcmEfwya9l2PWzzIlOXRVH/7RU/dUQ==}
     dev: true
 
   /@typescript-eslint/eslint-plugin@6.8.0(@typescript-eslint/parser@6.8.0)(eslint@8.51.0)(typescript@5.2.2):
