@@ -1236,6 +1236,19 @@ export interface GetDealsOffer {
     [key: string]: any;
 }
 
+export interface JwtClaim {
+    aud: string;
+    exp: number;
+    iat: number;
+    iss: string;
+    oid: string;
+    role: UserRole;
+    sub: string;
+    username: string;
+
+    [key: string]: any;
+}
+
 export interface LastRefreshInformation {
     lastRefresh: string;
 

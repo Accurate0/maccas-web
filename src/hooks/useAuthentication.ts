@@ -1,6 +1,7 @@
 import { useAtom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
-import { TokenResponse } from "./useApiClient/ApiClient.generated";
+import { JwtClaim, TokenResponse } from "./useApiClient/ApiClient.generated";
+import { useMemo } from "react";
 
 const AUTH_TOKEN_STORAGE_KEY = "maccas-api-auth-token";
 const authTokenAtom = atomWithStorage<TokenResponse | null>(
@@ -10,8 +11,15 @@ const authTokenAtom = atomWithStorage<TokenResponse | null>(
 
 export const useAuthentication = () => {
   const [state, setState] = useAtom(authTokenAtom);
+  const decodedJwt = useMemo(() => {
+    try {
+      return JSON.parse(btoa(state?.token.split(".")[1] ?? "")) as JwtClaim;
+    } catch {
+      return null;
+    }
+  }, [state?.token]);
 
-  return { state, setState, role: state?.role };
+  return { state, setState, role: state?.role, claims: decodedJwt };
 };
 
 export default useAuthentication;
