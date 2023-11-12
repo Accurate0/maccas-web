@@ -13,7 +13,7 @@ export const useAuthentication = () => {
   const [state, setState] = useAtom(authTokenAtom);
   const decodedJwt = useMemo(() => {
     try {
-      return JSON.parse(btoa(state?.token.split(".")[1] ?? "")) as JwtClaim;
+      return JSON.parse(atob(state?.token.split(".")[1] ?? "")) as JwtClaim;
     } catch {
       return null;
     }
