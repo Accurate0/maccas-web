@@ -3,7 +3,6 @@ import { ApiException } from "./useApiClient/ApiClient.generated";
 import useApiClient from "./useApiClient/useApiClient";
 import useNotification from "./useNotification";
 import useSetBackdrop from "./useSetBackdrop";
-import useAuthentication from "./useAuthentication";
 
 const DISTANCE = 100;
 
@@ -12,12 +11,11 @@ const useLocations = () => {
   const notification = useNotification();
   const apiClient = useApiClient();
   const queryClient = useQueryClient();
-  const { claims } = useAuthentication();
 
   const search = async (latitude: number, longitude: number) => {
     try {
       setBackdrop(true);
-      umami?.track("search-location-by-coordinates", { user: claims?.username });
+      umami?.track("search-location-by-coordinates");
       const response = await queryClient.fetchQuery({
         queryKey: [`search-${latitude}-${longitude}`],
         queryFn: async ({ signal }) =>

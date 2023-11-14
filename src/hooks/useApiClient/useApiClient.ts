@@ -5,7 +5,7 @@ import { useNavigate } from "react-router";
 import { useQueryClient } from "@tanstack/react-query";
 
 const useApiClient = () => {
-  const { state, setState, claims } = useAuthentication();
+  const { state, setState } = useAuthentication();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const apiClient = useUnauthenticatedApiClient();
@@ -25,19 +25,16 @@ const useApiClient = () => {
           if (response.status === 403 || response.status === 401) {
             await queryClient.cancelQueries();
             try {
-              umami?.track("token-expired", { user: claims?.username, tokenExpiry: claims?.exp });
+              umami?.track("token-expired");
               const { result } = await apiClient.get_token({
                 token: state?.token ?? "",
                 refreshToken: state?.refreshToken ?? "",
               });
               setState(result);
               await queryClient.refetchQueries();
-              umami?.track("token-refreshed", { user: claims?.username, tokenExpiry: claims?.exp });
+              umami?.track("token-refreshed");
             } catch {
-              umami?.track("token-refresh-failed", {
-                user: claims?.username,
-                tokenExpiry: claims?.exp,
-              });
+              umami?.track("token-refresh-failed");
 
               navigate("/login");
             }
@@ -45,7 +42,7 @@ const useApiClient = () => {
           return response;
         },
       }),
-    [apiClient, claims?.exp, claims?.username, navigate, queryClient, setState, state]
+    [apiClient, navigate, queryClient, setState, state]
   );
 };
 
