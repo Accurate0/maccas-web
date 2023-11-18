@@ -8,7 +8,6 @@ import {
 import useNotification from "../hooks/useNotification";
 import LoadableCardMedia from "./LoadableCardMedia";
 import { Typography } from "@mui/joy";
-import { truncate } from "../utils/truncate";
 import { useCallback, useState } from "react";
 import DealCode from "./DealCode";
 import { useGetUserConfig } from "../hooks/useUserConfig";
@@ -113,9 +112,7 @@ const DealCard: React.FC<DealCardProps> = ({ offer }) => {
             >
               <Grid item xs={8} container direction="column">
                 <Grid item xs>
-                  <Typography level="title-lg" component="div">
-                    {truncate(offer.shortName, 20)}
-                  </Typography>
+                  <Typography level="title-lg">{offer.shortName}</Typography>
                 </Grid>
                 <Grid item>
                   <Typography level="body-sm">{offer.count} available</Typography>
