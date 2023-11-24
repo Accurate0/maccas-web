@@ -22,32 +22,32 @@
     "@mui/icons-material": "^5.14.18",
     "@mui/joy": "5.0.0-beta.15",
     "@mui/material": "^5.14.18",
-    "@tanstack/react-query": "5.8.4",
+    "@tanstack/react-query": "5.8.7",
     "framer-motion": "^10.16.5",
     "jotai": "^2.5.1",
     "moment": "^2.29.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-error-boundary": "^4.0.11",
-    "react-router": "^6.19.0",
-    "react-router-dom": "^6.19.0",
+    "react-router": "^6.20.0",
+    "react-router-dom": "^6.20.0",
     "react-transition-group": "^4.4.5",
     "recoil": "^0.7.7",
-    "sonner": "^1.2.0"
+    "sonner": "^1.2.3"
   },
   "devDependencies": {
-    "@types/react": "^18.2.37",
-    "@types/react-dom": "^18.2.15",
+    "@types/react": "^18.2.38",
+    "@types/react-dom": "^18.2.17",
     "@types/umami-browser": "^2.3.2",
-    "@typescript-eslint/eslint-plugin": "^6.11.0",
-    "@typescript-eslint/parser": "^6.11.0",
+    "@typescript-eslint/eslint-plugin": "^6.12.0",
+    "@typescript-eslint/parser": "^6.12.0",
     "@vitejs/plugin-react-swc": "^3.5.0",
     "eslint": "^8.54.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.4",
-    "npm-check-updates": "^16.14.6",
+    "npm-check-updates": "^16.14.11",
     "nswag": "^13.20.0",
-    "typescript": "^5.2.2",
-    "vite": "^5.0.0"
+    "typescript": "^5.3.2",
+    "vite": "^5.0.2"
   }
 }
