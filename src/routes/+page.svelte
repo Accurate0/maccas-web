@@ -1,100 +1,106 @@
 <script lang="ts">
-  import type { PageServerData } from './$types';
-  import { createClient, type ArrayElement } from '$lib';
-  import * as Card from '$lib/components/ui/card';
-  import moment from 'moment';
-  import * as Accordion from '$lib/components/ui/accordion';
-  import { Skeleton } from '$lib/components/ui/skeleton';
-  import * as Alert from '$lib/components/ui/alert';
-  import { Code } from 'radix-icons-svelte';
+	import '@material/web/tabs/tabs';
+	import '@material/web/icon/icon';
+	import '@material/web/tabs/primary-tab';
+	import '@material/web/progress/linear-progress';
+	import '@material/web/list/list';
+	import '@material/web/list/list-item';
+	import '@material/web/iconbutton/icon-button';
+	import '@material/web/divider/divider';
 
-  const client = createClient();
+	import type { PageData } from './$houdini';
+	import { UserRole } from '$houdini';
+	import { writable, type Writable } from 'svelte/store';
+	import Code from '../components/code.svelte';
+	export let data: PageData;
+	let activeTabIndex = 0;
 
-  const isOfferValid = (deal: ArrayElement<PageServerData['deals']>) => {
-    const from = moment.utc(deal.validFromUtc).add(2, 'hours');
-    const to = moment.utc(deal.validToUtc).add(2, 'hours');
-    const now = new Date();
+	const onTabChange = (event: HTMLInputElement) => {
+		// @ts-expect-error
+		const newActiveTabIndex = event.target!.activeTabIndex as number;
+		activeTabIndex = newActiveTabIndex;
+	};
 
-    return moment.utc(now).isBetween(from, to);
-  };
+	let openDeals: Writable<{ [key: string]: string[] }> = writable({});
 
-  const promiseMap: {
-    [key: string]: Promise<any>;
-  } = {};
-
-  const addDeal = async (uuid: string) => {
-    const params = {
-      params: { query: { store: data.config!.storeId }, path: { deal_id: uuid } },
-      headers: { Authorization: `Bearer ${data.jwt}` }
-    };
-
-    return client.POST('/deals/{deal_id}', params);
-  };
-
-  const handleOnClick = async (uuid: string) => {
-    if (promiseMap[uuid] == undefined) {
-      const promise = addDeal(uuid);
-      promiseMap[uuid] = promise;
-    } else {
-      delete promiseMap[uuid];
-      await client.DELETE('/deals/{deal_id}', {
-        params: { query: { store: data.config!.storeId }, path: { deal_id: uuid } },
-        headers: { Authorization: `Bearer ${data.jwt}` }
-      });
-    }
-  };
-
-  export let data: PageServerData;
+	$: ({ Index } = data);
+	$: showPoints =
+		$Index.data?.user.role === UserRole.ADMIN || $Index.data?.user.role === UserRole.PRIVILEGED;
+	$: pointsIndex = showPoints ? 1 : -1;
+	$: locationIndex = showPoints ? 2 : 1;
 </script>
 
 <svelte:head>
-  <title>Maccas</title>
+	<title>Maccas</title>
 </svelte:head>
-<div>
-  <div class="p-8">
-    <Accordion.Root multiple>
-      {#each data.deals ?? [] as deal}
-        <Card.Root class="w-full mb-8">
-          <Accordion.Item value={deal.dealUuid}>
-            <Accordion.Trigger on:click={() => handleOnClick(deal.dealUuid)}>
-              <div class="grid-flow-col grid gap-4 place-content-stretch w-full">
-                <div class="pl-4">
-                  <img alt={deal.shortName} src={deal.imageUrl} class="w-[90px] p-0" />
-                </div>
-                <div class="pl-4 pt-0 text-left">
-                  <div>{deal.shortName}</div>
-                  <div class="pt-2 text-left">
-                    {isOfferValid(deal) ? '✅' : '❌'}
-                    {deal.count} available
-                  </div>
-                </div>
-              </div>
-            </Accordion.Trigger>
-            <Accordion.Content class="px-4">
-              <Alert.Root>
-                {#await promiseMap[deal.dealUuid]}
-                  <Skeleton class="h-6 w-auto" />
-                {:then response}
-                  <div class="grid grid-cols-2">
-                    <div class="self-center">
-                      <Code />
-                    </div>
-                    <div>
-                      <code>
-                        {response.data.randomCode}
-                      </code>
-                    </div>
-                  </div>
-                {/await}
-              </Alert.Root>
-            </Accordion.Content>
-          </Accordion.Item>
-        </Card.Root>
 
-        <!-- <Card.Footer>
-            <Button class="w-full">Select</Button>
-          </Card.Footer> -->
-      {/each}
-    </Accordion.Root>
-  </div>
-</div>
+<md-tabs id="tabs" on:change={onTabChange} {activeTabIndex}>
+	<!-- FIXME: this md-tab and active should not be required... it gets added after HMR and is required for it to work -->
+	<md-primary-tab md-tab="" active="" hasIcon>
+		<md-icon slot="icon">savings</md-icon>
+		Deals
+	</md-primary-tab>
+	{#if showPoints}
+		<md-primary-tab md-tab="" hasIcon>
+			<md-icon slot="icon">loyalty</md-icon>
+			Points
+		</md-primary-tab>
+	{/if}
+	<md-primary-tab md-tab="" hasIcon>
+		<md-icon slot="icon">near_me</md-icon>
+		Location
+	</md-primary-tab>
+</md-tabs>
+
+{#if $Index.data}
+	<div class="grid grid-flow-row gap-4 container mx-auto p-4">
+		{#if activeTabIndex === 0}
+			{#each $Index.data.deal.currentDeals as deal}
+				<div class="border rounded p-4 grid grid-flow-row gap-4">
+					<button
+						class="grid grid-flow-col w-full gap-8 justify-between text-left"
+						on:click={() => {
+							const id = crypto.randomUUID();
+							openDeals.update((c) => ({
+								...c,
+								[deal.dealUuid]: [...(c[deal.dealUuid] ?? []), id]
+							}));
+						}}
+					>
+						<div class="grid grid-flow-row">
+							<h2 class="font-medium">{deal.shortName}</h2>
+							<p><small class="text-xs">{deal.count} available</small></p>
+						</div>
+						<img src={deal.imageUrl} alt={deal.shortName} class="h-24" />
+					</button>
+					<Code deals={$openDeals[deal.dealUuid]} />
+				</div>
+			{/each}
+		{/if}
+
+		{#if activeTabIndex === pointsIndex}
+			{#each $Index.data.points.filter((p) => p.totalPoints >= 2500) as points}
+				<button class="grid grid-flow-col w-full gap-8 justify-between border rounded p-4">
+					<h2>{points.totalPoints}</h2>
+					<div class="flex">
+						{#if points.totalPoints >= 2500}
+							<md-icon>local_cafe</md-icon>
+						{/if}
+
+						{#if points.totalPoints >= 5000}
+							<md-icon>icecream</md-icon>
+						{/if}
+
+						{#if points.totalPoints >= 7500}
+							<md-icon>lunch_dining</md-icon>
+						{/if}
+					</div>
+				</button>
+			{/each}
+		{/if}
+
+		{#if activeTabIndex === locationIndex}
+			<div>Location</div>
+		{/if}
+	</div>
+{/if}

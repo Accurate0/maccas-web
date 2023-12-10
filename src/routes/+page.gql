@@ -1,0 +1,26 @@
+query Index {
+	user {
+		role
+		config {
+			storeName
+			storeId
+		}
+	}
+	points {
+		name
+		totalPoints
+	}
+	deal {
+		lastRefresh
+		currentDeals {
+			dealUuid
+			imageUrl
+			offerPropositionId
+			count
+			shortName
+			name
+			validFromUtc
+			validToUtc
+		}
+	}
+}

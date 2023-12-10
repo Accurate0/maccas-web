@@ -1,0 +1,51 @@
+schema {
+  query: QueryRoot
+}
+
+type AccountPointMap {
+  lifeTimePoints: Int!
+  name: String!
+  totalPoints: Int!
+}
+
+type Deal {
+  currentDeals: [GetDealsOffer!]!
+  lastRefresh: String!
+}
+
+type GetDealsOffer {
+  count: Int!
+  creationDateUtc: String!
+  dealUuid: String!
+  description: String!
+  imageUrl: String!
+  name: String!
+  offerPropositionId: String!
+  price: Float
+  shortName: String!
+  validFromUtc: String!
+  validToUtc: String!
+}
+
+type QueryRoot {
+  deal: Deal!
+  points: [AccountPointMap!]!
+  user: User!
+}
+
+type User {
+  config: UserOptions!
+  id: String!
+  role: UserRole!
+}
+
+type UserOptions {
+  storeId: String!
+  storeName: String
+}
+
+enum UserRole {
+  ADMIN
+  NONE
+  PRIVILEGED
+}
