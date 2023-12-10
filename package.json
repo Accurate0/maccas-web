@@ -9,9 +9,12 @@
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "generate:client": "nswag run nswag/config.json",
-    "update-packages": "ncu -u"
+    "update-packages": "ncu -u",
+    "compile": "graphql-codegen",
+    "watch": "graphql-codegen -w"
   },
   "dependencies": {
+    "@apollo/client": "^3.8.8",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@fontsource/inter": "^5.0.15",
@@ -24,6 +27,7 @@
     "@mui/material": "^5.14.18",
     "@tanstack/react-query": "5.8.4",
     "framer-motion": "^10.16.5",
+    "graphql": "^16.8.1",
     "jotai": "^2.5.1",
     "moment": "^2.29.4",
     "react": "^18.2.0",
@@ -36,6 +40,10 @@
     "sonner": "^1.2.0"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "^5.0.0",
+    "@graphql-codegen/client-preset": "^4.1.0",
+    "@graphql-typed-document-node/core": "^3.2.0",
+    "@parcel/watcher": "^2.3.0",
     "@types/react": "^18.2.37",
     "@types/react-dom": "^18.2.15",
     "@types/umami-browser": "^2.3.2",

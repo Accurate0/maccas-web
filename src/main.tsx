@@ -11,10 +11,13 @@ import Login from "./pages/login";
 import Points from "./pages/points";
 import Statistics from "./pages/statistics";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ApiException } from "./hooks/useApiClient/ApiClient.generated";
+import { ApiException, TokenResponse } from "./hooks/useApiClient/ApiClient.generated";
 import Register from "./pages/register";
 import Error from "./pages/error";
 import Admin from "./pages/admin";
+import { ApolloClient, ApolloProvider, InMemoryCache, createHttpLink } from "@apollo/client";
+import { setContext } from "@apollo/client/link/context";
+import { AUTH_TOKEN_STORAGE_KEY } from "./hooks/useAuthentication";
 
 const router = createBrowserRouter([
   {
@@ -64,15 +67,37 @@ const queryClient = new QueryClient({
   },
 });
 
+const httpLink = createHttpLink({
+  uri: `${import.meta.env.VITE_API_BASE}/graphql`,
+});
+
+const authLink = setContext((_, { headers }) => {
+  const auth = JSON.parse(localStorage.getItem(AUTH_TOKEN_STORAGE_KEY) ?? "null") as TokenResponse;
+
+  return {
+    headers: {
+      ...headers,
+      authorization: auth ? `Bearer ${auth.token}` : "",
+    },
+  };
+});
+
+const client = new ApolloClient({
+  link: authLink.concat(httpLink),
+  cache: new InMemoryCache(),
+});
+
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <Provider>
-      <RecoilRoot>
-        <QueryClientProvider client={queryClient}>
-          <Backdrop />
-          <RouterProvider router={router} />
-        </QueryClientProvider>
-      </RecoilRoot>
-    </Provider>
+    <ApolloProvider client={client}>
+      <Provider>
+        <RecoilRoot>
+          <QueryClientProvider client={queryClient}>
+            <Backdrop />
+            <RouterProvider router={router} />
+          </QueryClientProvider>
+        </RecoilRoot>
+      </Provider>
+    </ApolloProvider>
   </React.StrictMode>
 );

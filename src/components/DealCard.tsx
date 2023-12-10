@@ -1,10 +1,6 @@
 import { Grid, Card, CardContent, Box } from "@mui/material";
 import moment from "moment";
-import {
-  ApiException,
-  GetDealsOffer,
-  OfferResponse,
-} from "../hooks/useApiClient/ApiClient.generated";
+import { ApiException, OfferResponse } from "../hooks/useApiClient/ApiClient.generated";
 import useNotification from "../hooks/useNotification";
 import LoadableCardMedia from "./LoadableCardMedia";
 import { Typography } from "@mui/joy";
@@ -14,12 +10,13 @@ import { useGetUserConfig } from "../hooks/useUserConfig";
 import { motion } from "framer-motion";
 import { useMutation } from "@tanstack/react-query";
 import useApiClient from "../hooks/useApiClient/useApiClient";
+import { GetDealsOffer } from "../__generated__/graphql";
 
 export interface DealCardProps {
-  offer: GetDealsOffer;
+  offer: Omit<GetDealsOffer, "description" | "creationDateUtc">;
 }
 
-const isOfferValid = (deal: GetDealsOffer) => {
+const isOfferValid = (deal: DealCardProps["offer"]) => {
   const from = moment.utc(deal.validFromUtc).add(2, "hours");
   const to = moment.utc(deal.validToUtc).add(2, "hours");
   const now = new Date();

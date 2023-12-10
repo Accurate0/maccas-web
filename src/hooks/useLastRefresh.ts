@@ -1,27 +1,21 @@
-import moment from "moment";
-import useApiClient from "./useApiClient/useApiClient";
 import useNotification from "./useNotification";
-import { useQuery } from "@tanstack/react-query";
+import { indexQuery } from "../queries/indexQuery";
+import { useEffect } from "react";
+import { NetworkStatus, useQuery } from "@apollo/client";
+import moment from "moment";
 
 const useLastRefresh = () => {
-  const apiClient = useApiClient();
   const notification = useNotification();
+  const { data, networkStatus } = useQuery(indexQuery);
 
-  return useQuery({
-    queryKey: ["last-refresh"],
-    queryFn: async ({ signal }) => {
-      const response = await apiClient.get_last_refresh(signal);
-      const lastRefreshed = moment.utc(response.result.lastRefresh);
+  useEffect(() => {
+    if (networkStatus === NetworkStatus.ready) {
       notification({
-        msg: `Last refreshed at ${lastRefreshed.local().format("LLL")}`,
+        msg: `Last refreshed at ${moment.utc(data?.deal.lastRefresh)?.local().format("LLL")}`,
         variant: "info",
       });
-
-      return lastRefreshed;
-    },
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
-  });
+    }
+  }, [data, networkStatus, notification]);
 };
 
 export default useLastRefresh;

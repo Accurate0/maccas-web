@@ -3,7 +3,7 @@ import { atomWithStorage } from "jotai/utils";
 import { JwtClaim, TokenResponse } from "./useApiClient/ApiClient.generated";
 import { useMemo } from "react";
 
-const AUTH_TOKEN_STORAGE_KEY = "maccas-api-auth-token";
+export const AUTH_TOKEN_STORAGE_KEY = "maccas-api-auth-token";
 const authTokenAtom = atomWithStorage<TokenResponse | null>(
   AUTH_TOKEN_STORAGE_KEY,
   JSON.parse(localStorage.getItem(AUTH_TOKEN_STORAGE_KEY) ?? "null")
