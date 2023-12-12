@@ -7,13 +7,19 @@
 	import '@material/web/list/list-item';
 	import '@material/web/iconbutton/icon-button';
 	import '@material/web/divider/divider';
+	import '@material/web/textfield/outlined-text-field';
+	import '@material/web/button/filled-button';
 
 	import type { PageData } from './$houdini';
 	import { UserRole } from '$houdini';
 	import { writable, type Writable } from 'svelte/store';
 	import Code from '../components/code.svelte';
+
 	export let data: PageData;
-	let activeTabIndex = 0;
+
+	export let form: import('./$types').ActionData;
+
+	let activeTabIndex = 2;
 
 	const onTabChange = (event: HTMLInputElement) => {
 		// @ts-expect-error
@@ -22,6 +28,9 @@
 	};
 
 	let openDeals: Writable<{ [key: string]: string[] }> = writable({});
+	const removeDeal = (uuid: string, id: string) => {
+		openDeals.set({ ...$openDeals, [uuid]: $openDeals[uuid].filter((c) => c !== id) });
+	};
 
 	$: ({ Index } = data);
 	$: showPoints =
@@ -73,7 +82,7 @@
 						</div>
 						<img src={deal.imageUrl} alt={deal.shortName} class="h-24" />
 					</button>
-					<Code deals={$openDeals[deal.dealUuid]} />
+					<Code deals={$openDeals[deal.dealUuid]} uuid={deal.dealUuid} remove={removeDeal} />
 				</div>
 			{/each}
 		{/if}
@@ -100,7 +109,19 @@
 		{/if}
 
 		{#if activeTabIndex === locationIndex}
-			<div>Location</div>
+			<form method="POST" action="?/searchLocation">
+				<div class="grid grid-flow-row gap-4 w-full max-w-md container mx-auto">
+					<h3 class="text-xl font-medium">Location</h3>
+					<md-outlined-text-field
+						class="w-full max-w-sm items-center gap-2"
+						label="Location"
+						name="query"
+						required
+					/>
+					<md-filled-button class="w-full max-w-sm items-center gap-2">Search</md-filled-button>
+				</div>
+			</form>
+			{JSON.stringify(form?.location)}
 		{/if}
 	</div>
 {/if}

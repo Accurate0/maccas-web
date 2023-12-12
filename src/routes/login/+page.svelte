@@ -1,6 +1,8 @@
-<script>
+<script lang="ts">
 	import '@material/web/textfield/outlined-text-field';
 	import '@material/web/button/filled-button';
+
+	export let form: import('./$types').ActionData;
 </script>
 
 <svelte:head>
@@ -25,6 +27,10 @@
 				name="password"
 				required
 			/>
+
+			{#if form?.error}
+				<p class="outline outline-1 rounded outline-gray-300 p-4">Invalid credentials!</p>
+			{/if}
 
 			<md-filled-button class="w-full max-w-sm items-center gap-2">Log in</md-filled-button>
 		</div>
