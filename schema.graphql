@@ -8,9 +8,21 @@ type AccountPointMap {
   totalPoints: Int!
 }
 
+input CoordinateSearchInput {
+  distance: Float!
+  lat: Float!
+  lng: Float!
+}
+
 type Deal {
+  code(input: DealCodeInput!): OfferResponse!
   currentDeals: [GetDealsOffer!]!
   lastRefresh: String!
+}
+
+input DealCodeInput {
+  storeId: String!
+  uuid: String!
 }
 
 type GetDealsOffer {
@@ -27,10 +39,40 @@ type GetDealsOffer {
   validToUtc: String!
 }
 
+type Location {
+  coordinates(input: CoordinateSearchInput!): [RestaurantInformation!]!
+  text(input: TextSearchInput!): [RestaurantInformation!]!
+}
+
+type OfferResponse {
+  dealUuid: String
+  message: String!
+  randomCode: String!
+}
+
+input PointsFilterInput {
+  minimumPoints: Int!
+}
+
 type QueryRoot {
   deal: Deal!
-  points: [AccountPointMap!]!
+  location: Location!
+  points(filter: PointsFilterInput): [AccountPointMap!]!
   user: User!
+}
+
+type RestaurantAddress {
+  addressLine: String!
+}
+
+type RestaurantInformation {
+  address: RestaurantAddress!
+  name: String!
+  storeNumber: Int!
+}
+
+input TextSearchInput {
+  query: String!
 }
 
 type User {
