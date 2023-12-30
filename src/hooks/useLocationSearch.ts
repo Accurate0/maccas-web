@@ -10,7 +10,6 @@ const useLocationSearch = () => {
   const search = async (text: string) => {
     try {
       setBackdrop(true);
-      umami?.track("search-location-by-text");
       const response = await queryClient.fetchQuery({
         queryKey: [`search-${text}`],
         queryFn: async ({ signal }) => await apiClient.search_locations(text, signal),

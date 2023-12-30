@@ -1,15 +1,9 @@
 import { Button, Card, CardActions, Typography } from "@mui/joy";
 import { Grid } from "@mui/material";
-import { useNavigate, useRouteError } from "react-router";
-import { useEffect } from "react";
+import { useNavigate } from "react-router";
 
 const Error = () => {
   const navigate = useNavigate();
-  const error = useRouteError();
-
-  useEffect(() => {
-    umami?.track("error", { error, errorAsText: JSON.stringify(error) });
-  }, [error]);
 
   return (
     <Grid container direction="column" spacing={2} padding={2}>

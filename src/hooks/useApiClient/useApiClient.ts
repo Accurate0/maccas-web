@@ -25,17 +25,13 @@ const useApiClient = () => {
           if (response.status === 403 || response.status === 401) {
             await queryClient.cancelQueries();
             try {
-              umami?.track("token-expired");
               const { result } = await apiClient.get_token({
                 token: state?.token ?? "",
                 refreshToken: state?.refreshToken ?? "",
               });
               setState(result);
               await queryClient.refetchQueries();
-              umami?.track("token-refreshed");
             } catch {
-              umami?.track("token-refresh-failed");
-
               navigate("/login");
             }
           }

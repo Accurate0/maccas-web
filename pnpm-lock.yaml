@@ -79,9 +79,6 @@ devDependencies:
   '@types/react-dom':
     specifier: ^18.2.15
     version: 18.2.15
-  '@types/umami-browser':
-    specifier: ^2.3.2
-    version: 2.3.2
   '@typescript-eslint/eslint-plugin':
     specifier: ^6.11.0
     version: 6.11.0(@typescript-eslint/parser@6.11.0)(eslint@8.54.0)(typescript@5.2.2)
@@ -1325,10 +1322,6 @@ packages:
 
   /@types/semver@7.5.3:
     resolution: {integrity: sha512-OxepLK9EuNEIPxWNME+C6WwbRAOOI2o2BaQEGzz5Lu2e4Z5eDnEo+/aVEDMIXywoJitJ7xWd641wrGLZdtwRyw==}
-    dev: true
-
-  /@types/umami-browser@2.3.2:
-    resolution: {integrity: sha512-Y/6dm2EDSw57x3nxFz0X4WoK0ykeWKEGJnrKVGSXE6r6LlibPcKbVr5jPcmEfwya9l2PWzzIlOXRVH/7RU/dUQ==}
     dev: true
 
   /@typescript-eslint/eslint-plugin@6.11.0(@typescript-eslint/parser@6.11.0)(eslint@8.54.0)(typescript@5.2.2):

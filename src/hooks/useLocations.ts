@@ -15,7 +15,6 @@ const useLocations = () => {
   const search = async (latitude: number, longitude: number) => {
     try {
       setBackdrop(true);
-      umami?.track("search-location-by-coordinates");
       const response = await queryClient.fetchQuery({
         queryKey: [`search-${latitude}-${longitude}`],
         queryFn: async ({ signal }) =>
